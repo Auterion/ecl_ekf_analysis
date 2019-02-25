@@ -37,7 +37,7 @@ setup(
     url='git+ssh://git@github.com/Auterion/ecl_ekf_analysis',
     author='Johannes Brand',
     author_email='johannes@auterion.com',
-    download_url='git+ssh://git@github.com//ecl_ekf_analysis',
+    download_url='git+ssh://git@github.com/ecl_ekf_analysis',
     license='BSD 3-Clause',
     classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
