@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  development:
+    build:
+      context: .
+      dockerfile: ./ops/compose/Dockerfile
+    volumes:
+      - ".:/app"
+
