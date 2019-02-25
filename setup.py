@@ -29,15 +29,15 @@ Operating System :: MacOS
 # pylint: disable=invalid-name
 
 setup(
-    name='ecl-ekf-analysis',
+    name='ecl_ekf_analysis',
     maintainer="Daniel Agar",
     maintainer_email="daniel@px4.io",
     description="A library for PX4 ecl ekf analysis.",
     long_description=long_description,
-    url='https://github.com/PX4/ecl-ekf-analysis',
+    url='git+ssh://git@github.com/Auterion/ecl_ekf_analysis',
     author='Johannes Brand',
     author_email='johannes@auterion.com',
-    download_url='https://github.com/PX4/ecl-ekf-analysis',
+    download_url='git+ssh://git@github.com//ecl_ekf_analysis',
     license='BSD 3-Clause',
     classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
