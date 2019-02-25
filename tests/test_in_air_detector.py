@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 """
-Testing the ml log analysis.
+Testing the in air detector class.
 """
 
 import os
@@ -82,7 +82,6 @@ def start_in_air(ulog):
     ulog.get_dataset('vehicle_land_detected').data['landed'][-1] = 0
     in_air_detector = InAirDetector(
         ulog, min_flight_time_seconds=0.0, in_air_margin_seconds=0.0)
-    first_take_off = in_air_detector.take_off
     airtimes = in_air_detector.airtimes
 
     assert len(airtimes) == 1

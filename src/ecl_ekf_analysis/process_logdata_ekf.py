@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 import csv
-from typing import Dict
+from typing import Dict, Optional
 
 from pyulog import ULog
 
@@ -128,26 +128,39 @@ def process_logdata_ekf(
     return test_results
 
 
-def main() -> None:
+def process_logdata_ekf_configured(
+        log_filename: str, check_level_thresholds: Optional[str] = None,
+        check_table: Optional[str] = None, plot: bool = True,
+        sensor_safety_margins: bool = True):
 
-    args = get_arguments()
-
-    if args.check_level_thresholds is not None:
-        check_level_dict_filename = args.check_level_thresholds
+    if check_level_thresholds is not None:
+        check_level_dict_filename = check_level_thresholds
     else:
         file_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         check_level_dict_filename = os.path.join(file_dir, "check_level_dict.csv")
 
-    if args.check_table is not None:
-        check_table_filename = args.check_table
+    if check_table is not None:
+        check_table_filename = check_table
     else:
         file_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         check_table_filename = os.path.join(file_dir, "check_table.csv")
 
+    test_results = process_logdata_ekf(
+        log_filename, check_level_dict_filename, check_table_filename,
+        plot=plot, sensor_safety_margins=sensor_safety_margins)
+
+    return test_results
+
+
+def main() -> None:
+
+    args = get_arguments()
+
     try:
-        test_results = process_logdata_ekf(
-            args.filename, check_level_dict_filename, check_table_filename,
-            plot=not args.no_plots, sensor_safety_margins=not args.no_sensor_safety_margin)
+        test_results = process_logdata_ekf_configured(
+            args.filename, check_level_thresholds=args.check_level_thresholds,
+            check_table=args.check_table, plot=not args.no_plots,
+            sensor_safety_margins=not args.no_sensor_safety_margin)
     except Exception as e:
         print(str(e))
         sys.exit(-1)
@@ -160,6 +173,7 @@ def main() -> None:
     elif (test_results['master_status'][0] == 'Fail'):
         print('Major anomalies detected')
         sys.exit(-1)
+
 
 if __name__ == '__main__':
     main()
