@@ -44,6 +44,7 @@ setup(
     install_requires=['pyulog', 'matplotlib'],
     tests_require=['pytest'],
     test_suite='pytest',
+    package_dir = {'': 'src'},
     packages=find_packages('src'),
     version="0.01",
 )
