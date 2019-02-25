@@ -8,7 +8,7 @@ Runs process_logdata_ekf.py on the .ulg files in the supplied directory. ulog fi
 import argparse
 import os, glob
 
-from process_logdata_ekf import process_logdata_ekf
+from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Analyse the estimator_status and ekf2_innovation message data for the'

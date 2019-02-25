@@ -10,9 +10,9 @@ from typing import Dict
 
 from pyulog import ULog
 
-from analyse_logdata_ekf import analyse_ekf
-from plotting.pdf_report import create_pdf_report
-from analysis.detectors import PreconditionError
+from ecl_ekf_analysis.analyse_logdata_ekf import analyse_ekf
+from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
+from ecl_ekf_analysis.analysis.detectors import PreconditionError
 
 """
 Performs a health assessment on the ecl EKF navigation estimator data contained in a an ULog file

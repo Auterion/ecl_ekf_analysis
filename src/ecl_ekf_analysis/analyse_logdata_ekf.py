@@ -8,10 +8,10 @@ from typing import Tuple, List, Dict
 import numpy as np
 from pyulog import ULog
 
-from analysis.detectors import InAirDetector, PreconditionError
-from analysis.metrics import calculate_ecl_ekf_metrics
-from analysis.checks import perform_ecl_ekf_checks
-from analysis.post_processing import get_estimator_check_flags
+from ecl_ekf_analysis.analysis.detectors import InAirDetector, PreconditionError
+from ecl_ekf_analysis.analysis.metrics import calculate_ecl_ekf_metrics
+from ecl_ekf_analysis.analysis.checks import perform_ecl_ekf_checks
+from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
 
 def analyse_ekf(
         ulog: ULog, check_levels: Dict[str, float], red_thresh: float = 1.0,
