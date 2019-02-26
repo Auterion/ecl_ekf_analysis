@@ -1,4 +1,9 @@
 #! /usr/bin/env python3
+"""
+Performs a health assessment on the ecl EKF navigation estimator data contained in a an ULog file
+Outputs a health assessment summary in a csv file named <inputfilename>.mdat.csv
+Outputs summary plots in a pdf file named <inputfilename>.pdf
+"""
 
 from __future__ import print_function
 
@@ -14,14 +19,15 @@ from ecl_ekf_analysis.analyse_logdata_ekf import analyse_ekf
 from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 from ecl_ekf_analysis.analysis.detectors import PreconditionError
 
-"""
-Performs a health assessment on the ecl EKF navigation estimator data contained in a an ULog file
-Outputs a health assessment summary in a csv file named <inputfilename>.mdat.csv
-Outputs summary plots in a pdf file named <inputfilename>.pdf
-"""
 
 def get_arguments():
-    parser = argparse.ArgumentParser(description='Analyse the estimator_status and ekf2_innovation message data')
+    """
+    parses the command line arguments
+    :return:
+    """
+    parser = argparse.ArgumentParser(
+        description='Analyse the estimator_status and ekf2_innovation message data for a single'
+                    'ulog file.')
     parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
     parser.add_argument('--no-plots', action='store_true',
                         help='Whether to only analyse and not plot the summaries for developers.')
@@ -29,9 +35,10 @@ def get_arguments():
                         help='The csv file of fail and warning test thresholds for analysis.')
     parser.add_argument('--check-table', type=str, default=None,
                         help='The csv file with descriptions of the checks.')
-    parser.add_argument('--no-sensor-safety-margin', action='store_true',
-                        help='Whether to not cut-off 5s after take-off and 5s before landing '
-                             '(for certain sensors that might be influence by proximity to ground).')
+    parser.add_argument(
+        '--no-sensor-safety-margin', action='store_true',
+        help='Whether to not cut-off 5s after take-off and 5s before landing '
+             '(for certain sensors that might be influence by proximity to ground).')
     return parser.parse_args()
 
 
@@ -83,6 +90,15 @@ def create_results_table(
 def process_logdata_ekf(
         filename: str, check_level_dict_filename: str, check_table_filename: str,
         plot: bool = True, sensor_safety_margins: bool = True):
+    """
+    main function for processing the logdata for ekf analysis.
+    :param filename:
+    :param check_level_dict_filename:
+    :param check_table_filename:
+    :param plot:
+    :param sensor_safety_margins:
+    :return:
+    """
 
     ## load the log and extract the necessary data for the analyses
     try:
@@ -113,8 +129,8 @@ def process_logdata_ekf(
 
         file.write("name,value,description\n")
 
-        # loop through the test results dictionary and write each entry on a separate row, with data comma separated
-        # save data in alphabetical order
+        # loop through the test results dictionary and write each entry on a separate row,
+        # with data comma separated save data in alphabetical order
         key_list = list(test_results.keys())
         key_list.sort()
         for key in key_list:
@@ -132,6 +148,15 @@ def process_logdata_ekf_configured(
         log_filename: str, check_level_thresholds: Optional[str] = None,
         check_table: Optional[str] = None, plot: bool = True,
         sensor_safety_margins: bool = True):
+    """
+    process the logdate without specifying the csv parameter files.
+    :param log_filename:
+    :param check_level_thresholds:
+    :param check_table:
+    :param plot:
+    :param sensor_safety_margins:
+    :return:
+    """
 
     if check_level_thresholds is not None:
         check_level_dict_filename = check_level_thresholds
@@ -153,6 +178,10 @@ def process_logdata_ekf_configured(
 
 
 def main() -> None:
+    """
+    main entry point
+    :return:
+    """
 
     args = get_arguments()
 
@@ -166,11 +195,11 @@ def main() -> None:
         sys.exit(-1)
 
     # print master test status to console
-    if (test_results['master_status'][0] == 'Pass'):
+    if test_results['master_status'][0] == 'Pass':
         print('No anomalies detected')
-    elif (test_results['master_status'][0] == 'Warning'):
+    elif test_results['master_status'][0] == 'Warning':
         print('Minor anomalies detected')
-    elif (test_results['master_status'][0] == 'Fail'):
+    elif test_results['master_status'][0] == 'Fail':
         print('Major anomalies detected')
         sys.exit(-1)
 

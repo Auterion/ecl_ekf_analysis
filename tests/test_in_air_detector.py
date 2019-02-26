@@ -2,7 +2,6 @@
 """
 Testing the in air detector class.
 """
-
 import os
 import pytest
 import numpy as np

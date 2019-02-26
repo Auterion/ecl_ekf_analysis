@@ -74,8 +74,8 @@ def analyse_ekf(
 
 
 def find_checks_that_apply(
-    control_mode: dict, estimator_status: dict, pos_checks_when_sensors_not_fused: bool = False) ->\
-        Tuple[List[str], List[str]]:
+        control_mode: dict, estimator_status: dict,
+        pos_checks_when_sensors_not_fused: bool = False) -> Tuple[List[str], List[str]]:
     """
     finds the checks that apply and stores them in lists for the std checks and the innovation
     fail checks.
@@ -93,7 +93,7 @@ def find_checks_that_apply(
     innov_fail_checks.append('posv')
 
     # Magnetometer Sensor Checks
-    if (np.amax(control_mode['yaw_aligned']) > 0.5):
+    if np.amax(control_mode['yaw_aligned']) > 0.5:
         sensor_checks.append('mag')
 
         innov_fail_checks.append('magx')
@@ -102,29 +102,29 @@ def find_checks_that_apply(
         innov_fail_checks.append('yaw')
 
     # Velocity Sensor Checks
-    if (np.amax(control_mode['using_gps']) > 0.5):
+    if np.amax(control_mode['using_gps']) > 0.5:
         sensor_checks.append('vel')
         innov_fail_checks.append('vel')
 
     # Position Sensor Checks
-    if (pos_checks_when_sensors_not_fused or (np.amax(control_mode['using_gps']) > 0.5)
-        or (np.amax(control_mode['using_evpos']) > 0.5)):
+    if pos_checks_when_sensors_not_fused or (np.amax(control_mode['using_gps']) > 0.5) or \
+            (np.amax(control_mode['using_evpos']) > 0.5):
         sensor_checks.append('pos')
         innov_fail_checks.append('posh')
 
     # Airspeed Sensor Checks
     # a value > 1.0 means the measurement data for that test has been rejected by the EKF
-    if (np.amax(estimator_status['tas_test_ratio']) > 0.0):
+    if np.amax(estimator_status['tas_test_ratio']) > 0.0:
         sensor_checks.append('tas')
         innov_fail_checks.append('tas')
 
     # Height above ground (rangefinder) sensor checks
-    if (np.amax(estimator_status['hagl_test_ratio']) > 0.0):
+    if np.amax(estimator_status['hagl_test_ratio']) > 0.0:
         sensor_checks.append('hagl')
         innov_fail_checks.append('hagl')
 
     # optical flow sensor checks
-    if (np.amax(control_mode['using_optflow']) > 0.5):
+    if np.amax(control_mode['using_optflow']) > 0.5:
         innov_fail_checks.append('ofx')
         innov_fail_checks.append('ofy')
 

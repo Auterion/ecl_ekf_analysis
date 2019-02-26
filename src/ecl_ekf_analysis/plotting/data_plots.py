@@ -42,11 +42,11 @@ class DataPlot():
     A plotting class interface. Provides functions such as saving the figure.
     """
     def __init__(
-        self, plot_data: Dict[str, np.ndarray], variable_names: List[List[str]],
-        plot_title: str = '', sub_titles: Optional[List[str]] = None,
-        x_labels: Optional[List[str]] = None, y_labels: Optional[List[str]] = None,
-        y_lim: Optional[Tuple[int, int]] = None, legend: Optional[List[str]] = None,
-        pdf_handle: Optional[PdfPages] = None) -> None:
+            self, plot_data: Dict[str, np.ndarray], variable_names: List[List[str]],
+            plot_title: str = '', sub_titles: Optional[List[str]] = None,
+            x_labels: Optional[List[str]] = None, y_labels: Optional[List[str]] = None,
+            y_lim: Optional[Tuple[int, int]] = None, legend: Optional[List[str]] = None,
+            pdf_handle: Optional[PdfPages] = None) -> None:
         """
         Initializes the data plot class interface.
         :param plot_title:
@@ -148,9 +148,9 @@ class TimeSeriesPlot(DataPlot):
     class for creating multiple time series plot.
     """
     def __init__(
-        self, plot_data: dict, variable_names: List[List[str]], x_labels: List[str],
-        y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
-        pdf_handle: Optional[PdfPages] = None) -> None:
+            self, plot_data: dict, variable_names: List[List[str]], x_labels: List[str],
+            y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
+            pdf_handle: Optional[PdfPages] = None) -> None:
         """
         initializes a timeseries plot
         :param plot_data:
@@ -187,9 +187,9 @@ class InnovationPlot(DataPlot):
     class for creating an innovation plot.
     """
     def __init__(
-        self, plot_data: dict, variable_names: List[Tuple[str, str]], x_labels: List[str],
-        y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
-        pdf_handle: Optional[PdfPages] = None) -> None:
+            self, plot_data: dict, variable_names: List[Tuple[str, str]], x_labels: List[str],
+            y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
+            pdf_handle: Optional[PdfPages] = None) -> None:
         """
         initializes a timeseries plot
         :param plot_data:

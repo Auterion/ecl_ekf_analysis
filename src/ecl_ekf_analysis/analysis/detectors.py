@@ -12,8 +12,8 @@ class PreconditionError(Exception):
     a class for a Precondition Error
     """
 
-
-class Airtime(object):
+#pylint: disable=too-few-public-methods
+class Airtime():
     """
     Airtime struct.
     """
@@ -22,7 +22,7 @@ class Airtime(object):
         self.landing = landing
 
 
-class InAirDetector(object):
+class InAirDetector():
     """
     handles airtime detection.
     """

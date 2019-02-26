@@ -9,6 +9,6 @@ echo "lint source code"
 pylint --rcfile=/app/pylintrc src/
 
 echo "lint unit tests"
-pylint --rcfile=/app/pylintrc --disable=redefined-outer-name tests/
+pylint --rcfile=/app/pylintrc --disable=redefined-outer-name,import-error tests/
 
 exit 0

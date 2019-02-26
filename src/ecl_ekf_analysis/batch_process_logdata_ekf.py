@@ -1,35 +1,50 @@
 #! /usr/bin/env python3
 """
-Runs process_logdata_ekf.py on the .ulg files in the supplied directory. ulog files are skipped from the analysis, if a
+Runs process_logdata_ekf.py on the .ulg files in the supplied directory. ulog files are
+skipped from the analysis, if a
  corresponding .pdf file already exists (unless the overwrite flag was set).
 """
 # -*- coding: utf-8 -*-
 
 import argparse
-import os, glob
+import os
+import glob
 
 from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
+
 def get_arguments():
-    parser = argparse.ArgumentParser(description='Analyse the estimator_status and ekf2_innovation message data for the'
-                                                 ' .ulg files in the specified directory')
+    """
+    parses the command line arguments.
+    :return:
+    """
+    parser = argparse.ArgumentParser(
+        description='Analyse the estimator_status and ekf2_innovation message data for the '
+                    '.ulg files in the specified directory')
     parser.add_argument("directory_path")
-    parser.add_argument('-o', '--overwrite', action='store_true',
-                        help='Whether to overwrite an already analysed file. If a file with .pdf extension exists for a .ulg'
-                             'file, the log file will be skipped from analysis unless this flag has been set.')
+    parser.add_argument(
+        '-o', '--overwrite', action='store_true',
+        help='Whether to overwrite an already analysed file. If a file with .pdf extension exists '
+             'for a .ulg file, the log file will be skipped from analysis unless this flag has '
+             'been set.')
     parser.add_argument('--no-plots', action='store_true',
-                        help='Whether to only analyse and not plot the summaries for developers.')
+                        help='Whether to only analyse and not plot the summaries for the analysis.')
     parser.add_argument('--check-level-thresholds', type=str, default=None,
-                        help='The csv file of fail and warning test thresholds for analysis.')
+                        help='The csv file of fail and warning test thresholds used for analysis.')
     parser.add_argument('--check-table', type=str, default=None,
-                        help='The csv file with descriptions of the checks.')
-    parser.add_argument('--no-sensor-safety-margin', action='store_true',
-                        help='Whether to not cut-off 5s after take-off and 5s before landing '
-                             '(for certain sensors that might be influence by proximity to ground).')
+                        help='The csv file with descriptions of the analysis checks.')
+    parser.add_argument(
+        '--no-sensor-safety-margin', action='store_true',
+        help='Whether to not cut-off 5s after take-off and 5s before landing '
+             '(for certain sensors that might be influence by proximity to ground).')
     return parser.parse_args()
 
 
 def main() -> None:
+    """
+    the main entry point
+    :return:
+    """
 
     args = get_arguments()
 
@@ -51,8 +66,8 @@ def main() -> None:
     ulog_files = glob.glob(os.path.join(ulog_directory, '**/*.ulg'), recursive=True)
     print("found {:d} .ulg files in {:s}".format(len(ulog_files), ulog_directory))
 
-    # remove the files already analysed unless the overwrite flag was specified. A ulog file is consired to be analysed if
-    # a corresponding .pdf file exists.'
+    # remove the files already analysed unless the overwrite flag was specified. A
+    # ulog file is consired to be analysed if # a corresponding .pdf file exists.'
     if not args.overwrite:
         print("skipping already analysed ulg files.")
         ulog_files = [ulog_file for ulog_file in ulog_files if

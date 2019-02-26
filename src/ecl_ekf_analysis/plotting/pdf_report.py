@@ -6,9 +6,8 @@ function collection for plotting
 # matplotlib don't use Xwindows backend (must be before pyplot import)
 import matplotlib
 matplotlib.use('Agg')
-
-import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
+import numpy as np
 from pyulog import ULog
 
 from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
@@ -17,6 +16,8 @@ from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot,
     ControlModeSummaryPlot, CheckFlagsPlot
 from ecl_ekf_analysis.analysis.detectors import PreconditionError
 
+
+#pylint: disable=too-many-statements
 def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     """
     creates a pdf report of the ekf analysis.
@@ -79,7 +80,7 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         # horizontal velocity innovations
         data_plot = InnovationPlot(
             ekf2_innovations, [('vel_pos_innov[0]', 'vel_pos_innov_var[0]'),
-                               ('vel_pos_innov[1]','vel_pos_innov_var[1]')],
+                               ('vel_pos_innov[1]', 'vel_pos_innov_var[1]')],
             x_labels=['time (sec)', 'time (sec)'],
             y_labels=['North Vel (m/s)', 'East Vel (m/s)'],
             plot_title='Horizontal Velocity  Innovations', pdf_handle=pdf_pages)
@@ -88,18 +89,19 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # horizontal position innovations
         data_plot = InnovationPlot(
-            ekf2_innovations, [('vel_pos_innov[3]', 'vel_pos_innov_var[3]'), ('vel_pos_innov[4]',
-                                                                              'vel_pos_innov_var[4]')],
+            ekf2_innovations, [('vel_pos_innov[3]', 'vel_pos_innov_var[3]'),
+                               ('vel_pos_innov[4]', 'vel_pos_innov_var[4]')],
             x_labels=['time (sec)', 'time (sec)'],
-            y_labels=['North Pos (m)', 'East Pos (m)'], plot_title='Horizontal Position Innovations',
-            pdf_handle=pdf_pages)
+            y_labels=['North Pos (m)', 'East Pos (m)'],
+            plot_title='Horizontal Position Innovations', pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
         # magnetometer innovations
         data_plot = InnovationPlot(
             ekf2_innovations, [('mag_innov[0]', 'mag_innov_var[0]'),
-           ('mag_innov[1]', 'mag_innov_var[1]'), ('mag_innov[2]', 'mag_innov_var[2]')],
+                               ('mag_innov[1]', 'mag_innov_var[1]'),
+                               ('mag_innov[2]', 'mag_innov_var[2]')],
             x_labels=['time (sec)', 'time (sec)', 'time (sec)'],
             y_labels=['X (Gauss)', 'Y (Gauss)', 'Z (Gauss)'], plot_title='Magnetometer Innovations',
             pdf_handle=pdf_pages)
@@ -127,8 +129,8 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # optical flow innovations
         data_plot = InnovationPlot(
-            ekf2_innovations, [('flow_innov[0]', 'flow_innov_var[0]'), ('flow_innov[1]',
-                                                                        'flow_innov_var[1]')],
+            ekf2_innovations, [('flow_innov[0]', 'flow_innov_var[0]'),
+                               ('flow_innov[1]', 'flow_innov_var[1]')],
             x_labels=['time (sec)', 'time (sec)'],
             y_labels=['X (rad/sec)', 'Y (rad/sec)'],
             plot_title='Optical Flow Innovations', pdf_handle=pdf_pages)
@@ -140,13 +142,12 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         variables = [['mag_test_ratio'], ['vel_test_ratio', 'pos_test_ratio'], ['hgt_test_ratio']]
         y_labels = ['mag', 'vel, pos', 'hgt']
         legend = [['mag'], ['vel', 'pos'], ['hgt']]
-        if np.amax(estimator_status['hagl_test_ratio']) > 0.0:  # plot hagl test ratio, if applicable
+        if np.amax(estimator_status['hagl_test_ratio']) > 0.0:  # plot hagl ratio, if applicable
             variables[-1].append('hagl_test_ratio')
             y_labels[-1] += ', hagl'
             legend[-1].append('hagl')
 
-        if np.amax(estimator_status[
-                       'tas_test_ratio']) > 0.0:  # plot airspeed sensor test ratio, if applicable
+        if np.amax(estimator_status['tas_test_ratio']) > 0.0:  # plot airspeed sensor test ratio
             variables.append(['tas_test_ratio'])
             y_labels.append('TAS')
             legend.append(['airspeed'])
@@ -161,15 +162,17 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # plot control mode summary A
         data_plot = ControlModeSummaryPlot(
-            status_time, control_mode, [['tilt_aligned', 'yaw_aligned'],
-            ['using_gps', 'using_optflow', 'using_evpos'], ['using_barohgt', 'using_gpshgt',
-             'using_rnghgt', 'using_evhgt'], ['using_magyaw', 'using_mag3d', 'using_magdecl']],
+            status_time, control_mode,
+            [['tilt_aligned', 'yaw_aligned'], ['using_gps', 'using_optflow', 'using_evpos'],
+             ['using_barohgt', 'using_gpshgt', 'using_rnghgt', 'using_evhgt'],
+             ['using_magyaw', 'using_mag3d', 'using_magdecl']],
             x_label='time (sec)', y_labels=['aligned', 'pos aiding', 'hgt aiding', 'mag aiding'],
-            annotation_text=[['tilt alignment', 'yaw alignment'], ['GPS aiding', 'optical flow aiding',
-             'external vision aiding'], ['Baro aiding', 'GPS aiding', 'rangefinder aiding',
-             'external vision aiding'], ['magnetic yaw aiding', '3D magnetoemter aiding',
-             'magnetic declination aiding']], plot_title='EKF Control Status - Figure A',
-            pdf_handle=pdf_pages)
+            annotation_text=[
+                ['tilt alignment', 'yaw alignment'],
+                ['GPS aiding', 'optical flow aiding', 'external vision aiding'],
+                ['Baro aiding', 'GPS aiding', 'rangefinder aiding', 'external vision aiding'],
+                ['magnetic yaw aiding', '3D magnetoemter aiding', 'magnetic declination aiding']],
+            plot_title='EKF Control Status - Figure A', pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
@@ -180,8 +183,9 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
             airborne_annotations.append(
                 (on_ground_transition_time, 'air to ground transition not detected'))
         else:
-            airborne_annotations.append((on_ground_transition_time, 'on-ground at {:.1f} sec'.format(
-                on_ground_transition_time)))
+            airborne_annotations.append(
+                (on_ground_transition_time, 'on-ground at {:.1f} sec'.format(
+                    on_ground_transition_time)))
         if in_air_duration > 0.0:
             airborne_annotations.append(((in_air_transition_time + on_ground_transition_time) / 2,
                                          'duration = {:.1f} sec'.format(in_air_duration)))
@@ -194,8 +198,8 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         data_plot = ControlModeSummaryPlot(
             status_time, control_mode, [['airborne'], ['estimating_wind']],
-            x_label='time (sec)', y_labels=['airborne', 'estimating wind'], annotation_text=[[], []],
-            additional_annotation=[airborne_annotations, []],
+            x_label='time (sec)', y_labels=['airborne', 'estimating wind'],
+            annotation_text=[[], []], additional_annotation=[airborne_annotations, []],
             plot_title='EKF Control Status - Figure B', pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
@@ -224,9 +228,10 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
              ['hdrift_fail', 'vdrift_fail', 'hspd_fail', 'veld_diff_fail']],
             x_label='time (sec)', y_lim=(-0.1, 1.1), y_labels=['failed', 'failed'],
             sub_titles=['GPS Direct Output Check Failures', 'GPS Derived Output Check Failures'],
-            legend=[['N sats', 'GDOP', 'horiz pos error', 'vert pos error', 'fix type',
-                     'speed error'], ['horiz drift', 'vert drift', 'horiz speed',
-                                      'vert vel inconsistent']], annotate=False, pdf_handle=pdf_pages)
+            legend=[
+                ['N sats', 'GDOP', 'horiz pos error', 'vert pos error', 'fix type', 'speed error'],
+                ['horiz drift', 'vert drift', 'horiz speed', 'vert vel inconsistent']],
+            annotate=False, pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
@@ -319,14 +324,21 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
 
 def detect_airtime(control_mode, status_time):
+    """
+    old function for detecting airtime. Warning: this function is actually deprecated.
+    :param control_mode:
+    :param status_time:
+    :return:
+    """
+
     # define flags for starting and finishing in air
     b_starts_in_air = False
     b_finishes_in_air = False
     # calculate in-air transition time
-    if (np.amin(control_mode['airborne']) < 0.5) and (np.amax(control_mode['airborne']) > 0.5):
+    if np.amax(np.abs(np.diff(control_mode['airborne']))) > 0.5:
         in_air_transtion_time_arg = np.argmax(np.diff(control_mode['airborne']))
         in_air_transition_time = status_time[in_air_transtion_time_arg]
-    elif (np.amax(control_mode['airborne']) > 0.5):
+    elif np.amax(control_mode['airborne']) > 0.5:
         in_air_transition_time = np.amin(status_time)
         print('log starts while in-air at ' + str(round(in_air_transition_time, 1)) + ' sec')
         b_starts_in_air = True
@@ -334,21 +346,23 @@ def detect_airtime(control_mode, status_time):
         in_air_transition_time = float('NaN')
         print('always on ground')
     # calculate on-ground transition time
-    if (np.amin(np.diff(control_mode['airborne'])) < 0.0):
+    if np.amin(np.diff(control_mode['airborne'])) < 0.0:
         on_ground_transition_time_arg = np.argmin(np.diff(control_mode['airborne']))
         on_ground_transition_time = status_time[on_ground_transition_time_arg]
-    elif (np.amax(control_mode['airborne']) > 0.5):
+    elif np.amax(control_mode['airborne']) > 0.5:
         on_ground_transition_time = np.amax(status_time)
         print('log finishes while in-air at ' + str(round(on_ground_transition_time, 1)) + ' sec')
         b_finishes_in_air = True
     else:
         on_ground_transition_time = float('NaN')
         print('always on ground')
-    if (np.amax(np.diff(control_mode['airborne'])) > 0.5) and (np.amin(np.diff(control_mode['airborne'])) < -0.5):
-        if ((on_ground_transition_time - in_air_transition_time) > 0.0):
+    if np.amax(np.diff(control_mode['airborne'])) > 0.5 and \
+            np.amin(np.diff(control_mode['airborne'])) < -0.5:
+        if (on_ground_transition_time - in_air_transition_time) > 0.0:
             in_air_duration = on_ground_transition_time - in_air_transition_time
         else:
             in_air_duration = float('NaN')
     else:
         in_air_duration = float('NaN')
-    return b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, on_ground_transition_time
+    return b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, \
+           on_ground_transition_time

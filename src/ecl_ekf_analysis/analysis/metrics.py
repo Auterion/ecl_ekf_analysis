@@ -10,10 +10,22 @@ import numpy as np
 
 from ecl_ekf_analysis.analysis.detectors import InAirDetector
 
+
 def calculate_ecl_ekf_metrics(
         ulog: ULog, innov_flags: Dict[str, float], innov_fail_checks: List[str],
         sensor_checks: List[str], in_air: InAirDetector, in_air_no_ground_effects: InAirDetector,
         red_thresh: float = 1.0, amb_thresh: float = 0.5) -> Tuple[dict, dict, dict, dict]:
+    """
+    :param ulog:
+    :param innov_flags:
+    :param innov_fail_checks:
+    :param sensor_checks:
+    :param in_air:
+    :param in_air_no_ground_effects:
+    :param red_thresh:
+    :param amb_thresh:
+    :return:
+    """
 
     sensor_metrics = calculate_sensor_metrics(
         ulog, sensor_checks, in_air, in_air_no_ground_effects,
@@ -46,6 +58,15 @@ def calculate_sensor_metrics(
         ulog: ULog, sensor_checks: List[str], in_air: InAirDetector,
         in_air_no_ground_effects: InAirDetector, red_thresh: float = 1.0,
         amb_thresh: float = 0.5) -> Dict[str, float]:
+    """
+    :param ulog:
+    :param sensor_checks:
+    :param in_air:
+    :param in_air_no_ground_effects:
+    :param red_thresh:
+    :param amb_thresh:
+    :return:
+    """
 
     estimator_status_data = ulog.get_dataset('estimator_status').data
 
@@ -63,7 +84,7 @@ def calculate_sensor_metrics(
         # only run sensor checks, if they apply.
         if result_id in sensor_checks:
 
-            if result_id == 'mag' or result_id == 'hgt':
+            if result_id in ('mag', 'hgt'):
                 in_air_detector = in_air_no_ground_effects
             else:
                 in_air_detector = in_air
@@ -133,6 +154,12 @@ def calculate_innov_fail_metrics(
 
 def calculate_imu_metrics(
         ulog: ULog, in_air_no_ground_effects: InAirDetector) -> dict:
+    """
+    calculates the imu metrics.
+    :param ulog:
+    :param in_air_no_ground_effects:
+    :return:
+    """
 
     ekf2_innovation_data = ulog.get_dataset('ekf2_innovations').data
 
@@ -160,12 +187,14 @@ def calculate_imu_metrics(
                 in_air_no_ground_effects, np.mean)
 
     # IMU bias checks
-    imu_metrics['imu_dang_bias_median'] = np.sqrt(np.sum([np.square(calculate_stat_from_signal(
-        estimator_status_data, 'estimator_status', signal, in_air_no_ground_effects, np.median))
-        for signal in ['states[10]', 'states[11]', 'states[12]']]))
-    imu_metrics['imu_dvel_bias_median'] = np.sqrt(np.sum([np.square(calculate_stat_from_signal(
-        estimator_status_data, 'estimator_status', signal, in_air_no_ground_effects, np.median))
-        for signal in ['states[13]', 'states[14]', 'states[15]']]))
+    imu_metrics['imu_dang_bias_median'] = np.sqrt(
+        np.sum([np.square(calculate_stat_from_signal(
+            estimator_status_data, 'estimator_status', signal, in_air_no_ground_effects,
+            np.median)) for signal in ['states[10]', 'states[11]', 'states[12]']]))
+    imu_metrics['imu_dvel_bias_median'] = np.sqrt(
+        np.sum([np.square(calculate_stat_from_signal(
+            estimator_status_data, 'estimator_status', signal, in_air_no_ground_effects,
+            np.median)) for signal in ['states[13]', 'states[14]', 'states[15]']]))
 
     return imu_metrics
 

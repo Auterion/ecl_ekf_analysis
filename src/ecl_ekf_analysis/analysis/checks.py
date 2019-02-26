@@ -106,12 +106,12 @@ def perform_sensor_innov_checks(
 
         # only run sensor checks, if they apply.
         if result_id in sensor_checks:
-            if metrics['{:s}_percentage_amber'.format(result_id)] > check_levels[
-                '{:s}_amber_fail_pct'.format(result_id)]:
+            if metrics['{:s}_percentage_amber'.format(result_id)] > \
+                    check_levels['{:s}_amber_fail_pct'.format(result_id)]:
                 sensor_status['{:s}_sensor_status'.format(result_id)] = 'Fail'
                 print('{:s} sensor check failure.'.format(result_id))
-            elif metrics['{:s}_percentage_amber'.format(result_id)] > check_levels[
-                '{:s}_amber_warn_pct'.format(result_id)]:
+            elif metrics['{:s}_percentage_amber'.format(result_id)] > \
+                    check_levels['{:s}_amber_warn_pct'.format(result_id)]:
                 sensor_status['{:s}_sensor_status'.format(result_id)] = 'Warning'
                 print('{:s} sensor check warning.'.format(result_id))
             else:
@@ -137,7 +137,7 @@ def perform_sensor_innov_checks(
                 sensor_status['{:s}_sensor_status'.format(result_id)] = 'Fail'
                 print('{:s} sensor check failure.'.format(result_id))
             else:
-                if not ('{:s}_sensor_status'.format(result_id) in sensor_status):
+                if '{:s}_sensor_status'.format(result_id) not in sensor_status:
                     sensor_status['{:s}_sensor_status'.format(result_id)] = 'Pass'
 
     return sensor_status

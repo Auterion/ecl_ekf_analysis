@@ -43,12 +43,6 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
 
         process_logdata_ekf_configured(tmp_log_filename, plot=False)
 
-        '''
-        os.system('python {:s} {:s} --no-plots'.format(os.path.join(
-            os.path.dirname(__file__), '../src/ecl_ekf_analysis/process_logdata_ekf.py'),
-            tmp_log_filename))
-        '''
-
         analysis_result_filename = os.path.join(tmp_dir, '{:s}.mdat.csv'.format(tmp_log_filename))
 
         assert os.path.exists(analysis_result_filename)
