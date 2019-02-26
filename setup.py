@@ -46,10 +46,10 @@ setup(
     test_suite='pytest',
     package_dir = {'': 'src'},
     packages=find_packages('src'),
-    scripts=['src/ecl_ekf_analysis/batch_process_metadata_ekf.py'],
     entry_points = {
             'console_scripts': [
                 'batch_process_logdata_ekf=ecl_ekf_analysis.batch_process_logdata_ekf:main',
+                'batch_process_metadata_ekf=ecl_ekf_analysis.batch_process_metadata_ekf:main',
                 'process_logdata_ekf=ecl_ekf_analysis.process_logdata_ekf:main'
             ],
     },
