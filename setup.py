@@ -30,8 +30,8 @@ Operating System :: MacOS
 
 setup(
     name='ecl_ekf_analysis',
-    maintainer="Daniel Agar",
-    maintainer_email="daniel@px4.io",
+    maintainer="Johannes Brand",
+    maintainer_email="johannes@auterion.com",
     description="A library for PX4 ecl ekf analysis.",
     long_description=long_description,
     url='git+ssh://git@github.com/Auterion/ecl_ekf_analysis',
