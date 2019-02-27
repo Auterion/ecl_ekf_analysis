@@ -14,8 +14,9 @@ from ecl_ekf_analysis.analysis.detectors import InAirDetector
 def calculate_ecl_ekf_metrics(
         ulog: ULog, innov_flags: Dict[str, float], innov_fail_checks: List[str],
         sensor_checks: List[str], in_air: InAirDetector, in_air_no_ground_effects: InAirDetector,
-        red_thresh: float = 1.0, amb_thresh: float = 0.5) -> Tuple[dict, dict, dict, dict]:
+        red_thresh: float = 1.0, amb_thresh: float = 0.5) -> Dict[str, float]:
     """
+    calculate the ecl ekf metrics.
     :param ulog:
     :param innov_flags:
     :param innov_fail_checks:
@@ -59,6 +60,7 @@ def calculate_sensor_metrics(
         in_air_no_ground_effects: InAirDetector, red_thresh: float = 1.0,
         amb_thresh: float = 0.5) -> Dict[str, float]:
     """
+    calculate the sensor metrics.
     :param ulog:
     :param sensor_checks:
     :param in_air:
@@ -112,8 +114,9 @@ def calculate_sensor_metrics(
 
 def calculate_innov_fail_metrics(
         innov_flags: dict, innov_fail_checks: List[str], in_air: InAirDetector,
-        in_air_no_ground_effects: InAirDetector) -> dict:
+        in_air_no_ground_effects: InAirDetector) -> Dict[str, float]:
     """
+    calculate the innovation fail metrics.
     :param innov_flags:
     :param innov_fail_checks:
     :param in_air:
@@ -153,9 +156,9 @@ def calculate_innov_fail_metrics(
 
 
 def calculate_imu_metrics(
-        ulog: ULog, in_air_no_ground_effects: InAirDetector) -> dict:
+        ulog: ULog, in_air_no_ground_effects: InAirDetector) -> Dict[str, float]:
     """
-    calculates the imu metrics.
+    calculate the imu metrics.
     :param ulog:
     :param in_air_no_ground_effects:
     :return:
@@ -203,6 +206,7 @@ def calculate_stat_from_signal(
         data: Dict[str, np.ndarray], dataset: str, variable: str,
         in_air_det: InAirDetector, stat_function: Callable) -> float:
     """
+    calculate a statistic from a signal.
     :param data:
     :param variable:
     :param in_air_detector:

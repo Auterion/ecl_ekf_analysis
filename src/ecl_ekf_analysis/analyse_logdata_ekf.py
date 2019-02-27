@@ -19,6 +19,7 @@ def analyse_ekf(
         in_air_margin_seconds: float = 5.0, pos_checks_when_sensors_not_fused: bool = False) -> \
         Tuple[str, Dict[str, str], Dict[str, float], Dict[str, float]]:
     """
+    perform the ekf analysis.
     :param ulog:
     :param check_levels:
     :param red_thresh:

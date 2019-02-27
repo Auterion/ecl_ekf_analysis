@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 """
-detectors
+The in air detector class.
 """
 from typing import Optional
 import numpy as np
@@ -24,11 +24,12 @@ class Airtime():
 
 class InAirDetector():
     """
-    handles airtime detection.
+    this class handles airtime detection.
     """
 
-    def __init__(self, ulog: ULog, min_flight_time_seconds: float = 0.0,
-                 in_air_margin_seconds: float = 0.0) -> None:
+    def __init__(
+            self, ulog: ULog, min_flight_time_seconds: float = 0.0,
+            in_air_margin_seconds: float = 0.0) -> None:
         """
         initializes an InAirDetector instance.
         :param ulog:

@@ -20,7 +20,7 @@ from ecl_ekf_analysis.analysis.detectors import PreconditionError
 #pylint: disable=too-many-statements
 def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     """
-    creates a pdf report of the ekf analysis.
+    create a pdf analysis report.
     :param ulog:
     :param output_plot_filename:
     :return:
@@ -325,7 +325,7 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
 def detect_airtime(control_mode, status_time):
     """
-    old function for detecting airtime. Warning: this function is actually deprecated.
+    detect airtime. Warning: this function is deprecated and only used for the pdf report.
     :param control_mode:
     :param status_time:
     :return:
