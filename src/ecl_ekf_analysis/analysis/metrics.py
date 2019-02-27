@@ -3,7 +3,7 @@
 function collection for calculation ecl ekf metrics.
 """
 
-from typing import Dict, List, Tuple, Callable
+from typing import Dict, List, Callable
 
 from pyulog import ULog
 import numpy as np
