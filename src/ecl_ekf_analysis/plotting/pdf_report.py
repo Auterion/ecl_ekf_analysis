@@ -10,11 +10,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 from pyulog import ULog
 
-from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
-    get_estimator_check_flags
-from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot, \
-    ControlModeSummaryPlot, CheckFlagsPlot
-from ecl_ekf_analysis.analysis.detectors import PreconditionError
+from analysis.post_processing import magnetic_field_estimates_from_status, get_estimator_check_flags
+from analysis.custom_exceptions import PreconditionError
+from plotting.data_plots import TimeSeriesPlot, InnovationPlot, ControlModeSummaryPlot, \
+    CheckFlagsPlot
 
 
 #pylint: disable=too-many-statements

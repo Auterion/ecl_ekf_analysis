@@ -6,7 +6,8 @@ import os
 import pytest
 import numpy as np
 from pyulog import ULog
-from analysis.detectors import InAirDetector
+
+from analysis.in_air_detector import InAirDetector
 
 @pytest.fixture(scope="module")
 def testing_args():

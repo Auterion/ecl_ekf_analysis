@@ -15,9 +15,9 @@ from typing import Dict, Optional
 
 from pyulog import ULog
 
-from ecl_ekf_analysis.analyse_logdata_ekf import analyse_ekf
-from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
-from ecl_ekf_analysis.analysis.detectors import PreconditionError
+from analyse_logdata_ekf import analyse_ekf
+from plotting.pdf_report import create_pdf_report
+from analysis.custom_exceptions import PreconditionError
 
 
 def get_arguments():

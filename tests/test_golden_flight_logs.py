@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf_configured
+from process_logdata_ekf import process_logdata_ekf_configured
 
 @pytest.fixture(scope="module")
 def testing_args():
@@ -65,6 +65,7 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
                 assert golden_value == pytest.approx(analysis_results[result_name])
             else:
                 assert golden_value == analysis_results[result_name]
+
 
 def test_golden_flight_logs(testing_args):
     """
