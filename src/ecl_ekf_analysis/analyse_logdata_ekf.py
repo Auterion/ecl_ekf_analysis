@@ -9,10 +9,10 @@ import numpy as np
 from pyulog import ULog
 
 from analysis.in_air_detector import InAirDetector
-from analysis.custom_exceptions import PreconditionError
 from analysis.metrics import calculate_ecl_ekf_metrics
 from analysis.checks import perform_ecl_ekf_checks
 from analysis.post_processing import get_estimator_check_flags
+from log_processing.custom_exceptions import PreconditionError
 
 def analyse_ekf(
         ulog: ULog, check_levels: Dict[str, float], red_thresh: float = 1.0,

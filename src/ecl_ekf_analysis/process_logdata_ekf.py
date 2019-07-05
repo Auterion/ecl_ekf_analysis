@@ -17,7 +17,7 @@ from pyulog import ULog
 
 from analyse_logdata_ekf import analyse_ekf
 from plotting.pdf_report import create_pdf_report
-from analysis.custom_exceptions import PreconditionError
+from log_processing.custom_exceptions import PreconditionError
 
 
 def get_arguments():
