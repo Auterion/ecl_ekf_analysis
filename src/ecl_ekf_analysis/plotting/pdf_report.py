@@ -11,7 +11,7 @@ import numpy as np
 from pyulog import ULog
 
 from analysis.post_processing import magnetic_field_estimates_from_status, get_estimator_check_flags
-from analysis.log_processing import PreconditionError
+from log_processing.custom_exceptions import PreconditionError
 from plotting.data_plots import TimeSeriesPlot, InnovationPlot, ControlModeSummaryPlot, \
     CheckFlagsPlot
 
