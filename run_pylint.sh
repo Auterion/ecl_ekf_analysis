@@ -3,7 +3,7 @@
 
 set -e
 
-export PYTHONPATH=$PYTHONPATH:src/ecl-ekf-analysis
+export PYTHONPATH=$PYTHONPATH:src/ecl_ekf_analysis
 
 echo "lint source code"
 pylint --rcfile=/app/pylintrc src/

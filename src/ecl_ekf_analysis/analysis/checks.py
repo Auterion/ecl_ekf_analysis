@@ -58,6 +58,7 @@ def perform_imu_checks(
     for imu_vibr_metric in ['imu_coning', 'imu_hfdang', 'imu_hfdvel']:
         mean_metric = '{:s}_mean'.format(imu_vibr_metric)
         peak_metric = '{:s}_peak'.format(imu_vibr_metric)
+        mean_windowed_metric = '{:s}_windowed_mean'.format(imu_vibr_metric)
         if imu_metrics[mean_metric] > check_levels['{:s}_warn'.format(mean_metric)] \
                 or imu_metrics[peak_metric] > check_levels['{:s}_warn'.format(peak_metric)]:
             imu_status['imu_vibration_check'] = 'Warning'
