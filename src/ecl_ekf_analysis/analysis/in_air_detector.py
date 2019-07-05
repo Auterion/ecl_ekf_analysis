@@ -1,16 +1,13 @@
-#! /usr/bin/env python3
+# /usr/bin/env/ python3
 """
-The in air detector class.
+a class for airtime detection.
 """
-from typing import Optional
+from typing import Optional, List
 import numpy as np
 from pyulog import ULog
 
+from log_processing.custom_exceptions import PreconditionError
 
-class PreconditionError(Exception):
-    """
-    a class for a Precondition Error
-    """
 
 #pylint: disable=too-few-public-methods
 class Airtime():
@@ -57,7 +54,7 @@ class InAirDetector():
         self._in_air = self._detect_airtime()
 
 
-    def _detect_airtime(self) -> Optional[Airtime]:
+    def _detect_airtime(self) -> List[Airtime]:
         """
         detects the airtime take_off and landing of a ulog.
         :return: a named tuple of ('Airtime', ['take_off', 'landing']) or None.
@@ -106,7 +103,7 @@ class InAirDetector():
         return in_air
 
     @property
-    def airtimes(self):
+    def airtimes(self) -> Optional[List[Airtime]]:
         """
         airtimes
         :return:
@@ -119,7 +116,7 @@ class InAirDetector():
         first take off
         :return:
         """
-        return self._in_air[0].take_off if self._in_air else None
+        return self.airtimes[0].take_off if self.airtimes else None
 
     @property
     def landing(self) -> Optional[float]:
@@ -127,7 +124,7 @@ class InAirDetector():
         last landing
         :return: the last landing of the flight.
         """
-        return self._in_air[-1].landing if self._in_air else None
+        return self.airtimes[-1].landing if self.airtimes else None
 
     @property
     def log_start(self) -> Optional[float]:
@@ -136,6 +133,35 @@ class InAirDetector():
         :return: the start time of the log.
         """
         return self._log_start
+
+    def get_sample_rate(self, dataset: str, multi_instance: int = 0) -> float:
+        """
+        :param dataset:
+        :param multi_instance:
+        :return:
+        """
+        data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
+        sample_rate = data['timestamp'].shape[0] / \
+                      ((data['timestamp'][-1] - data['timestamp'][0]) * 1.0e-6)
+
+        return sample_rate
+
+    def calc_rolling_window_len(
+            self, dataset: str, window_len_s: float, odd: bool = True,
+            multi_instance: int = 0) -> int:
+        """
+        :param dataset:
+        :param window_len_s:
+        :param odd:
+        :param multi_instance:
+        :return:
+        """
+        sample_rate = self.get_sample_rate(dataset, multi_instance=multi_instance)
+        window_len = int(window_len_s * sample_rate)
+        if odd and ((window_len % 2) == 0):
+            window_len += 1
+
+        return window_len
 
     def get_take_off_to_last_landing(self, dataset) -> list:
         """
@@ -150,34 +176,62 @@ class InAirDetector():
             print('InAirDetector: {:s} not found in log.'.format(dataset))
             return []
 
-        if self._in_air:
-            airtime = np.where(((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                                self._in_air[0].take_off) & (
-                                    (data['timestamp'] - self._ulog.start_timestamp) /
-                                    1.0e6 < self._in_air[-1].landing))[0]
+        if self.airtimes:
+            airtime_indices = np.where(
+                ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
+                 self.airtimes[0].take_off) &
+                ((data['timestamp'] - self._ulog.start_timestamp) /
+                 1.0e6 < self.airtimes[-1].landing))[0]
 
         else:
-            airtime = []
+            airtime_indices = []
 
-        return airtime
+        return airtime_indices
 
-    def get_airtime(self, dataset) -> list:
+    def get_airtime(self, dataset: str, multi_instance: int = 0) -> list:
         """
         return all indices of the log file that are in air
         :param dataset:
         :return:
         """
         try:
-            data = self._ulog.get_dataset(dataset).data
+            data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
         except:
             raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
 
-        airtime = []
-        if self._in_air is not None:
-            for i in range(len(self._in_air)):
-                airtime.extend(np.where(((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                                         self._in_air[i].take_off) & (
-                                             (data['timestamp'] - self._ulog.start_timestamp) /
-                                             1.0e6 < self._in_air[i].landing))[0])
+        airtime_indices = []
 
-        return airtime
+        if self.airtimes is not None:
+            for airtime in self.airtimes:
+                airtime_indices.extend(
+                    np.where(
+                        ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
+                         airtime.take_off) & ((data['timestamp'] - self._ulog.start_timestamp) /
+                                              1.0e6 < airtime.landing))[0])
+
+        return airtime_indices
+
+
+    def get_airtime_per_phase(self, dataset: str, multi_instance: int = 0) -> List[list]:
+        """
+        return all indices of the log file that are in air
+        :param dataset:
+        :param multi_instance:
+        :return:
+        """
+        try:
+            data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
+        except:
+            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
+
+        airphase_airtime_indices = []
+
+        if self.airtimes is not None:
+            for airtime in self.airtimes:
+                airphase_airtime_indices.append(
+                    np.where(((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
+                              airtime.take_off) &
+                             ((data['timestamp'] - self._ulog.start_timestamp) /
+                              1.0e6 < airtime.landing))[0])
+
+        return airphase_airtime_indices
