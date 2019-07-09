@@ -11,6 +11,7 @@ import numpy as np
 from analysis.in_air_detector import Airtime, InAirDetector
 from signal_processing.smooth_filt_rolling import smooth_1d_boundaries
 
+
 def calculate_ecl_ekf_metrics(
         ulog: ULog, innov_flags: Dict[str, float], innov_fail_checks: List[str],
         sensor_checks: List[str], in_air: InAirDetector, in_air_no_ground_effects: InAirDetector,
@@ -309,7 +310,6 @@ def calculate_stat_from_signal(
     :param in_air_detector:
     :return:
     """
-
     return float(stat_function(data[variable][in_air_det.get_airtime(dataset)]))
 
 
