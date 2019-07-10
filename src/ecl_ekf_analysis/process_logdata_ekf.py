@@ -9,7 +9,7 @@ from __future__ import print_function
 
 import argparse
 import sys
-from typing import Dict
+from typing import Dict, Tuple, Optional
 
 from pyulog import ULog
 
@@ -33,32 +33,31 @@ def get_arguments():
     return parser.parse_args()
 
 
-def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
+def analyse_logdata_ekf(ulog: ULog) -> Dict[str, tuple]:
     """
-    main function for processing the logdata for ekf analysis.
-    :param filename:
-    :param plot:
+    perform the analysis
+    :param ulog:
     :return:
     """
-
-    ## load the log and extract the necessary data for the analyses
-    try:
-        ulog = ULog(filename)
-    except:
-        raise PreconditionError('could not open {:s}'.format(filename))
-
     try:
         estimator_status_data = ulog.get_dataset('estimator_status').data
         print('found estimator_status data')
     except:
         raise PreconditionError('could not find estimator_status data')
-
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status_data)
-
     ecl_check_runner = EclCheckRunner(ulog, innov_flags)
     ecl_check_runner.run_checks()
     test_results = ecl_check_runner.results_table
 
+    return test_results
+
+
+def get_master_status_from_test_results(
+            test_results: Dict[str, tuple]) -> Tuple[str, str, Optional[str]]:
+    """
+    :param test_results:
+    :return:
+    """
     master_status = 'Pass'
     for _, entry in test_results.items():
         if entry[0] == 'Warning' and master_status == 'Pass':
@@ -66,12 +65,17 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
         elif entry[0] == 'Fail':
             master_status = 'Fail'
             break
+    return (master_status, '', None)
 
-    test_results['master_status'] = (master_status, '', None)
 
+def write_test_results_to_csv(filename: str, test_results: Dict[str, tuple]) -> None:
+    """
+    :param filename:
+    :param test_results:
+    :return:
+    """
     # write metadata to a .csv file
     with open('{:s}.mdat.csv'.format(filename), "w") as file:
-
         file.write("name,value,description\n")
 
         # loop through the test results dictionary and write each entry on a separate row,
@@ -81,6 +85,25 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
         for key in key_list:
             file.write(key + "," + str(test_results[key][0]) + "," + test_results[key][1] + "\n")
     print('Test results written to {:s}.mdat.csv'.format(filename))
+
+
+def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
+    """
+    main function for processing the logdata for ekf analysis.
+    :param filename:
+    :param plot:
+    :return:
+    """
+    try:
+        ulog = ULog(filename)
+    except:
+        raise PreconditionError('could not open {:s}'.format(filename))
+
+    test_results = analyse_logdata_ekf(ulog)
+
+    test_results['master_status'] = get_master_status_from_test_results(test_results)
+
+    write_test_results_to_csv(filename, test_results)
 
     if plot:
         create_pdf_report(ulog, '{:s}.pdf'.format(filename))
