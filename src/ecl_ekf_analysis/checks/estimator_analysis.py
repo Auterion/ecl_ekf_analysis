@@ -39,10 +39,16 @@ class EstimatorCheck(Check):
         self._check_id = check_id
         self._test_ratio_name = test_ratio_name
         self._innov_fail_names = innov_fail_names
-        self._in_air_detector = InAirDetector(ulog)
+
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
             in_air_margin_seconds=params.iad_in_air_margin_seconds())
+
+        if check_id in ['magnetometer', 'height', 'yaw', 'optical_flow']:
+            self._in_air_detector = self._in_air_detector_no_ground_effects
+        else:
+            self._in_air_detector = InAirDetector(
+                ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds())
 
 
     def calc_estimator_status_metrics(self) -> Dict[str, list]:
@@ -109,11 +115,12 @@ class EstimatorCheck(Check):
             estimator_status_data, 'estimator_status', self._test_ratio_name,
             self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
 
+        #TODO: remove subtraction of innov_red_pct and tune parameters
         innov_amber_pct = self.add_statistic(
             check_data_api.CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT)
         innov_amber_pct.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name, self._in_air_detector,
-            lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh())))
+            lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
         innov_amber_pct.thresholds.warning.value = thresholds.ecl_amber_warning_pct(self._check_id)
         innov_amber_pct.thresholds.failure.value = thresholds.ecl_amber_failure_pct(self._check_id)
 
