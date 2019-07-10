@@ -196,7 +196,7 @@ class MagnetometerCheck(EstimatorCheck):
         :param ulog:
         """
         super(MagnetometerCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_COMPASS_STATUS,
+            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_MAGNETOMETER_STATUS,
             check_id = 'magnetometer', test_ratio_name = 'mag_test_ratio',
             innov_fail_names = ['magx_innov_fail', 'magy_innov_fail', 'magz_innov_fail'])
 
@@ -210,7 +210,7 @@ class MagneticHeadingCheck(EstimatorCheck):
         :param ulog:
         """
         super(MagneticHeadingCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_COMPASS_STATUS,
+            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_MAGNETIC_HEADING_STATUS,
             check_id = 'yaw', test_ratio_name = None, innov_fail_names = ['yaw_innov_fail'])
 
 

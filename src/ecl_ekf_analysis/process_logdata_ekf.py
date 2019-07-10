@@ -8,10 +8,12 @@ Outputs summary plots in a pdf file named <inputfilename>.pdf
 from __future__ import print_function
 
 import argparse
+import os
 import sys
-from typing import Dict, Tuple, Optional
+from typing import Dict, List
 
 from pyulog import ULog
+import simplejson as json
 
 from plotting.pdf_report import create_pdf_report
 from log_processing.custom_exceptions import PreconditionError
@@ -33,7 +35,7 @@ def get_arguments():
     return parser.parse_args()
 
 
-def analyse_logdata_ekf(ulog: ULog) -> Dict[str, tuple]:
+def analyse_logdata_ekf(ulog: ULog) -> List[dict]:
     """
     perform the analysis
     :param ulog:
@@ -47,47 +49,27 @@ def analyse_logdata_ekf(ulog: ULog) -> Dict[str, tuple]:
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status_data)
     ecl_check_runner = EclCheckRunner(ulog, innov_flags)
     ecl_check_runner.run_checks()
-    test_results = ecl_check_runner.results_table
+    test_results = ecl_check_runner.results_deserialized
 
     return test_results
 
 
-def get_master_status_from_test_results(
-            test_results: Dict[str, tuple]) -> Tuple[str, str, Optional[str]]:
+def get_master_status_from_test_results(test_results: List[dict]) -> str:
     """
     :param test_results:
     :return:
     """
     master_status = 'Pass'
-    for _, entry in test_results.items():
-        if entry[0] == 'Warning' and master_status == 'Pass':
+    for test_result in test_results:
+        if test_result['status'] == 'CHECK_STATUS_WARNING' and master_status == 'Pass':
             master_status = 'Warning'
-        elif entry[0] == 'Fail':
+        elif test_result['status'] == 'CHECK_STATUS_FAIL':
             master_status = 'Fail'
             break
-    return (master_status, '', None)
+    return master_status
 
 
-def write_test_results_to_csv(filename: str, test_results: Dict[str, tuple]) -> None:
-    """
-    :param filename:
-    :param test_results:
-    :return:
-    """
-    # write metadata to a .csv file
-    with open('{:s}.mdat.csv'.format(filename), "w") as file:
-        file.write("name,value,description\n")
-
-        # loop through the test results dictionary and write each entry on a separate row,
-        # with data comma separated save data in alphabetical order
-        key_list = list(test_results.keys())
-        key_list.sort()
-        for key in key_list:
-            file.write(key + "," + str(test_results[key][0]) + "," + test_results[key][1] + "\n")
-    print('Test results written to {:s}.mdat.csv'.format(filename))
-
-
-def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
+def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
     """
     main function for processing the logdata for ekf analysis.
     :param filename:
@@ -101,9 +83,8 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> Dict[str, tuple]:
 
     test_results = analyse_logdata_ekf(ulog)
 
-    test_results['master_status'] = get_master_status_from_test_results(test_results)
-
-    write_test_results_to_csv(filename, test_results)
+    with open('{:s}.json'.format(os.path.splitext(filename)[0]), 'w') as file:
+        json.dump(test_results, file, indent=2)
 
     if plot:
         create_pdf_report(ulog, '{:s}.pdf'.format(filename))
@@ -126,12 +107,14 @@ def main() -> None:
         print(str(e))
         sys.exit(-1)
 
+    master_status = get_master_status_from_test_results(test_results)
+
     # print master test status to console
-    if test_results['master_status'][0] == 'Pass':
+    if master_status == 'Pass':
         print('No anomalies detected')
-    elif test_results['master_status'][0] == 'Warning':
+    elif master_status == 'Warning':
         print('Minor anomalies detected')
-    elif test_results['master_status'][0] == 'Fail':
+    elif master_status == 'Fail':
         print('Major anomalies detected')
         sys.exit(-1)
 

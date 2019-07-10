@@ -7,6 +7,7 @@ import os
 import csv
 from tempfile import TemporaryDirectory
 
+import simplejson as json
 import pytest
 
 from process_logdata_ekf import process_logdata_ekf
@@ -31,7 +32,7 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
     """
 
     golden_result_filename = os.path.join(
-        log_file_path, '{:s}_golden.mdat.csv'.format(os.path.splitext(log_filename)[0]))
+        log_file_path, '{:s}_golden.json'.format(os.path.splitext(log_filename)[0]))
 
     with TemporaryDirectory() as tmp_dir:
 
@@ -43,18 +44,16 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
 
         process_logdata_ekf(tmp_log_filename, plot=False)
 
-        analysis_result_filename = os.path.join(tmp_dir, '{:s}.mdat.csv'.format(tmp_log_filename))
+        analysis_result_filename = os.path.join(tmp_dir, '{:s}.json'.format(tmp_log_filename))
 
-        assert os.path.exists(analysis_result_filename)
+        assert os.path.exists(analysis_result_filename), '{:s} does not exist.'.format(
+            analysis_result_filename)
 
         with open(analysis_result_filename, 'r') as file:
-            reader = csv.DictReader(file)
-            analysis_results = {row['name']: row['value'] for row in reader}
-
+            analysis_results = json.load(file)
 
         with open(golden_result_filename, 'r') as file:
-            reader = csv.DictReader(file)
-            golden_results = {row['name']: row['value'] for row in reader}
+            golden_results = json.load(file)
 
         print('comparing analysis to golden results')
         print('result_name; value; golden_value')
