@@ -8,7 +8,8 @@ from typing import List, Set, Dict
 from log_processing.custom_exceptions import PreconditionError, capture_exception
 from checks.base_check import Check
 from grpc_interfaces.check_data_pb2 import CheckResult, CheckType
-from checks.check_data_utils import deserialize_check_result, check_status_str_from_enum
+from checks.check_data_utils import deserialize_check_results, deserialize_check_result, \
+    check_status_str_from_enum
 
 
 class CheckRunner():
@@ -99,6 +100,13 @@ class CheckRunner():
         :return:
         """
         return self._check_results
+
+    @property
+    def results_deserialized(self) -> List[dict]:
+        """
+        :return:
+        """
+        return deserialize_check_results(self._check_results)
 
 
     @property
