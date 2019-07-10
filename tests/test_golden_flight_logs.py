@@ -9,7 +9,7 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-from process_logdata_ekf import process_logdata_ekf_configured
+from process_logdata_ekf import process_logdata_ekf
 
 @pytest.fixture(scope="module")
 def testing_args():
@@ -39,9 +39,9 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
 
         os.system('cp {:s} {:s}'.format(log_filename, tmp_log_filename))
 
-        assert os.path.exists(tmp_log_filename)
+        assert os.path.exists(tmp_log_filename), '{:s} does not exist.'.format(tmp_log_filename)
 
-        process_logdata_ekf_configured(tmp_log_filename, plot=False)
+        process_logdata_ekf(tmp_log_filename, plot=False)
 
         analysis_result_filename = os.path.join(tmp_dir, '{:s}.mdat.csv'.format(tmp_log_filename))
 
