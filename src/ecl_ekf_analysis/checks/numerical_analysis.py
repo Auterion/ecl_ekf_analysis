@@ -2,24 +2,18 @@
 """
 the numerical analysis
 """
-from typing import Dict
-
 from pyulog import ULog
 import numpy as np
 
 
 from checks.base_check import Check
-from grpc_interfaces.check_data_pb2 import CheckType
 import grpc_interfaces.check_data_pb2 as check_data_api
-from log_processing.analysis import calculate_windowed_mean_per_airphase, calculate_stat_from_signal
-from analysis.in_air_detector import InAirDetector
-import config.params as params
 import config.thresholds as thresholds
 
 
 class NumericalCheck(Check):
     """
-    the attitude check.
+    the numerical check.
     """
     def __init__(self, ulog: ULog):
         """
@@ -33,5 +27,10 @@ class NumericalCheck(Check):
         """
         :return:
         """
+        estimator_status_data = self.ulog.get_dataset('estimator_status').data
+
         filter_fault_flag = self.add_statistic(
             check_data_api.CHECK_STATISTIC_TYPE_ECL_FILTER_FAULT_FLAG)
+        filter_fault_flag.value = float(
+            np.amax(estimator_status_data['filter_fault_flags']))
+        filter_fault_flag.thresholds.failure.value = thresholds.ecl_filter_fault_flag_failure()

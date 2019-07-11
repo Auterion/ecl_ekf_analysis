@@ -152,36 +152,58 @@ class IMU_Output_Predictor_Check(Check):
         :return:
         """
         imu_metrics = self.calculate_metrics()
+        ekf2_innovation_data = self.ulog.get_dataset('ekf2_innovations').data
 
-        # observed angle error statistic
+        # observed angle error statistic average
+        imu_observed_angle_error_avg = self.add_statistic(
+            check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_ANGLE_ERROR_AVG)
+        imu_observed_angle_error_avg.value = float(calculate_stat_from_signal(
+            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[0]',
+            self._in_air_detector_no_ground_effects, np.median))
+        imu_observed_angle_error_avg.thresholds.warning.value = \
+            thresholds.imu_observed_angle_error_warning_avg()
+
+        # observed angle error statistic average windowed
         imu_observed_angle_error_windowed_avg = self.add_statistic(
             check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG)
 
         imu_observed_angle_error_windowed_avg.value = float(max(
-            [np.max(metric) for _, metric in imu_metrics['output_obs_ang_err_median_windowed_mean']]
+            [metric.max() for _, metric in imu_metrics['output_obs_ang_err_median_windowed_mean']]
         ))
-        imu_observed_angle_error_windowed_avg.thresholds.warning.value = \
-            thresholds.imu_observed_angle_error_warning_avg()
 
-        # observed velocity error statistic
+        # observed velocity error statistic average
+        imu_observed_velocity_error_avg = self.add_statistic(
+            check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_VELOCITY_ERROR_AVG)
+        imu_observed_velocity_error_avg.value = float(calculate_stat_from_signal(
+            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[1]',
+            self._in_air_detector_no_ground_effects, np.median))
+        imu_observed_velocity_error_avg.thresholds.warning.value = \
+            thresholds.imu_observed_velocity_error_warning_avg()
+
+        # observed velocity error statistic average windowed
         imu_observed_velocity_error_windowed_avg = self.add_statistic(
             check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG)
 
         imu_observed_velocity_error_windowed_avg.value = float(max(
-            [np.max(metric) for _, metric in imu_metrics['output_obs_vel_err_median_windowed_mean']]
+            [metric.max() for _, metric in imu_metrics['output_obs_vel_err_median_windowed_mean']]
         ))
-        imu_observed_velocity_error_windowed_avg.thresholds.warning.value = \
-            thresholds.imu_observed_velocity_error_warning_avg()
 
-        # observed position error statistic
+        # observed position error statistic average
+        imu_observed_position_error_avg = self.add_statistic(
+            check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_POSITION_ERROR_AVG)
+        imu_observed_position_error_avg.value = float(calculate_stat_from_signal(
+            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[2]',
+            self._in_air_detector_no_ground_effects, np.median))
+        imu_observed_position_error_avg.thresholds.warning.value = \
+            thresholds.imu_observed_position_error_warning_avg()
+
+        # observed position error statistic average windowed
         imu_observed_position_error_windowed_avg = self.add_statistic(
             check_data_api.CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG)
 
         imu_observed_position_error_windowed_avg.value = float(max(
-            [np.max(metric) for _, metric in imu_metrics['output_obs_pos_err_median_windowed_mean']]
+            [metric.max() for _, metric in imu_metrics['output_obs_pos_err_median_windowed_mean']]
         ))
-        imu_observed_position_error_windowed_avg.thresholds.warning.value = \
-            thresholds.imu_observed_position_error_warning_avg()
 
 
 class IMU_Vibration_Check(Check):

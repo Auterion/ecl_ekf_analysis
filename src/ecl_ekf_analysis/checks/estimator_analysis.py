@@ -22,7 +22,7 @@ class EstimatorCheck(Check):
     the attitude check.
     """
     def __init__(
-            self, ulog: ULog, innov_flags: Dict[str, float],
+            self, ulog: ULog, innov_flags: Dict[str, float], control_mode_flags: Dict[str, float],
             check_type: CheckType = check_data_api.CHECK_TYPE_UNDEFINED, check_id: str = '',
             test_ratio_name: Optional[str] = '', innov_fail_names: List[str] = list()):
         """
@@ -36,6 +36,7 @@ class EstimatorCheck(Check):
         super(EstimatorCheck, self).__init__(
             ulog, check_type=check_type)
         self._innov_flags = innov_flags
+        self._control_mode_flags = control_mode_flags
         self._check_id = check_id
         self._test_ratio_name = test_ratio_name
         self._innov_fail_names = innov_fail_names
@@ -198,67 +199,128 @@ class MagnetometerCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(MagnetometerCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_MAGNETOMETER_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_MAGNETOMETER_STATUS,
             check_id = 'magnetometer', test_ratio_name = 'mag_test_ratio',
             innov_fail_names = ['magx_innov_fail', 'magy_innov_fail', 'magz_innov_fail'])
+
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self._control_mode_flags['yaw_aligned']) > 0.5:
+            return True
+        else:
+            return False
 
 
 class MagneticHeadingCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(MagneticHeadingCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_MAGNETIC_HEADING_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_MAGNETIC_HEADING_STATUS,
             check_id = 'yaw', test_ratio_name = None, innov_fail_names = ['yaw_innov_fail'])
+
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self._control_mode_flags['yaw_aligned']) > 0.5:
+            return True
+        else:
+            return False
 
 
 class VelocityCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(VelocityCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_VELOCITY_SENSOR_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_VELOCITY_SENSOR_STATUS,
             check_id = 'velocity', test_ratio_name = 'vel_test_ratio',
             innov_fail_names = ['vel_innov_fail'])
+
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self._control_mode_flags['using_gps']) > 0.5:
+            return True
+        else:
+            return False
 
 
 class PositionCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(PositionCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_POSITION_SENSOR_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_POSITION_SENSOR_STATUS,
             check_id = 'position', test_ratio_name = 'pos_test_ratio',
             innov_fail_names = ['posh_innov_fail'])
+
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if params.ecl_pos_checks_when_sensors_not_fused() or np.amax(
+                self._control_mode_flags['using_gps']) > 0.5 or np.amax(
+            self._control_mode_flags['using_evpos']) > 0.5:
+            return True
+        else:
+            return False
 
 
 class HeightCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(HeightCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_HEIGHT_SENSOR_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_HEIGHT_SENSOR_STATUS,
             check_id = 'height', test_ratio_name = 'hgt_test_ratio',
             innov_fail_names = ['posv_innov_fail'])
 
@@ -267,43 +329,82 @@ class HeightAboveGroundCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(HeightAboveGroundCheck, self).__init__(
-            ulog, innov_flags,
+            ulog, innov_flags, control_mode_flags,
             check_type=check_data_api.CHECK_TYPE_ECL_HEIGHT_ABOVE_GROUND_SENSOR_STATUS,
             check_id = 'height_above_ground', test_ratio_name = 'hagl_test_ratio',
             innov_fail_names = ['hagl_innov_fail'])
+
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self.ulog.get_dataset('estimator_status').data['hagl_test_ratio']) > 0.0:
+            return True
+        else:
+            return False
 
 
 class AirspeedCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(AirspeedCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_AIRSPEED_SENSOR_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_AIRSPEED_SENSOR_STATUS,
             check_id = 'airspeed', test_ratio_name = 'tas_test_ratio',
             innov_fail_names = ['tas_innov_fail'])
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self.ulog.get_dataset('estimator_status').data['tas_test_ratio']) > 0.0:
+            return True
+        else:
+            return False
 
 
 class SideSlipCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(SideSlipCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_SIDESLIP_SENSOR_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_SIDESLIP_SENSOR_STATUS,
             check_id='side_slip', test_ratio_name = 'beta_test_ratio',
             innov_fail_names = ['sli_innov_fail'])
+
+    def _precondition(self) -> bool:
+        """
+        :return:
+        """
+        if np.amax(self.ulog.get_dataset('estimator_status').data['beta_test_ratio']) > 0.0:
+            return True
+        else:
+            return False
 
 
 
@@ -311,32 +412,26 @@ class OpticalFlowCheck(EstimatorCheck):
     """
     the compass check
     """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
         """
         :param ulog:
         """
         super(OpticalFlowCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_OPTICAL_FLOW_STATUS,
+            ulog, innov_flags, control_mode_flags,
+            check_type=check_data_api.CHECK_TYPE_ECL_OPTICAL_FLOW_STATUS,
             check_id='optical_flow', test_ratio_name=None,
             innov_fail_names=['ofx_innov_fail', 'ofy_innov_fail'])
 
 
-'''
-class FilterFaultCheck(EstimatorCheck):
-    """
-    the compass check
-    """
-    def __init__(self, ulog: ULog, innov_flags: Dict[str, float]) -> None:
+    def _precondition(self) -> bool:
         """
-        :param ulog:
+        :return:
         """
-        super(FilterFaultCheck, self).__init__(
-            ulog, innov_flags, check_type=check_data_api.CHECK_TYPE_ECL_FILTER_FAULT_STATUS)
-        self._check_id = 'vel'
-        self._test_ratio_name = 'vel_test_ratio'
-        self._innov_fail_name = 'vel_innov_fail'
-        self._in_air_detector = InAirDetector(
-            ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
-            in_air_margin_seconds=params.iad_in_air_margin_seconds())
-        self._in_air_detector_no_ground_effects = self._in_air_detector
-'''
+        if np.amax(self._control_mode_flags['using_optflow']) > 0.5:
+            return True
+        else:
+            return False
+
