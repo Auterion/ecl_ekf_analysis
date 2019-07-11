@@ -10,7 +10,7 @@ from __future__ import print_function
 import argparse
 import os
 import sys
-from typing import Dict, List
+from typing import List
 
 from pyulog import ULog
 import simplejson as json
