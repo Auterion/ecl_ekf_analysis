@@ -25,6 +25,7 @@ class Check():
         self._check_result = CheckResult()
         self._check_result.type = check_type
         self._error_message = ''
+        self._does_apply = True
 
 
     def add_statistic(self, check_statistic_type: CheckStatisticType) -> CheckStatistic:
@@ -59,19 +60,18 @@ class Check():
         """
         return self._check_result.type
 
+
     def calc_statistics(self) -> None:
         """
         function interface for running a check: can use the property _ulog and should set the
         _check_status and write _check_statistics
         """
 
-    def _precondition(self) -> bool:
+    def run_precondition(self) -> None:
         """
-        precondition for running the check. the check status is set to does not apply if the
-        precondition is not met.
-        :return: True by default.
+        precondition function that is being run before running the check. meant to assign the
+        _does_apply member variable. running the check is skipped, if _does_apply is set to False.
         """
-        return True
 
 
     def run(self) -> None:
@@ -79,7 +79,8 @@ class Check():
         runs the check functions for calculating the statistics and calculates the check status
         :return:
         """
-        if not self._precondition():
+        self.run_precondition()
+        if not self._does_apply:
             self._check_result.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
             return
 

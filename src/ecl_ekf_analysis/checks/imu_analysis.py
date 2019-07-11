@@ -9,7 +9,6 @@ import numpy as np
 
 
 from checks.base_check import Check
-from grpc_interfaces.check_data_pb2 import CheckType
 import grpc_interfaces.check_data_pb2 as check_data_api
 from log_processing.analysis import calculate_windowed_mean_per_airphase, calculate_stat_from_signal
 from analysis.in_air_detector import InAirDetector
@@ -74,7 +73,7 @@ class IMU_Bias_Check(Check):
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
                 estimator_status_data, 'estimator_status', signal,
                 self._in_air_detector_no_ground_effects, np.median)) for signal in
-                ['states[10]', 'states[11]', 'states[12]']])))
+                            ['states[10]', 'states[11]', 'states[12]']])))
         imu_delta_angle_bias_avg.thresholds.warning.value = \
             thresholds.imu_delta_angle_bias_warning_avg()
 
@@ -95,7 +94,7 @@ class IMU_Bias_Check(Check):
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
                 estimator_status_data, 'estimator_status', signal,
                 self._in_air_detector_no_ground_effects, np.median)) for signal in
-                ['states[13]', 'states[14]', 'states[15]']])))
+                            ['states[13]', 'states[14]', 'states[15]']])))
         imu_delta_velocity_bias_avg.thresholds.warning.value = \
             thresholds.imu_delta_velocity_bias_warning_avg()
 
