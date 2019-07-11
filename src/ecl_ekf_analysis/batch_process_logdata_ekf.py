@@ -10,7 +10,7 @@ import argparse
 import os
 import glob
 
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
+from process_logdata_ekf import process_logdata_ekf
 
 
 def get_arguments():
@@ -28,15 +28,7 @@ def get_arguments():
              'for a .ulg file, the log file will be skipped from analysis unless this flag has '
              'been set.')
     parser.add_argument('--no-plots', action='store_true',
-                        help='Whether to only analyse and not plot the summaries for the analysis.')
-    parser.add_argument('--check-level-thresholds', type=str, default=None,
-                        help='The csv file of fail and warning test thresholds used for analysis.')
-    parser.add_argument('--check-table', type=str, default=None,
-                        help='The csv file with descriptions of the analysis checks.')
-    parser.add_argument(
-        '--no-sensor-safety-margin', action='store_true',
-        help='Whether to not cut-off 5s after take-off and 5s before landing '
-             '(for certain sensors that might be influence by proximity to ground).')
+                        help='Whether to only analyse and not plot the summaries for developers.')
     return parser.parse_args()
 
 
@@ -47,18 +39,6 @@ def main() -> None:
     """
 
     args = get_arguments()
-
-    if args.check_level_thresholds is not None:
-        check_level_dict_filename = args.check_level_thresholds
-    else:
-        file_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        check_level_dict_filename = os.path.join(file_dir, "check_level_dict.csv")
-
-    if args.check_table is not None:
-        check_table_filename = args.check_table
-    else:
-        file_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        check_table_filename = os.path.join(file_dir, "check_table.csv")
 
     ulog_directory = args.directory_path
 
@@ -71,7 +51,7 @@ def main() -> None:
     if not args.overwrite:
         print("skipping already analysed ulg files.")
         ulog_files = [ulog_file for ulog_file in ulog_files if
-                      not os.path.exists('{}.pdf'.format(ulog_file))]
+                      not os.path.exists('{:s}.json'.format(os.path.splitext(ulog_file)[0]))]
 
     n_files = len(ulog_files)
 
@@ -84,9 +64,7 @@ def main() -> None:
         print('analysing file {:d}/{:d}: {:s}'.format(i, n_files, ulog_file))
 
         try:
-            _ = process_logdata_ekf(
-                ulog_file, check_level_dict_filename, check_table_filename,
-                plot=not args.no_plots, sensor_safety_margins=not args.no_sensor_safety_margin)
+            _ = process_logdata_ekf(ulog_file, plot=not args.no_plots)
 
         except Exception as e:
             print(str(e))
