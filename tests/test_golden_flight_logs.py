@@ -4,13 +4,13 @@ Running the analysis over a couple of golden flight logs.
 """
 
 import os
-import csv
 from tempfile import TemporaryDirectory
 
 import simplejson as json
 import pytest
 
 from process_logdata_ekf import process_logdata_ekf
+from checks.comparison import compare_check_analysis_result_ground_truth
 
 @pytest.fixture(scope="module")
 def testing_args():
@@ -44,7 +44,8 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
 
         process_logdata_ekf(tmp_log_filename, plot=False)
 
-        analysis_result_filename = os.path.join(tmp_dir, '{:s}.json'.format(tmp_log_filename))
+        analysis_result_filename = os.path.join(
+            tmp_dir, '{:s}.json'.format(os.path.splitext(tmp_log_filename)[0]))
 
         assert os.path.exists(analysis_result_filename), '{:s} does not exist.'.format(
             analysis_result_filename)
@@ -56,14 +57,13 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
             golden_results = json.load(file)
 
         print('comparing analysis to golden results')
-        print('result_name; value; golden_value')
-        for result_name, golden_value in golden_results.items():
-            print('{:s}; {:s}; {:s}'.format(
-                result_name, str(analysis_results[result_name]), str(golden_value)))
-            if isinstance(golden_value, float):
-                assert golden_value == pytest.approx(analysis_results[result_name])
-            else:
-                assert golden_value == analysis_results[result_name]
+
+        for local_analysis_check, golden_analysis_check in zip(analysis_results, golden_results):
+            print('{:s}'.format(local_analysis_check['type']))
+            compare_check_analysis_result_ground_truth(
+                local_analysis_check, golden_analysis_check,
+                os.path.splitext(os.path.basename(tmp_log_filename))[0])
+
 
 
 def test_golden_flight_logs(testing_args):

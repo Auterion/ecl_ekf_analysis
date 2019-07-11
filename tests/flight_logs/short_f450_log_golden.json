@@ -1,0 +1,572 @@
+[
+  {
+    "status": "CHECK_STATUS_FAIL",
+    "type": "CHECK_TYPE_ECL_MAGNETOMETER_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_PCT",
+        "value": 12.21294363256785,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT",
+        "value": 3.653444676409187,
+        "thresholds": {
+          "warning": 5.0,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_WINDOWED_PCT",
+        "value": 27.210883796215057,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_WINDOWED_PCT",
+        "value": 42.17686988413334,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_MAX",
+        "value": 2.420034885406494,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_AVG",
+        "value": 0.33545294404029846,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_WINDOWED_AVG",
+        "value": 0.3395399749279022,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 20.668058455114824,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 76.19047462940216,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_MAGNETIC_HEADING_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_VELOCITY_SENSOR_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT",
+        "value": 0.05089058524173028,
+        "thresholds": {
+          "warning": 5.0,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_WINDOWED_PCT",
+        "value": 0.6802720949053764,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_MAX",
+        "value": 0.5093812346458435,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_AVG",
+        "value": 0.09788551181554794,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_WINDOWED_AVG",
+        "value": 0.098329558968544,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_POSITION_SENSOR_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 5.0,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_MAX",
+        "value": 0.13065417110919952,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_AVG",
+        "value": 0.03778509795665741,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_WINDOWED_AVG",
+        "value": 0.03904018923640251,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_HEIGHT_SENSOR_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT",
+        "value": 0.20876826722338201,
+        "thresholds": {
+          "warning": 5.0,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_WINDOWED_PCT",
+        "value": 2.0408162847161293,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_MAX",
+        "value": 0.6475272178649902,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_AVG",
+        "value": 0.053101375699043274,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_WINDOWED_AVG",
+        "value": 0.054602913558483124,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_DOES_NOT_APPLY",
+    "type": "CHECK_TYPE_ECL_HEIGHT_ABOVE_GROUND_SENSOR_STATUS",
+    "statistics": []
+  },
+  {
+    "status": "CHECK_STATUS_DOES_NOT_APPLY",
+    "type": "CHECK_TYPE_ECL_AIRSPEED_SENSOR_STATUS",
+    "statistics": []
+  },
+  {
+    "status": "CHECK_STATUS_DOES_NOT_APPLY",
+    "type": "CHECK_TYPE_ECL_SIDESLIP_SENSOR_STATUS",
+    "statistics": []
+  },
+  {
+    "status": "CHECK_STATUS_DOES_NOT_APPLY",
+    "type": "CHECK_TYPE_ECL_OPTICAL_FLOW_STATUS",
+    "statistics": []
+  },
+  {
+    "status": "CHECK_STATUS_WARNING",
+    "type": "CHECK_TYPE_ECL_IMU_VIBRATION_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_CONING_MAX",
+        "value": 1.4525997357850429e-05,
+        "thresholds": {
+          "warning": 1.8e-05,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_CONING_AVG",
+        "value": 1.8058575506074703e-06,
+        "thresholds": {
+          "warning": 3.6e-06,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_CONING_WINDOWED_AVG",
+        "value": 4.937323865306098e-06,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_ANGLE_MAX",
+        "value": 0.003721016924828291,
+        "thresholds": {
+          "warning": 0.003,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_ANGLE_AVG",
+        "value": 0.0017624606844037771,
+        "thresholds": {
+          "warning": 0.0006,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG",
+        "value": 0.0023362908978015184,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_VELOCITY_MAX",
+        "value": 0.07891786098480225,
+        "thresholds": {
+          "warning": 0.09,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_VELOCITY_AVG",
+        "value": 0.031774476170539856,
+        "thresholds": {
+          "warning": 0.018,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG",
+        "value": 0.04837441444396973,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_IMU_BIAS_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_DELTA_ANGLE_BIAS_AVG",
+        "value": 1.3343967615975286e-05,
+        "thresholds": {
+          "warning": 0.00044,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG",
+        "value": 2.2321219688768345e-05,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_DELTA_VELOCITY_BIAS_AVG",
+        "value": 0.0012356483338333093,
+        "thresholds": {
+          "warning": 0.0048,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG",
+        "value": 0.0020475090258861624,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_IMU_OUTPUT_PREDICTOR_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_ANGLE_ERROR_AVG",
+        "value": 0.0009283827384933829,
+        "thresholds": {
+          "warning": 0.008,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG",
+        "value": 0.0030048582702875137,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_VELOCITY_ERROR_AVG",
+        "value": 0.02307303063571453,
+        "thresholds": {
+          "warning": 0.05,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG",
+        "value": 0.07632311433553696,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_POSITION_ERROR_AVG",
+        "value": 0.06205093488097191,
+        "thresholds": {
+          "warning": 0.15,
+          "failure": 0.0
+        }
+      },
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG",
+        "value": 0.2239716351032257,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "status": "CHECK_STATUS_PASS",
+    "type": "CHECK_TYPE_ECL_FILTER_FAULT_STATUS",
+    "statistics": [
+      {
+        "type": "CHECK_STATISTIC_TYPE_ECL_FILTER_FAULT_FLAG",
+        "value": 0.0,
+        "thresholds": {
+          "warning": 0.0,
+          "failure": 0.5
+        }
+      }
+    ]
+  }
+]

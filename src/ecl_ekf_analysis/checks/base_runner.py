@@ -8,6 +8,7 @@ from typing import List, Set, Dict
 from log_processing.custom_exceptions import PreconditionError, capture_exception
 from checks.base_check import Check
 from grpc_interfaces.check_data_pb2 import CheckResult, CheckType
+import grpc_interfaces.check_data_pb2 as check_data_api
 from checks.check_data_utils import deserialize_check_results, deserialize_check_result, \
     check_status_str_from_enum
 
@@ -25,7 +26,6 @@ class CheckRunner():
         self._error_message = ''
         self._check_results = list()
         self._results_table = list()
-        self._check_does_not_apply = set()
 
 
     def append(self, check: Check):
@@ -65,19 +65,19 @@ class CheckRunner():
             except PreconditionError as e:
                 analyses_statuses.append(-3)
                 capture_exception(e)
-                self._check_does_not_apply.add(CheckType.Name(check.type))
+                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
             except RuntimeError as e:
                 analyses_statuses.append(-2)
                 capture_exception(e)
-                self._check_does_not_apply.add(CheckType.Name(check.type))
+                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
             except Exception as e:
                 analyses_statuses.append(-1)
                 capture_exception(e)
-                self._check_does_not_apply.add(CheckType.Name(check.type))
+                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
 
@@ -130,7 +130,9 @@ class CheckRunner():
         """
         :return: a set with checks that don't apply
         """
-        return self._check_does_not_apply
+        return {CheckType.Name(check.type) for check in self._check_results
+                if check.status == check_data_api.CHECK_STATUS_DOES_NOT_APPLY}
+
 
     @property
     def error_message(self) -> str:

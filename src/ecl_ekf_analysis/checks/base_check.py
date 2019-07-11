@@ -65,11 +65,24 @@ class Check():
         _check_status and write _check_statistics
         """
 
+    def _precondition(self) -> bool:
+        """
+        precondition for running the check. the check status is set to does not apply if the
+        precondition is not met.
+        :return: True by default.
+        """
+        return True
+
+
     def run(self) -> None:
         """
         runs the check functions for calculating the statistics and calculates the check status
         :return:
         """
+        if not self._precondition():
+            self._check_result.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
+            return
+
         self.calc_statistics()
 
         for statistic in self._check_result.statistics:

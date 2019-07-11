@@ -127,7 +127,6 @@ def get_gps_check_fail_flags(estimator_status: dict) -> dict:
 
 def magnetic_field_estimates_from_status(estimator_status: dict) -> Tuple[float, float, float]:
     """
-
     :param estimator_status:
     :return:
     """

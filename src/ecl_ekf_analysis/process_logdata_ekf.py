@@ -47,7 +47,7 @@ def analyse_logdata_ekf(ulog: ULog) -> List[dict]:
     except:
         raise PreconditionError('could not find estimator_status data')
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status_data)
-    ecl_check_runner = EclCheckRunner(ulog, innov_flags)
+    ecl_check_runner = EclCheckRunner(ulog, innov_flags, control_mode)
     ecl_check_runner.run_checks()
     test_results = ecl_check_runner.results_deserialized
 
