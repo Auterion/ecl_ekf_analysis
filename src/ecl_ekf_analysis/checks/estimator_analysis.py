@@ -7,7 +7,6 @@ from typing import Dict, List, Optional
 from pyulog import ULog
 import numpy as np
 
-
 from checks.base_check import Check
 from check_data_interfaces.check_data import CheckType, CheckStatisticType
 from log_processing.analysis import calculate_windowed_mean_per_airphase, calculate_stat_from_signal

@@ -5,7 +5,6 @@ the numerical analysis
 from pyulog import ULog
 import numpy as np
 
-
 from checks.base_check import Check
 from check_data_interfaces.check_data import CheckType, CheckStatisticType
 import config.thresholds as thresholds
