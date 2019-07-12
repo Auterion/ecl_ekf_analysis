@@ -6,11 +6,9 @@ base check runner class
 from typing import List, Set, Dict
 
 from log_processing.custom_exceptions import PreconditionError, capture_exception
-from grpc_interfaces.check_data_pb2 import CheckResult, CheckType
-import grpc_interfaces.check_data_pb2 as check_data_api
+from check_data_interfaces.check_data import CheckResult, CheckStatus
 from checks.base_check import Check
-from checks.check_data_utils import deserialize_check_results, deserialize_check_result, \
-    check_status_str_from_enum
+from checks.check_data_utils import deserialize_check_results, deserialize_check_result
 
 
 class CheckRunner():
@@ -43,8 +41,8 @@ class CheckRunner():
         """
         results_table = dict()
         for check_result in self._check_results:
-            check_name = CheckType.Name(check_result.type)
-            check_status = check_status_str_from_enum.get(check_result.status, 'Undefined')
+            check_name = check_result.check_type.name
+            check_status = check_result.status.legacy_name
             check_data = deserialize_check_result(check_result)
             results_table[check_name] = (check_status, '', check_data)
 
@@ -65,19 +63,19 @@ class CheckRunner():
             except PreconditionError as e:
                 analyses_statuses.append(-3)
                 capture_exception(e)
-                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
+                check.status = CheckStatus.DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
             except RuntimeError as e:
                 analyses_statuses.append(-2)
                 capture_exception(e)
-                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
+                check.status = CheckStatus.DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
             except Exception as e:
                 analyses_statuses.append(-1)
                 capture_exception(e)
-                check.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
+                check.status = CheckStatus.DOES_NOT_APPLY
                 self._error_message += str(e) + '; '
                 print(e)
 
@@ -130,8 +128,8 @@ class CheckRunner():
         """
         :return: a set with checks that don't apply
         """
-        return {CheckType.Name(check.type) for check in self._check_results
-                if check.status == check_data_api.CHECK_STATUS_DOES_NOT_APPLY}
+        return {check.check_type.name for check in self._check_results
+                if check.status == CheckStatus.DOES_NOT_APPLY}
 
 
     @property

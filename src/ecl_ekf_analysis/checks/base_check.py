@@ -4,8 +4,7 @@ base classes for running checks
 """
 from pyulog import ULog
 
-import grpc_interfaces.check_data_pb2 as check_data_api
-from grpc_interfaces.check_data_pb2 import CheckResult, CheckStatistic, CheckType, \
+from check_data_interfaces.check_data import CheckResult, CheckStatistic, CheckType, \
     CheckStatisticType, CheckStatus
 from log_processing.custom_exceptions import capture_message
 
@@ -15,7 +14,7 @@ class Check():
     A check interface.
     """
     def __init__(
-            self, ulog: ULog, check_type: CheckType = check_data_api.CHECK_TYPE_UNDEFINED) -> None:
+            self, ulog: ULog, check_type: CheckType = CheckType.UNDEFINED) -> None:
         """
         Initializes the check interface.
         :param ulog: a handle to the open ulog file
@@ -23,7 +22,7 @@ class Check():
         """
         self.ulog = ulog
         self._check_result = CheckResult()
-        self._check_result.type = check_type
+        self._check_result.check_type = check_type
         self._error_message = ''
         self._does_apply = True
 
@@ -35,7 +34,7 @@ class Check():
         :return:
         """
         statistic = self._check_result.statistics.add()
-        statistic.type = check_statistic_type
+        statistic.statistic_type = check_statistic_type
         return statistic
 
 
@@ -46,6 +45,7 @@ class Check():
         """
         return self._check_result.status
 
+
     @property
     def result(self) -> CheckResult:
         """
@@ -53,12 +53,13 @@ class Check():
         """
         return self._check_result
 
+
     @property
-    def type(self) -> check_data_api.CheckType:
+    def check_type(self) -> CheckType:
         """
         :return:
         """
-        return self._check_result.type
+        return self._check_result.check_type
 
 
     def calc_statistics(self) -> None:
@@ -66,6 +67,7 @@ class Check():
         function interface for running a check: can use the property _ulog and should set the
         _check_status and write _check_statistics
         """
+
 
     def run_precondition(self) -> None:
         """
@@ -81,24 +83,24 @@ class Check():
         """
         self.run_precondition()
         if not self._does_apply:
-            self._check_result.status = check_data_api.CHECK_STATUS_DOES_NOT_APPLY
+            self._check_result.status = CheckStatus.DOES_NOT_APPLY
             return
 
         self.calc_statistics()
 
         for statistic in self._check_result.statistics:
 
-            if statistic.type == check_data_api.CHECK_STATISTIC_TYPE_UNDEFINED:
+            if statistic.statistic_type == CheckStatisticType.UNDEFINED:
                 capture_message('Warning: check statistics type is undefined')
 
-            if self._check_result.status == check_data_api.CHECK_STATUS_UNDEFINED:
-                self._check_result.status = check_data_api.CHECK_STATUS_PASS
+            if self._check_result.status == CheckStatus.UNDEFINED:
+                self._check_result.status = CheckStatus.PASS
 
-            if statistic.HasField('thresholds'):
-                if statistic.thresholds.HasField('failure') and \
-                    statistic.value > statistic.thresholds.failure.value:
-                    self._check_result.status = check_data_api.CHECK_STATUS_FAIL
-                if statistic.thresholds.HasField('warning') and \
-                    statistic.value > statistic.thresholds.warning.value:
-                    if self._check_result.status != check_data_api.CHECK_STATUS_FAIL:
-                        self._check_result.status = check_data_api.CHECK_STATUS_WARNING
+            if statistic.value is not None:
+                if statistic.thresholds.failure is not None and \
+                    statistic.value > statistic.thresholds.failure:
+                    self._check_result.status = CheckStatus.FAIL
+                if statistic.thresholds.warning is not None and \
+                    statistic.value > statistic.thresholds.warning:
+                    if self._check_result.status != CheckStatus.FAIL:
+                        self._check_result.status = CheckStatus.WARNING

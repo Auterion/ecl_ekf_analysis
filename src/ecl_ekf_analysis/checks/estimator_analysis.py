@@ -9,8 +9,7 @@ import numpy as np
 
 
 from checks.base_check import Check
-from grpc_interfaces.check_data_pb2 import CheckType
-import grpc_interfaces.check_data_pb2 as check_data_api
+from check_data_interfaces.check_data import CheckType, CheckStatisticType
 from log_processing.analysis import calculate_windowed_mean_per_airphase, calculate_stat_from_signal
 from analysis.in_air_detector import InAirDetector
 import config.params as params
@@ -23,7 +22,7 @@ class EstimatorCheck(Check):
     """
     def __init__(
             self, ulog: ULog, innov_flags: Dict[str, float], control_mode_flags: Dict[str, float],
-            check_type: CheckType = check_data_api.CHECK_TYPE_UNDEFINED, check_id: str = '',
+            check_type: CheckType = CheckType.UNDEFINED, check_id: str = '',
             test_ratio_name: Optional[str] = '', innov_fail_names: Optional[List[str]] = None):
         """
         :param ulog:
@@ -113,41 +112,41 @@ class EstimatorCheck(Check):
         estimator_status_metrics = self.calc_estimator_status_metrics()
 
         innov_red_pct = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_PCT)
+            CheckStatisticType.INNOVATION_RED_PCT)
         innov_red_pct.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name,
             self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
 
         #TODO: remove subtraction of innov_red_pct and tune parameters
         innov_amber_pct = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_PCT)
+            CheckStatisticType.INNOVATION_AMBER_PCT)
         innov_amber_pct.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name, self._in_air_detector,
             lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
-        innov_amber_pct.thresholds.warning.value = thresholds.ecl_amber_warning_pct(self._check_id)
-        innov_amber_pct.thresholds.failure.value = thresholds.ecl_amber_failure_pct(self._check_id)
+        innov_amber_pct.thresholds.warning = thresholds.ecl_amber_warning_pct(self._check_id)
+        innov_amber_pct.thresholds.failure = thresholds.ecl_amber_failure_pct(self._check_id)
 
         innov_red_windowed_pct = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_INNOVATION_RED_WINDOWED_PCT)
+            CheckStatisticType.INNOVATION_RED_WINDOWED_PCT)
         innov_red_windowed_pct.value = float(max(
             [np.max(metric) for _, metric in estimator_status_metrics[
                 '{:s}_percentage_red_windowed'.format(self._check_id)]]))
 
         innov_amber_windowed_pct = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_INNOVATION_AMBER_WINDOWED_PCT)
+            CheckStatisticType.INNOVATION_AMBER_WINDOWED_PCT)
         innov_amber_windowed_pct.value = float(max(
             [np.max(metric) for _, metric in estimator_status_metrics[
                 '{:s}_percentage_amber_windowed'.format(self._check_id)]]))
 
         # the max and mean ratio of samples above / below std dev
         test_ratio_max = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_MAX)
+            CheckStatisticType.ESTIMATOR_FAILURE_MAX)
         test_ratio_max.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name,
             self._in_air_detector, np.amax))
 
         test_ratio_avg = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_AVG)
+            CheckStatisticType.ESTIMATOR_FAILURE_AVG)
         test_ratio_avg.value = float(0.0)
 
         if test_ratio_max.value > 0.0:
@@ -156,7 +155,7 @@ class EstimatorCheck(Check):
                 self._in_air_detector, np.mean))
 
         test_ratio_windowed_avg = self.add_statistic(
-            check_data_api.CHECK_STATISTIC_TYPE_ECL_ESTIMATOR_FAILURE_WINDOWED_AVG)
+            CheckStatisticType.ESTIMATOR_FAILURE_WINDOWED_AVG)
 
         test_ratio_windowed_avg.value = float(max(
             [float(np.mean(metric)) for _, metric in estimator_status_metrics[
@@ -172,16 +171,16 @@ class EstimatorCheck(Check):
 
         for innov_fail_name in self._innov_fail_names:
             innov_stats_fail_pct = self.add_statistic(
-                check_data_api.CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_PCT)
+                CheckStatisticType.FAIL_RATIO_PCT)
 
             innov_stats_fail_pct.value = float(calculate_stat_from_signal(
                 self._innov_flags, 'estimator_status', innov_fail_name,
                 self._in_air_detector_no_ground_effects, lambda x: 100.0 * np.mean(x > 0.5)))
-            innov_stats_fail_pct.thresholds.failure.value = thresholds.ecl_innovation_failure_pct(
+            innov_stats_fail_pct.thresholds.failure = thresholds.ecl_innovation_failure_pct(
                 self._check_id)
 
             innov_stats_fail_windowed_pct = self.add_statistic(
-                check_data_api.CHECK_STATISTIC_TYPE_ECL_FAIL_RATIO_WINDOWED_PCT)
+                CheckStatisticType.FAIL_RATIO_WINDOWED_PCT)
 
             innov_stats_fail_windowed_pct.value = float(max(
                 [np.max(metric) for _, metric in innovation_metrics[
@@ -209,7 +208,7 @@ class MagnetometerCheck(EstimatorCheck):
         """
         super(MagnetometerCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_MAGNETOMETER_STATUS,
+            check_type=CheckType.MAGNETOMETER_STATUS,
             check_id='magnetometer', test_ratio_name='mag_test_ratio',
             innov_fail_names=['magx_innov_fail', 'magy_innov_fail', 'magz_innov_fail'])
 
@@ -234,7 +233,7 @@ class MagneticHeadingCheck(EstimatorCheck):
         """
         super(MagneticHeadingCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_MAGNETIC_HEADING_STATUS,
+            check_type=CheckType.MAGNETIC_HEADING_STATUS,
             check_id='yaw', test_ratio_name=None, innov_fail_names=['yaw_innov_fail'])
 
 
@@ -258,7 +257,7 @@ class VelocityCheck(EstimatorCheck):
         """
         super(VelocityCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_VELOCITY_SENSOR_STATUS,
+            check_type=CheckType.VELOCITY_SENSOR_STATUS,
             check_id='velocity', test_ratio_name='vel_test_ratio',
             innov_fail_names=['vel_innov_fail'])
 
@@ -283,7 +282,7 @@ class PositionCheck(EstimatorCheck):
         """
         super(PositionCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_POSITION_SENSOR_STATUS,
+            check_type=CheckType.POSITION_SENSOR_STATUS,
             check_id='position', test_ratio_name='pos_test_ratio',
             innov_fail_names=['posh_innov_fail'])
 
@@ -310,7 +309,7 @@ class HeightCheck(EstimatorCheck):
         """
         super(HeightCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_HEIGHT_SENSOR_STATUS,
+            check_type=CheckType.HEIGHT_SENSOR_STATUS,
             check_id='height', test_ratio_name='hgt_test_ratio',
             innov_fail_names=['posv_innov_fail'])
 
@@ -328,7 +327,7 @@ class HeightAboveGroundCheck(EstimatorCheck):
         """
         super(HeightAboveGroundCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_HEIGHT_ABOVE_GROUND_SENSOR_STATUS,
+            check_type=CheckType.HEIGHT_ABOVE_GROUND_SENSOR_STATUS,
             check_id='height_above_ground', test_ratio_name='hagl_test_ratio',
             innov_fail_names=['hagl_innov_fail'])
 
@@ -354,7 +353,7 @@ class AirspeedCheck(EstimatorCheck):
         """
         super(AirspeedCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_AIRSPEED_SENSOR_STATUS,
+            check_type=CheckType.AIRSPEED_SENSOR_STATUS,
             check_id='airspeed', test_ratio_name='tas_test_ratio',
             innov_fail_names=['tas_innov_fail'])
 
@@ -379,7 +378,7 @@ class SideSlipCheck(EstimatorCheck):
         """
         super(SideSlipCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_SIDESLIP_SENSOR_STATUS,
+            check_type=CheckType.SIDESLIP_SENSOR_STATUS,
             check_id='side_slip', test_ratio_name='beta_test_ratio',
             innov_fail_names=['sli_innov_fail'])
 
@@ -404,7 +403,7 @@ class OpticalFlowCheck(EstimatorCheck):
         """
         super(OpticalFlowCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
-            check_type=check_data_api.CHECK_TYPE_ECL_OPTICAL_FLOW_STATUS,
+            check_type=CheckType.OPTICAL_FLOW_STATUS,
             check_id='optical_flow', test_ratio_name=None,
             innov_fail_names=['ofx_innov_fail', 'ofy_innov_fail'])
 
