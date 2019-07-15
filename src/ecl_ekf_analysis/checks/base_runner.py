@@ -7,8 +7,9 @@ from typing import List, Set, Dict
 
 from log_processing.custom_exceptions import PreconditionError, capture_exception
 from check_data_interfaces.check_data import CheckResult, CheckStatus
+from check_data_interfaces.check_data_utils import deserialize_check_results, \
+    deserialize_check_result
 from checks.base_check import Check
-from checks.check_data_utils import deserialize_check_results, deserialize_check_result
 
 
 class CheckRunner():
