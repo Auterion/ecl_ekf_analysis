@@ -17,7 +17,6 @@ import simplejson as json
 
 from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
-from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
 from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
 
 
@@ -41,13 +40,8 @@ def analyse_logdata_ekf(ulog: ULog) -> List[dict]:
     :param ulog:
     :return:
     """
-    try:
-        estimator_status_data = ulog.get_dataset('estimator_status').data
-        print('found estimator_status data')
-    except:
-        raise PreconditionError('could not find estimator_status data')
-    control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status_data)
-    ecl_check_runner = EclCheckRunner(ulog, innov_flags, control_mode)
+
+    ecl_check_runner = EclCheckRunner(ulog)
     ecl_check_runner.run_checks()
     test_results = ecl_check_runner.results_deserialized
 

@@ -12,6 +12,8 @@ from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, Magnet
 from ecl_ekf_analysis.checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, \
     IMU_Output_Predictor_Check
 from ecl_ekf_analysis.checks.numerical_analysis import NumericalCheck
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
 
 
 class EclCheckRunner(CheckRunner):
@@ -19,13 +21,19 @@ class EclCheckRunner(CheckRunner):
     a runner for performing the load analyses.
 
     """
-    def __init__(
-            self, ulog: ULog, innov_flags: Dict[str, float], control_mode_flags: Dict[str, float]):
+    def __init__(self, ulog: ULog):
         """
         :param ulog:
-        :param check_levels_dict:
         """
         super(EclCheckRunner, self).__init__()
+
+        try:
+            estimator_status_data = ulog.get_dataset('estimator_status').data
+            print('found estimator_status data')
+        except:
+            raise PreconditionError('could not find estimator_status data')
+        control_mode_flags, innov_flags, _ = get_estimator_check_flags(estimator_status_data)
+
         self.append(MagnetometerCheck(ulog, innov_flags, control_mode_flags))
         self.append(MagneticHeadingCheck(ulog, innov_flags, control_mode_flags))
         self.append(VelocityCheck(ulog, innov_flags, control_mode_flags))
