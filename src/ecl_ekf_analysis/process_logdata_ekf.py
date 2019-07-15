@@ -15,10 +15,10 @@ from typing import List
 from pyulog import ULog
 import simplejson as json
 
-from plotting.pdf_report import create_pdf_report
-from log_processing.custom_exceptions import PreconditionError
-from analysis.post_processing import get_estimator_check_flags
-from checks.ecl_check_runner import EclCheckRunner
+from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
+from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
 
 
 def get_arguments():

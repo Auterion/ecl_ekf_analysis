@@ -6,8 +6,8 @@ from typing import Dict, Callable, Tuple, List, Optional
 
 import numpy as np
 
-from analysis.in_air_detector import InAirDetector, Airtime
-from signal_processing.smooth_filt_rolling import smooth_1d_boundaries
+from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector, Airtime
+from ecl_ekf_analysis.signal_processing.smooth_filt_rolling import smooth_1d_boundaries
 
 
 def calculate_stat_from_signal(

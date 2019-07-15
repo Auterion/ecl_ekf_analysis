@@ -3,8 +3,9 @@
 utility functions for check data.
 """
 from typing import List
-from check_data_interfaces.check_data import (CheckResult, CheckStatistic, CheckStatisticType,
-                                              CheckStatus, CheckType)
+from ecl_ekf_analysis.check_data_interfaces.check_data import (CheckResult, CheckStatistic,
+                                                               CheckStatisticType, CheckStatus,
+                                                               CheckType)
 
 def deserialize_check_statistic(check_statistic: CheckStatistic) -> dict:
     """

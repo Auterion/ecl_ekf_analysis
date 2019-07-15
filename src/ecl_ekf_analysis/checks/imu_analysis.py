@@ -7,12 +7,13 @@ from typing import Dict
 from pyulog import ULog
 import numpy as np
 
-from checks.base_check import Check
-from check_data_interfaces.check_data import CheckType, CheckStatisticType
-from log_processing.analysis import calculate_windowed_mean_per_airphase, calculate_stat_from_signal
-from analysis.in_air_detector import InAirDetector
-import config.params as params
-import config.thresholds as thresholds
+from ecl_ekf_analysis.checks.base_check import Check
+from ecl_ekf_analysis.check_data_interfaces.check_data import CheckType, CheckStatisticType
+from ecl_ekf_analysis.log_processing.analysis import calculate_windowed_mean_per_airphase, \
+    calculate_stat_from_signal
+from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
+import ecl_ekf_analysis.config.params as params
+import ecl_ekf_analysis.config.thresholds as thresholds
 
 
 class IMU_Bias_Check(Check):

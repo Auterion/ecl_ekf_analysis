@@ -4,9 +4,9 @@ base classes for running checks
 """
 from pyulog import ULog
 
-from check_data_interfaces.check_data import CheckResult, CheckStatistic, CheckType, \
-    CheckStatisticType, CheckStatus
-from log_processing.custom_exceptions import capture_message
+from ecl_ekf_analysis.check_data_interfaces.check_data import CheckResult, CheckStatistic, \
+    CheckType, CheckStatisticType, CheckStatus
+from ecl_ekf_analysis.log_processing.custom_exceptions import capture_message
 
 
 class Check():

@@ -5,12 +5,13 @@ an estimator check runner class
 from typing import Dict
 from pyulog import ULog
 
-from checks.base_runner import CheckRunner
-from checks.estimator_analysis import MagnetometerCheck, MagneticHeadingCheck, VelocityCheck, \
-    PositionCheck, HeightCheck, HeightAboveGroundCheck, AirspeedCheck, SideSlipCheck, \
-    OpticalFlowCheck
-from checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, IMU_Output_Predictor_Check
-from checks.numerical_analysis import NumericalCheck
+from ecl_ekf_analysis.checks.base_runner import CheckRunner
+from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, MagneticHeadingCheck, \
+    VelocityCheck, PositionCheck, HeightCheck, HeightAboveGroundCheck, AirspeedCheck, \
+    SideSlipCheck, OpticalFlowCheck
+from ecl_ekf_analysis.checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, \
+    IMU_Output_Predictor_Check
+from ecl_ekf_analysis.checks.numerical_analysis import NumericalCheck
 
 
 class EclCheckRunner(CheckRunner):

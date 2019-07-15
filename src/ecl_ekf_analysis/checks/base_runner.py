@@ -5,11 +5,11 @@ base check runner class
 
 from typing import List, Set, Dict
 
-from log_processing.custom_exceptions import PreconditionError, capture_exception
-from check_data_interfaces.check_data import CheckResult, CheckStatus
-from check_data_interfaces.check_data_utils import deserialize_check_results, \
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError, capture_exception
+from ecl_ekf_analysis.check_data_interfaces.check_data import CheckResult, CheckStatus
+from ecl_ekf_analysis.check_data_interfaces.check_data_utils import deserialize_check_results, \
     deserialize_check_result
-from checks.base_check import Check
+from ecl_ekf_analysis.checks.base_check import Check
 
 
 class CheckRunner():

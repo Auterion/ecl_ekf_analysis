@@ -7,7 +7,7 @@ import pytest
 import numpy as np
 from pyulog import ULog
 
-from analysis.in_air_detector import InAirDetector
+from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
 
 @pytest.fixture(scope="module")
 def testing_args():

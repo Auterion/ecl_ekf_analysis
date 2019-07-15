@@ -6,7 +6,7 @@ from typing import Optional, List
 import numpy as np
 from pyulog import ULog
 
-from log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 
 
 #pylint: disable=too-few-public-methods

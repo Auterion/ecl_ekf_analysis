@@ -10,7 +10,7 @@ import argparse
 import os
 import glob
 
-from process_logdata_ekf import process_logdata_ekf
+from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
 
 def get_arguments():
