@@ -44,8 +44,8 @@ setup(
     install_requires=['pyulog', 'matplotlib'],
     tests_require=['pytest'],
     test_suite='pytest',
-    package_dir = {'': 'src/ecl_ekf_analysis'},
-    packages=find_packages('src/ecl_ekf_analysis'),
+    package_dir = {'': 'src'},
+    packages=find_packages('src'),
     entry_points = {
             'console_scripts': [
                 'batch_process_logdata_ekf=ecl_ekf_analysis.batch_process_logdata_ekf:main',
