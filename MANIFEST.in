@@ -1,2 +1,2 @@
-include src/ecl_ekf_analysis/check_level_dict.csv
-include src/ecl_ekf_analysis/check_table.csv
+include src/ecl_ekf_analysis/config/params.ini
+include src/ecl_ekf_analysis/config/thresholds.ini
