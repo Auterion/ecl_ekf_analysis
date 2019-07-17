@@ -46,6 +46,15 @@ class Check():
         return self._check_result.status
 
 
+    @status.setter
+    def status(self, check_status: CheckStatus) -> None:
+        """
+        :param check_status:
+        :return:
+        """
+        self._check_result.status = check_status
+
+
     @property
     def result(self) -> CheckResult:
         """
