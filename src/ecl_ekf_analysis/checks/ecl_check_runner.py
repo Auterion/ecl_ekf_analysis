@@ -2,7 +2,6 @@
 """
 an estimator check runner class
 """
-from typing import Dict
 from pyulog import ULog
 
 from ecl_ekf_analysis.checks.base_runner import CheckRunner
