@@ -5,34 +5,34 @@
     "statistics": [
       {
         "type": "INNOVATION_RED_PCT",
-        "value": 12.21294363256785,
+        "value": 12.034676185619581,
         "thresholds": {
-          "warning": null,
-          "failure": null
+          "failure": null,
+          "warning": null
         }
       },
       {
         "type": "INNOVATION_AMBER_PCT",
-        "value": 3.653444676409187,
+        "value": 3.5696073431922493,
         "thresholds": {
-          "warning": 5.0,
-          "failure": 50.0
+          "failure": 50.0,
+          "warning": 5.0
         }
       },
       {
         "type": "INNOVATION_RED_WINDOWED_PCT",
         "value": 27.210883796215057,
         "thresholds": {
-          "warning": null,
-          "failure": null
+          "failure": null,
+          "warning": null
         }
       },
       {
         "type": "INNOVATION_AMBER_WINDOWED_PCT",
         "value": 42.17686988413334,
         "thresholds": {
-          "warning": null,
-          "failure": null
+          "failure": null,
+          "warning": null
         }
       },
       {
@@ -44,20 +44,20 @@
         }
       },
       {
-        "type": "ESTIMATOR_FAILURE_AVG",
-        "value": 0.33545294404029846,
+        "value": 0.33237460255622864,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "ESTIMATOR_FAILURE_AVG"
       },
       {
-        "type": "ESTIMATOR_FAILURE_WINDOWED_AVG",
-        "value": 0.3395399749279022,
+        "value": 0.33799347281455994,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
         "type": "FAIL_RATIO_PCT",
@@ -92,20 +92,20 @@
         }
       },
       {
-        "type": "FAIL_RATIO_PCT",
-        "value": 20.668058455114824,
+        "value": 20.295767465578788,
         "thresholds": {
           "warning": null,
           "failure": 0.0
-        }
+        },
+        "type": "FAIL_RATIO_PCT"
       },
       {
-        "type": "FAIL_RATIO_WINDOWED_PCT",
         "value": 76.19047462940216,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "FAIL_RATIO_WINDOWED_PCT"
       }
     ]
   },
@@ -301,7 +301,7 @@
       },
       {
         "type": "INNOVATION_AMBER_PCT",
-        "value": 0.20876826722338201,
+        "value": 0.2039775624681285,
         "thresholds": {
           "warning": 5.0,
           "failure": 50.0
@@ -333,7 +333,7 @@
       },
       {
         "type": "ESTIMATOR_FAILURE_AVG",
-        "value": 0.053101375699043274,
+        "value": 0.05244263634085655,
         "thresholds": {
           "warning": null,
           "failure": null
@@ -341,7 +341,7 @@
       },
       {
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG",
-        "value": 0.054602913558483124,
+        "value": 0.05408806353807449,
         "thresholds": {
           "warning": null,
           "failure": null
@@ -398,20 +398,20 @@
         }
       },
       {
-        "type": "IMU_CONING_AVG",
-        "value": 1.8058575506074703e-06,
+        "value": 1.7784452666091966e-06,
         "thresholds": {
           "warning": 3.6e-06,
           "failure": null
-        }
+        },
+        "type": "IMU_CONING_AVG"
       },
       {
-        "type": "IMU_CONING_WINDOWED_AVG",
         "value": 4.937323865306098e-06,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_CONING_WINDOWED_AVG"
       },
       {
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_MAX",
@@ -422,20 +422,20 @@
         }
       },
       {
-        "type": "IMU_HIGH_FREQ_DELTA_ANGLE_AVG",
-        "value": 0.0017624606844037771,
+        "value": 0.0017436499474570155,
         "thresholds": {
           "warning": 0.0006,
           "failure": null
-        }
+        },
+        "type": "IMU_HIGH_FREQ_DELTA_ANGLE_AVG"
       },
       {
-        "type": "IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG",
         "value": 0.0023362908978015184,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG"
       },
       {
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_MAX",
@@ -446,20 +446,20 @@
         }
       },
       {
-        "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_AVG",
-        "value": 0.031774476170539856,
+        "value": 0.03141993284225464,
         "thresholds": {
           "warning": 0.018,
           "failure": null
-        }
+        },
+        "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_AVG"
       },
       {
-        "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG",
         "value": 0.04837441444396973,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG"
       }
     ]
   },
@@ -468,36 +468,36 @@
     "type": "IMU_BIAS_STATUS",
     "statistics": [
       {
-        "type": "IMU_DELTA_ANGLE_BIAS_AVG",
-        "value": 1.3343967615975286e-05,
+        "value": 1.327401733528254e-05,
         "thresholds": {
           "warning": 0.00044,
           "failure": null
-        }
+        },
+        "type": "IMU_DELTA_ANGLE_BIAS_AVG"
       },
       {
-        "type": "IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG",
         "value": 2.2321219688768345e-05,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG"
       },
       {
-        "type": "IMU_DELTA_VELOCITY_BIAS_AVG",
-        "value": 0.0012356483338333093,
+        "value": 0.001228483364835705,
         "thresholds": {
           "warning": 0.0048,
           "failure": null
-        }
+        },
+        "type": "IMU_DELTA_VELOCITY_BIAS_AVG"
       },
       {
-        "type": "IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG",
         "value": 0.0020475090258861624,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG"
       }
     ]
   },
@@ -506,52 +506,52 @@
     "type": "IMU_OUTPUT_PREDICTOR_STATUS",
     "statistics": [
       {
-        "type": "IMU_OBSERVED_ANGLE_ERROR_AVG",
-        "value": 0.0009283827384933829,
+        "value": 0.0009520638268440962,
         "thresholds": {
           "warning": 0.008,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_ANGLE_ERROR_AVG"
       },
       {
-        "type": "IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG",
         "value": 0.0030048582702875137,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG"
       },
       {
-        "type": "IMU_OBSERVED_VELOCITY_ERROR_AVG",
-        "value": 0.02307303063571453,
+        "value": 0.022792557254433632,
         "thresholds": {
           "warning": 0.05,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_VELOCITY_ERROR_AVG"
       },
       {
-        "type": "IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG",
         "value": 0.07632311433553696,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG"
       },
       {
-        "type": "IMU_OBSERVED_POSITION_ERROR_AVG",
-        "value": 0.06205093488097191,
+        "value": 0.061094287782907486,
         "thresholds": {
           "warning": 0.15,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_POSITION_ERROR_AVG"
       },
       {
-        "type": "IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG",
         "value": 0.2239716351032257,
         "thresholds": {
           "warning": null,
           "failure": null
-        }
+        },
+        "type": "IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG"
       }
     ]
   },
