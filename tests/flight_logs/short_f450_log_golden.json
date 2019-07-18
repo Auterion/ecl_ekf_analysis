@@ -352,7 +352,7 @@
         "value": 0.0,
         "thresholds": {
           "warning": null,
-          "failure": 20.0
+          "failure": 0.0
         }
       },
       {
