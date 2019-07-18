@@ -16,7 +16,7 @@
         "value": 3.5696073431922493,
         "thresholds": {
           "failure": 50.0,
-          "warning": 5.0
+          "warning": 0.5
         }
       },
       {
@@ -352,7 +352,7 @@
         "value": 0.0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": 20.0
         }
       },
       {
@@ -386,7 +386,7 @@
     "statistics": []
   },
   {
-    "status": "WARNING",
+    "status": "PASS",
     "type": "IMU_VIBRATION_STATUS",
     "statistics": [
       {
@@ -417,14 +417,14 @@
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_MAX",
         "value": 0.003721016924828291,
         "thresholds": {
-          "warning": 0.003,
+          "warning": 0.004,
           "failure": null
         }
       },
       {
         "value": 0.0017436499474570155,
         "thresholds": {
-          "warning": 0.0006,
+          "warning": 0.002,
           "failure": null
         },
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_AVG"
@@ -441,14 +441,14 @@
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_MAX",
         "value": 0.07891786098480225,
         "thresholds": {
-          "warning": 0.09,
+          "warning": 0.08,
           "failure": null
         }
       },
       {
         "value": 0.03141993284225464,
         "thresholds": {
-          "warning": 0.018,
+          "warning": 0.04,
           "failure": null
         },
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_AVG"
