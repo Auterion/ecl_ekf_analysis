@@ -7,9 +7,11 @@ skipped from the analysis, if a
 # -*- coding: utf-8 -*-
 
 import argparse
+import sys
 import os
 import glob
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
 

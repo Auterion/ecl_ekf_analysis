@@ -15,6 +15,7 @@ from typing import List
 from pyulog import ULog
 import simplejson as json
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
