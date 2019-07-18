@@ -7,7 +7,8 @@ lint:	build-container
 
 .PHONY:	test
 test:	build-container
-	docker-compose run -e PYTHONDONTWRITEBYTECODE=1 --rm development pytest -v --cache-clear
+	docker-compose run -e PYTHONDONTWRITEBYTECODE=1 --rm development [ -n "$$(find . -name __pycache__)" ] && find . -name __pycache__ | xargs rm -r || true
+	docker-compose run -e PYTHONDONTWRITEBYTECODE=1 --rm development pytest -n 0 -v -p no:cacheprovider /app/tests/
 
 .PHONY: analyse-file
 analyse-file: build-container
