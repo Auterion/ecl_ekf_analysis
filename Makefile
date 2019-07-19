@@ -16,4 +16,4 @@ analyse-file: build-container
 
 .PHONY: analyse-dir
 analyse-dir: build-container
-	docker-compose run -e PYTHONDONTWRITEBYTECODE=1 -v $(dir):$(dir) --rm development bash -c "python src/ecl_ekf_analysis/batch_process_logdata_ekf.py $(dir) --overwrite"
+	docker-compose run -it -e PYTHONDONTWRITEBYTECODE=1 -v $(dir):$(dir) --rm development bash -c "python src/ecl_ekf_analysis/batch_process_logdata_ekf.py $(dir) --overwrite"
