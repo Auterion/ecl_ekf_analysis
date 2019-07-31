@@ -47,19 +47,20 @@ def calculate_windowed_mean_per_airphase(
         if (window_len % 2) == 0:
             window_len += 1
 
-        window_len_after_s = duration_s * (window_len / float(len(at_indices)))
+        if len(at_indices) > 0:
+            window_len_after_s = duration_s * (window_len / float(len(at_indices)))
 
-        input_signal = data[variable][at_indices]
-        if threshold is not None:
-            input_signal = 100.0 * (input_signal > threshold)
+            input_signal = data[variable][at_indices]
+            if threshold is not None:
+                input_signal = 100.0 * (input_signal > threshold)
 
-        smoothed_air_phase = smooth_1d_boundaries(
-            input_signal, window_len=window_len, mode='valid', mean_for_short_signals=True)
+            smoothed_air_phase = smooth_1d_boundaries(
+                input_signal, window_len=window_len, mode='valid', mean_for_short_signals=True)
 
-        smoothed_airtime = Airtime(
-            take_off=airtime.take_off + min(window_len_after_s, duration_s) / 2.0,
-            landing=airtime.landing - min(window_len_after_s, duration_s) / 2.0)
+            smoothed_airtime = Airtime(
+                take_off=airtime.take_off + min(window_len_after_s, duration_s) / 2.0,
+                landing=airtime.landing - min(window_len_after_s, duration_s) / 2.0)
 
-        windowed_stats.append((smoothed_airtime, smoothed_air_phase))
+            windowed_stats.append((smoothed_airtime, smoothed_air_phase))
 
     return windowed_stats
