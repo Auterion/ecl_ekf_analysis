@@ -29,20 +29,22 @@ class EclCheckRunner(CheckRunner):
         try:
             estimator_status_data = ulog.get_dataset('estimator_status').data
             print('found estimator_status data')
+
+            control_mode_flags, innov_flags, _ = get_estimator_check_flags(estimator_status_data)
+
+            self.append(MagnetometerCheck(ulog, innov_flags, control_mode_flags))
+            self.append(MagneticHeadingCheck(ulog, innov_flags, control_mode_flags))
+            self.append(VelocityCheck(ulog, innov_flags, control_mode_flags))
+            self.append(PositionCheck(ulog, innov_flags, control_mode_flags))
+            self.append(HeightCheck(ulog, innov_flags, control_mode_flags))
+            self.append(HeightAboveGroundCheck(ulog, innov_flags, control_mode_flags))
+            self.append(AirspeedCheck(ulog, innov_flags, control_mode_flags))
+            self.append(SideSlipCheck(ulog, innov_flags, control_mode_flags))
+            self.append(OpticalFlowCheck(ulog, innov_flags, control_mode_flags))
+            self.append(IMU_Vibration_Check(ulog))
+            self.append(IMU_Bias_Check(ulog))
+            self.append(IMU_Output_Predictor_Check(ulog))
+            self.append(NumericalCheck(ulog))
         except:
             raise PreconditionError('could not find estimator_status data')
-        control_mode_flags, innov_flags, _ = get_estimator_check_flags(estimator_status_data)
 
-        self.append(MagnetometerCheck(ulog, innov_flags, control_mode_flags))
-        self.append(MagneticHeadingCheck(ulog, innov_flags, control_mode_flags))
-        self.append(VelocityCheck(ulog, innov_flags, control_mode_flags))
-        self.append(PositionCheck(ulog, innov_flags, control_mode_flags))
-        self.append(HeightCheck(ulog, innov_flags, control_mode_flags))
-        self.append(HeightAboveGroundCheck(ulog, innov_flags, control_mode_flags))
-        self.append(AirspeedCheck(ulog, innov_flags, control_mode_flags))
-        self.append(SideSlipCheck(ulog, innov_flags, control_mode_flags))
-        self.append(OpticalFlowCheck(ulog, innov_flags, control_mode_flags))
-        self.append(IMU_Vibration_Check(ulog))
-        self.append(IMU_Bias_Check(ulog))
-        self.append(IMU_Output_Predictor_Check(ulog))
-        self.append(NumericalCheck(ulog))
