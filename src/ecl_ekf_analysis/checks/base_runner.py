@@ -107,7 +107,6 @@ class CheckRunner():
         """
         return deserialize_check_results(self._check_results)
 
-
     @property
     def analysis_status(self) -> int:
         """
@@ -115,6 +114,13 @@ class CheckRunner():
         """
         return self._analysis_status
 
+    @analysis_status.setter
+    def analysis_status(self, status: int) -> None:
+        """
+        :param check_status:
+        :return:
+        """
+        self._analysis_status = status
 
     @property
     def results_table(self) -> Dict[str, tuple]:
@@ -132,10 +138,17 @@ class CheckRunner():
         return {check.check_type.name for check in self._check_results
                 if check.status == CheckStatus.DOES_NOT_APPLY}
 
-
     @property
     def error_message(self) -> str:
         """
         :return: the error message
         """
         return self._error_message
+
+    @error_message.setter
+    def error_message(self, message: str) -> None:
+        """
+        :param check_status:
+        :return:
+        """
+        self._error_message = message

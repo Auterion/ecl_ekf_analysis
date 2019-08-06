@@ -11,7 +11,7 @@ from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, Magnet
 from ecl_ekf_analysis.checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, \
     IMU_Output_Predictor_Check
 from ecl_ekf_analysis.checks.numerical_analysis import NumericalCheck
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.log_processing.custom_exceptions import capture_message
 from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
 
 
@@ -45,6 +45,7 @@ class EclCheckRunner(CheckRunner):
             self.append(IMU_Bias_Check(ulog))
             self.append(IMU_Output_Predictor_Check(ulog))
             self.append(NumericalCheck(ulog))
-        except:
-            raise PreconditionError('could not find estimator_status data')
-
+        except Exception as e:
+            capture_message(str(e))
+            self.error_message = str(e)
+            self.analysis_status = -3
