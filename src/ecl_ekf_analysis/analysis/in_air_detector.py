@@ -188,6 +188,32 @@ class InAirDetector():
 
         return airtime_indices
 
+
+    def get_total_airtime_for_timestamp(
+            self, timestamps: np.ndarray, start_time: Optional[float] = None,
+            conversion_factor: Optional[float] = None) -> list:
+        """
+        :param timestamps:
+        :param start_time: an optional start time (in the same unit as timestamps). if not
+        specified, the first entry of timestamps is assumed to be the start time.
+        :param conversion_factor: the factor to convert the timestamps into seconds. if not
+        specified, it's assumed the timestamps are in seconds.
+        :return:
+        """
+        airtime_indices = []
+        start_timestamp = timestamps[0] if start_time is None else start_time
+        convert = 1.0 if conversion_factor is None else conversion_factor
+
+        if self.airtimes is not None:
+            for airtime in self.airtimes:
+                airtime_indices.extend(
+                    np.where(
+                        ((timestamps - start_timestamp) * convert >= airtime.take_off) &
+                        ((timestamps - start_timestamp) * convert < airtime.landing))[0])
+
+        return airtime_indices
+
+
     def get_airtime(self, dataset: str, multi_instance: int = 0) -> list:
         """
         return all indices of the log file that are in air
@@ -199,15 +225,31 @@ class InAirDetector():
         except:
             raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
 
+        return self.get_total_airtime_for_timestamp(
+            data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
+
+
+    def get_airtime_per_phase_for_timestamp(
+            self, timestamps: np.ndarray, start_time: Optional[float] = None,
+            conversion_factor: Optional[float] = None) -> list:
+        """
+        :param timestamps:
+        :param start_time: an optional start time (in the same unit as timestamps). if not
+        specified, the first entry of timestamps is assumed to be the start time.
+        :param conversion_factor: the factor to convert the timestamps into seconds. if not
+        specified, it's assumed the timestamps are in seconds.
+        :return:
+        """
         airtime_indices = []
+        start_timestamp = timestamps[0] if start_time is None else start_time
+        convert = 1.0 if conversion_factor is None else conversion_factor
 
         if self.airtimes is not None:
             for airtime in self.airtimes:
-                airtime_indices.extend(
+                airtime_indices.append(
                     np.where(
-                        ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                         airtime.take_off) & ((data['timestamp'] - self._ulog.start_timestamp) /
-                                              1.0e6 < airtime.landing))[0])
+                        ((timestamps - start_timestamp) * convert >= airtime.take_off) &
+                        ((timestamps - start_timestamp) * convert < airtime.landing))[0])
 
         return airtime_indices
 
@@ -224,14 +266,5 @@ class InAirDetector():
         except:
             raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
 
-        airphase_airtime_indices = []
-
-        if self.airtimes is not None:
-            for airtime in self.airtimes:
-                airphase_airtime_indices.append(
-                    np.where(((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                              airtime.take_off) &
-                             ((data['timestamp'] - self._ulog.start_timestamp) /
-                              1.0e6 < airtime.landing))[0])
-
-        return airphase_airtime_indices
+        return self.get_airtime_per_phase_for_timestamp(
+            data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
