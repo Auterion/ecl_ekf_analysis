@@ -12,3 +12,4 @@ pyulog==0.6.0
 six==1.12.0
 scipy==1.1.0
 simplejson==3.16.0
+python-intervals==1.8.0

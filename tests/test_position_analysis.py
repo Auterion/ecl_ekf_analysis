@@ -2,9 +2,24 @@
 """
 Testing some specific functions for signal processing.
 """
-import numpy as np
+import os
 
+import pytest
+import numpy as np
+from pyulog import ULog
+
+from ecl_ekf_analysis.analysis.position_analyzer import PositionAnalyzer
 from ecl_ekf_analysis.signal_processing.flag_analysis import detect_flag_value_changes
+
+
+@pytest.fixture(scope="module")
+def testing_args():
+    """
+    arguments for testing.
+    :return: test arguments
+    """
+    return {'golden_flight_logs_path': os.path.join(os.path.dirname(__file__), 'flight_logs'),
+            'golden_flight_logs': ['short_f450_log.ulg']}
 
 
 def test_detect_flag_value_changes():
@@ -54,3 +69,19 @@ def test_detect_flag_value_changes():
         (np.ones(4, dtype=int), np.zeros(4, dtype=int), np.ones(4, dtype=int),
          np.zeros(4, dtype=int), np.ones(4, dtype=int)))) == ([0, 8, 16], [3, 11, 19]), \
         'position phase not detected correctly'
+
+
+def test_position_analyzer(testing_args):
+    """
+
+    :param testing_args:
+    :return:
+    """
+
+    filename = os.path.join(testing_args['golden_flight_logs_path'],
+                            testing_args['golden_flight_logs'][0])
+
+    position_analyzer = PositionAnalyzer(ULog(filename))
+    position_analyzer.set_min_ground_distance(0.2)
+    assert position_analyzer.get_valid_position('sensor_combined') == [], \
+        'returned valid positions were not empty'
