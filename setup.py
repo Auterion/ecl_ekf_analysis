@@ -41,7 +41,7 @@ setup(
     license='BSD 3-Clause',
     classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
-    install_requires=['pyulog', 'matplotlib'],
+    install_requires=['pyulog', 'matplotlib', 'python-intervals'],
     tests_require=['pytest'],
     test_suite='pytest',
     package_dir = {'': 'src'},
