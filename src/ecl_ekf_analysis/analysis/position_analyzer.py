@@ -33,7 +33,7 @@ class PositionAnalyzer():
                 'PositionAnalyzer: Could not find vehicle local position message.')
 
         self._position_intervals = intervals.closed(
-            self._ulog.start_timestamp / 1.0e6, self._ulog.last_timestamp / 1.0e6)
+            0.0, (self._ulog.last_timestamp - self._ulog.start_timestamp) / 1.0e6)
 
 
     def _above_min_ground_distance_intervals(
