@@ -35,3 +35,8 @@ def ecl_pos_checks_when_sensors_not_fused() -> bool:
 def ecl_window_len_s() -> float:
     return _params.getfloat('ecl-analysis', 'window_len_s')
 
+def of_min_ground_distance_meters() -> float:
+    return _params.getfloat('optical-flow', 'min_ground_distance_meters')
+
+def of_min_flight_phase_duration_seconds() -> float:
+    return _params.getfloat('optical-flow', 'min_flight_phase_duration_seconds')

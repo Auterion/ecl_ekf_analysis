@@ -75,14 +75,19 @@ class PositionAnalyzer():
         return intervals_above_min_ground_distance
 
 
-    def set_min_ground_distance(self, ground_distance_meters: float) -> None:
+    def set_min_ground_distance(
+            self, ground_distance_meters: float, phase_change_margin_seconds: float = 0.0,
+            min_interval_duration_seconds: float = 0.0) -> None:
         """
         :param ground_distance_meters:
+        :param phase_change_margin_seconds:
+        :param min_interval_duration_seconds:
         :return:
         """
         self._position_intervals = self._above_min_ground_distance_intervals(
-            ground_distance_meters, phase_change_margin_seconds=0.0,
-            min_interval_duration_seconds=0.0) & self._position_intervals
+            ground_distance_meters, phase_change_margin_seconds=phase_change_margin_seconds,
+            min_interval_duration_seconds=min_interval_duration_seconds) & self._position_intervals
+
 
     def get_valid_position(self, dataset: str, multi_instance: int = 0) -> list:
         """
