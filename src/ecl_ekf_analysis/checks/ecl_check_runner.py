@@ -4,7 +4,7 @@ an estimator check runner class
 """
 from pyulog import ULog
 
-from ecl_ekf_analysis.checks.base_runner import CheckRunner
+from ecl_ekf_analysis.checks.base_runner import CheckRunner, AnalysisStatus
 from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, MagneticHeadingCheck, \
     VelocityCheck, PositionCheck, HeightCheck, HeightAboveGroundCheck, AirspeedCheck, \
     SideSlipCheck, OpticalFlowCheck
@@ -48,4 +48,4 @@ class EclCheckRunner(CheckRunner):
         except Exception as e:
             capture_message(str(e))
             self.error_message = str(e)
-            self.analysis_status = -3
+            self.analysis_status = AnalysisStatus.PRECONDITION_ERROR
