@@ -27,7 +27,8 @@ class Check():
         self._does_apply = True
 
 
-    def add_statistic(self, check_statistic_type: CheckStatisticType) -> CheckStatistic:
+    def add_statistic(
+            self, check_statistic_type: CheckStatisticType, instance: int = 0) -> CheckStatistic:
         """
         add a check statistic to the check results
         :param type:
@@ -35,6 +36,7 @@ class Check():
         """
         statistic = self._check_result.statistics.add()
         statistic.statistic_type = check_statistic_type
+        statistic.instance = instance
         return statistic
 
 

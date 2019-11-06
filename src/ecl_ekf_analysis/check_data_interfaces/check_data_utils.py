@@ -16,6 +16,7 @@ def deserialize_check_statistic(check_statistic: CheckStatistic) -> dict:
     return {
         'type': check_statistic.statistic_type.name,
         'value': check_statistic.value,
+        'instance': check_statistic.instance,
         'thresholds': {
             'warning': check_statistic.thresholds.warning,
             'failure': check_statistic.thresholds.failure
@@ -57,6 +58,7 @@ def serialize_check_statistic(check_statistic_dict: dict) -> CheckStatistic:
     check_statistic = CheckStatistic()
     check_statistic.type = CheckStatisticType[check_statistic_dict.get('type', 'UNDEFINED')]
     check_statistic.value = check_statistic_dict.get('value')
+    check_statistic.instance = check_statistic_dict.get('instance', 0)
     check_statistic.thresholds.warning = check_statistic_dict.get('thresholds').get('warning')
     check_statistic.thresholds.failure = check_statistic_dict.get('thresholds').get('failure')
     return check_statistic

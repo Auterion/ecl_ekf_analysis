@@ -68,8 +68,10 @@ class CheckStatistic():
     """
     def __init__(
             self, statistic_type: CheckStatisticType = CheckStatisticType.UNDEFINED,
-            value: Optional[float] = None, thresholds: Optional[Thresholds] = None) -> None:
+            value: Optional[float] = None, thresholds: Optional[Thresholds] = None,
+            instance: int = 0) -> None:
         self.statistic_type = statistic_type
+        self.instance = instance
         self.value = value
         self.thresholds = thresholds if thresholds is not None else Thresholds()
 

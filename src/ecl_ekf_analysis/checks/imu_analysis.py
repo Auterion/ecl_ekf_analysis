@@ -67,7 +67,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_AVG)
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_AVG, instance=0)
 
         imu_delta_angle_bias_avg.value = float(
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
@@ -79,7 +79,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG)
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, instance=0)
 
         imu_delta_angle_bias_windowed_avg.value = float(
             np.sqrt(np.sum([np.square(imu_state_metrics[signal]) for signal in
@@ -88,7 +88,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias
         imu_delta_velocity_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG)
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, instance=0)
 
         imu_delta_velocity_bias_avg.value = float(
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
@@ -100,7 +100,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias windowed
         imu_delta_velocity_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG)
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG, instance=0)
 
         imu_delta_velocity_bias_windowed_avg.value = float(
             np.sqrt(np.sum([np.square(imu_state_metrics[signal]) for signal in

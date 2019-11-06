@@ -56,6 +56,10 @@ def compare_check_analysis_result_ground_truth(
             'analysis check statistic type {:s} differed from ground truth {:s} in {:s}'.format(
                 check_statistic['type'], ground_truth_check_statistic['type'], log_id)
 
+        assert check_statistic['instance'] == ground_truth_check_statistic['instance'], \
+            'analysis check statistic instance {:s} differed from ground truth {:s} in {:s}'.format(
+                check_statistic['instance'], ground_truth_check_statistic['instance'], log_id)
+
         compare_float_values(
             check_statistic['type'], log_id, check_statistic['value'],
             ground_truth_check_statistic['value'], parent_name=check_result['type'],
