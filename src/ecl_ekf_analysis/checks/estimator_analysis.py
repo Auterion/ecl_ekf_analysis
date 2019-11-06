@@ -112,14 +112,14 @@ class EstimatorCheck(Check):
         estimator_status_metrics = self.calc_estimator_status_metrics()
 
         innov_red_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_RED_PCT, instance=0)
+            CheckStatisticType.INNOVATION_RED_PCT, statistic_instance=0)
         innov_red_pct.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name,
             self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
 
         #TODO: remove subtraction of innov_red_pct and tune parameters
         innov_amber_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_AMBER_PCT, instance=0)
+            CheckStatisticType.INNOVATION_AMBER_PCT, statistic_instance=0)
         innov_amber_pct.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name, self._in_air_detector,
             lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
@@ -127,26 +127,26 @@ class EstimatorCheck(Check):
         innov_amber_pct.thresholds.failure = thresholds.ecl_amber_failure_pct(self._check_id)
 
         innov_red_windowed_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_RED_WINDOWED_PCT, instance=0)
+            CheckStatisticType.INNOVATION_RED_WINDOWED_PCT, statistic_instance=0)
         innov_red_windowed_pct.value = float(max(
             [np.max(metric) for _, metric in estimator_status_metrics[
                 '{:s}_percentage_red_windowed'.format(self._check_id)]]))
 
         innov_amber_windowed_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_AMBER_WINDOWED_PCT, instance=0)
+            CheckStatisticType.INNOVATION_AMBER_WINDOWED_PCT, statistic_instance=0)
         innov_amber_windowed_pct.value = float(max(
             [np.max(metric) for _, metric in estimator_status_metrics[
                 '{:s}_percentage_amber_windowed'.format(self._check_id)]]))
 
         # the max and mean ratio of samples above / below std dev
         test_ratio_max = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_MAX, instance=0)
+            CheckStatisticType.ESTIMATOR_FAILURE_MAX, statistic_instance=0)
         test_ratio_max.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', self._test_ratio_name,
             self._in_air_detector, np.amax))
 
         test_ratio_avg = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_AVG, instance=0)
+            CheckStatisticType.ESTIMATOR_FAILURE_AVG, statistic_instance=0)
         test_ratio_avg.value = float(0.0)
 
         if test_ratio_max.value > 0.0:
@@ -155,7 +155,7 @@ class EstimatorCheck(Check):
                 self._in_air_detector, np.mean))
 
         test_ratio_windowed_avg = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_WINDOWED_AVG, instance=0)
+            CheckStatisticType.ESTIMATOR_FAILURE_WINDOWED_AVG, statistic_instance=0)
 
         test_ratio_windowed_avg.value = float(max(
             [float(np.mean(metric)) for _, metric in estimator_status_metrics[
@@ -171,7 +171,7 @@ class EstimatorCheck(Check):
 
         for i, innov_fail_name in enumerate(self._innov_fail_names):
             innov_stats_fail_pct = self.add_statistic(
-                CheckStatisticType.FAIL_RATIO_PCT, instance=i)
+                CheckStatisticType.FAIL_RATIO_PCT, statistic_instance=i)
 
             innov_stats_fail_pct.value = float(calculate_stat_from_signal(
                 self._innov_flags, 'estimator_status', innov_fail_name,
@@ -180,7 +180,7 @@ class EstimatorCheck(Check):
                 self._check_id)
 
             innov_stats_fail_windowed_pct = self.add_statistic(
-                CheckStatisticType.FAIL_RATIO_WINDOWED_PCT, instance=i)
+                CheckStatisticType.FAIL_RATIO_WINDOWED_PCT, statistic_instance=i)
 
             innov_stats_fail_windowed_pct.value = float(max(
                 [np.max(metric) for _, metric in innovation_metrics[

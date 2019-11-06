@@ -67,7 +67,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_AVG, instance=0)
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_AVG, statistic_instance=0)
 
         imu_delta_angle_bias_avg.value = float(
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
@@ -79,7 +79,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, instance=0)
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, statistic_instance=0)
 
         imu_delta_angle_bias_windowed_avg.value = float(
             np.sqrt(np.sum([np.square(imu_state_metrics[signal]) for signal in
@@ -88,7 +88,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias
         imu_delta_velocity_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, instance=0)
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, statistic_instance=0)
 
         imu_delta_velocity_bias_avg.value = float(
             np.sqrt(np.sum([np.square(calculate_stat_from_signal(
@@ -100,7 +100,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias windowed
         imu_delta_velocity_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG, instance=0)
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG, statistic_instance=0)
 
         imu_delta_velocity_bias_windowed_avg.value = float(
             np.sqrt(np.sum([np.square(imu_state_metrics[signal]) for signal in
@@ -155,7 +155,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed angle error statistic average
         imu_observed_angle_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG)
+            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0)
         imu_observed_angle_error_avg.value = float(calculate_stat_from_signal(
             ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[0]',
             self._in_air_detector_no_ground_effects, np.median))
@@ -164,7 +164,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed angle error statistic average windowed
         imu_observed_angle_error_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG)
+            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_WINDOWED_AVG, statistic_instance=0)
 
         imu_observed_angle_error_windowed_avg.value = float(max(
             [metric.max() for _, metric in imu_metrics['output_obs_ang_err_median_windowed_mean']]
@@ -172,7 +172,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed velocity error statistic average
         imu_observed_velocity_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG)
+            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0)
         imu_observed_velocity_error_avg.value = float(calculate_stat_from_signal(
             ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[1]',
             self._in_air_detector_no_ground_effects, np.median))
@@ -181,7 +181,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed velocity error statistic average windowed
         imu_observed_velocity_error_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG)
+            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_WINDOWED_AVG, statistic_instance=0)
 
         imu_observed_velocity_error_windowed_avg.value = float(max(
             [metric.max() for _, metric in imu_metrics['output_obs_vel_err_median_windowed_mean']]
@@ -189,7 +189,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed position error statistic average
         imu_observed_position_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG)
+            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0)
         imu_observed_position_error_avg.value = float(calculate_stat_from_signal(
             ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[2]',
             self._in_air_detector_no_ground_effects, np.median))
@@ -198,7 +198,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed position error statistic average windowed
         imu_observed_position_error_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG)
+            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_WINDOWED_AVG, statistic_instance=0)
 
         imu_observed_position_error_windowed_avg.value = float(max(
             [metric.max() for _, metric in imu_metrics['output_obs_pos_err_median_windowed_mean']]
@@ -249,14 +249,14 @@ class IMU_Vibration_Check(Check):
         :return:
         """
         # max coning
-        imu_coning_max = self.add_statistic(CheckStatisticType.IMU_CONING_MAX)
+        imu_coning_max = self.add_statistic(CheckStatisticType.IMU_CONING_MAX, statistic_instance=0)
         imu_coning_max.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', 'vibe[0]',
             self._in_air_detector_no_ground_effects, np.amax))
         imu_coning_max.thresholds.warning = thresholds.imu_coning_warning_max()
 
         # avg coning
-        imu_coning_avg = self.add_statistic(CheckStatisticType.IMU_CONING_AVG)
+        imu_coning_avg = self.add_statistic(CheckStatisticType.IMU_CONING_AVG, statistic_instance=0)
         imu_coning_avg.value = float(0.0)
 
         if imu_coning_max.value > 0.0:
@@ -267,7 +267,7 @@ class IMU_Vibration_Check(Check):
 
         # windowed avg coning
         imu_coning_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_CONING_WINDOWED_AVG)
+            CheckStatisticType.IMU_CONING_WINDOWED_AVG, statistic_instance=0)
         imu_coning_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in imu_metrics['imu_coning_windowed_mean']]))
 

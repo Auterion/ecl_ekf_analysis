@@ -25,7 +25,7 @@ class AnalysisStatus(IntEnum):
 
 
     @property
-    def name(self) -> str:
+    def status_name(self) -> str:
         """
         return the enum as a str
         :return:

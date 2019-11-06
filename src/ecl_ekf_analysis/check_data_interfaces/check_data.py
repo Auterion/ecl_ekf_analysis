@@ -54,7 +54,7 @@ class CheckStatisticType(IntEnum):
 
 
     @property
-    def name(self) -> str:
+    def type_name(self) -> str:
         """
         return the enum as a str
         :return:
@@ -69,9 +69,9 @@ class CheckStatistic():
     def __init__(
             self, statistic_type: CheckStatisticType = CheckStatisticType.UNDEFINED,
             value: Optional[float] = None, thresholds: Optional[Thresholds] = None,
-            instance: int = 0) -> None:
+            statistic_instance: int = 0) -> None:
         self.statistic_type = statistic_type
-        self.instance = instance
+        self.statistic_instance = statistic_instance
         self.value = value
         self.thresholds = thresholds if thresholds is not None else Thresholds()
 
@@ -88,7 +88,7 @@ class CheckStatus(IntEnum):
 
 
     @property
-    def name(self) -> str:
+    def status_name(self) -> str:
         """
         return the enum as a str
         :return:
@@ -125,7 +125,7 @@ class CheckType(IntEnum):
 
 
     @property
-    def name(self) -> str:
+    def type_name(self) -> str:
         """
         return the enum as a str
         :return:
