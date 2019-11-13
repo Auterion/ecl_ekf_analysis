@@ -57,17 +57,123 @@ def test_get_innovation_variance_message(testing_args):
     assert dvh.get_innovation_variance_message(
         log_est_format_version_2) == "estimator_innovation_variances"
 
-def test_get_field_name_from_message_and_descriptor():
-    """
-     Test if the return field name for different messages is correct
-    """
 
-    assert dvh.get_field_name_from_message_and_descriptor(
-        'ekf2_innovations', 'magnetometer_innovation') == 'mag_innov'
-    assert dvh.get_field_name_from_message_and_descriptor(
-        'ekf2_innovations', 'magnetometer_innovation_variance') == 'mag_innov_var'
+test_data = [
+    ("est_format_version_1", 'innovation', 'vel_pos_innovation', True),
+    ("est_format_version_1", 'innovation', 'gps_vvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'gps_hvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'gps_hpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'gps_vpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'vision_hvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'vision_vvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'vision_hpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'vision_vpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'fake_hvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'fake_vvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'fake_hpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'fake_vpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'rng_vpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'baro_vpos_innovation', False),
+    ("est_format_version_1", 'innovation', 'aux_hvel_innovation', True),
+    ("est_format_version_1", 'innovation', 'aux_vvel_innovation', False),
+    ("est_format_version_1", 'innovation', 'mag_field_innovation', True),
+    ("est_format_version_1", 'innovation', 'heading_innovation', True),
+    ("est_format_version_1", 'innovation', 'airspeed_innovation', True),
+    ("est_format_version_1", 'innovation', 'sideslip_innovation', True),
+    ("est_format_version_1", 'innovation', 'flow_innovation', True),
+    ("est_format_version_1", 'innovation', 'hagl_innovation', True),
+    ("est_format_version_1", 'innovation', 'drag_innovation', True),
+    ("est_format_version_1", 'innovation_variance', 'vel_pos_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'gps_vvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'gps_hvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'gps_hpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'gps_vpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'vision_hvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'vision_vvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'vision_hpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'vision_vpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'fake_hvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'fake_vvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'fake_hpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'fake_vpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'rng_vpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'baro_vpos_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'aux_hvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'aux_vvel_innovation_variance', False),
+    ("est_format_version_1", 'innovation_variance', 'mag_field_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'heading_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'airspeed_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'sideslip_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'flow_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'hagl_innovation_variance', True),
+    ("est_format_version_1", 'innovation_variance', 'drag_innovation_variance', True),
+    ("est_format_version_2", 'innovation', 'vel_pos_innovation', False),
+    ("est_format_version_2", 'innovation', 'gps_vvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'gps_hvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'gps_hpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'gps_vpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'vision_hvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'vision_vvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'vision_hpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'vision_vpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'fake_hvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'fake_vvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'fake_hpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'fake_vpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'rng_vpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'baro_vpos_innovation', True),
+    ("est_format_version_2", 'innovation', 'aux_hvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'aux_vvel_innovation', True),
+    ("est_format_version_2", 'innovation', 'mag_field_innovation', True),
+    ("est_format_version_2", 'innovation', 'heading_innovation', True),
+    ("est_format_version_2", 'innovation', 'airspeed_innovation', True),
+    ("est_format_version_2", 'innovation', 'sideslip_innovation', True),
+    ("est_format_version_2", 'innovation', 'flow_innovation', True),
+    ("est_format_version_2", 'innovation', 'hagl_innovation', True),
+    ("est_format_version_2", 'innovation', 'drag_innovation', True),
+    ("est_format_version_2", 'innovation_variance', 'vel_pos_innovation_variance', False),
+    ("est_format_version_2", 'innovation_variance', 'gps_vvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'gps_hvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'gps_hpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'gps_vpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'vision_hvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'vision_vvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'vision_hpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'vision_vpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'fake_hvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'fake_vvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'fake_hpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'fake_vpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'rng_vpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'baro_vpos_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'aux_hvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'aux_vvel_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'mag_field_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'heading_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'airspeed_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'sideslip_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'flow_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'hagl_innovation_variance', True),
+    ("est_format_version_2", 'innovation_variance', 'drag_innovation_variance', True),
+]
 
-    assert dvh.get_field_name_from_message_and_descriptor(
-        'estimator_innovations', 'magnetometer_innovation') == 'mag'
-    assert dvh.get_field_name_from_message_and_descriptor(
-        'estimator_innovation_variances', 'magnetometer_innovation_variance') == 'mag'
+@pytest.mark.parametrize(
+    "est_format_version,message_descriptor,field_name_req,should_exist", test_data)
+
+def test_get_field_name_from_message_and_descriptor(
+        testing_args, est_format_version, message_descriptor, field_name_req, should_exist):
+    """
+        Test logs of different verison for the existence/inexistence
+        of innovation and innovation_variance fields
+    """
+    log = testing_args[est_format_version]
+
+    message_name = ""
+    if message_descriptor == "innovation":
+        message_name = dvh.get_innovation_message(log)
+    if message_descriptor == "innovation_variance":
+        message_name = dvh.get_innovation_variance_message(log)
+
+    field_name = dvh.get_field_name_from_message_and_descriptor(message_name, field_name_req)
+
+    assert dvh.check_if_field_name_exists_in_message(log, message_name, field_name) == should_exist
