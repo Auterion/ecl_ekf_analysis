@@ -3,6 +3,7 @@
 function collection for handling different versions of log files
 """
 from pyulog import ULog
+from typing import Tuple
 
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 
@@ -37,13 +38,13 @@ def get_innovation_message(ulog: ULog, topic: str = 'innovation') -> str:
             if elem.name == "ekf2_innovations":
                 return "ekf2_innovations"
             if elem.name == "estimator_innovations":
-                return "estimator_innovations"
+                return "estimator_innovation_variances"
     if topic == 'innovation_test_ratio':
         for elem in  ulog.data_list:
             if elem.name == "ekf2_innovations":
-                return "ekf2_innovations"
+                return None
             if elem.name == "estimator_innovations":
-                return "estimator_innovations"
+                return "estimator_innovation_test_ratios"
 
     raise PreconditionError("Could not detect the message")
 
@@ -212,7 +213,7 @@ def field_name_wo_brackets(field_name: str) -> str:
     return field_name
 
 def get_innovation_message_and_field_name(
-        ulog: ULog, field_descriptor: str, topic: str = 'innovation') -> tuple([str, str]):
+        ulog: ULog, field_descriptor: str, topic: str = 'innovation') -> Tuple[str, str]:
     """
     :param ulog:
     :param field_descriptor:

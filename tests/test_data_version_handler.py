@@ -32,6 +32,28 @@ def test_get_output_tracking_error_message(testing_args):
     assert dvh.get_output_tracking_error_message(log_est_format_version_1) == "ekf2_innovations"
     assert dvh.get_output_tracking_error_message(log_est_format_version_2) == "estimator_status"
 
+def test_get_innovation_message(testing_args):
+    """
+        Test if the right message name will be returned for different log file versions
+    """
+
+    log_est_format_version_1 = testing_args['est_format_version_1']
+    log_est_format_version_2 = testing_args['est_format_version_2']
+
+    assert dvh.get_innovation_message(
+        log_est_format_version_1, 'innovation') == "ekf2_innovations"
+    assert dvh.get_innovation_message(
+        log_est_format_version_2, 'innovation') == "estimator_innovations"
+    assert dvh.get_innovation_message(
+        log_est_format_version_1, 'innovation_variance') == "ekf2_innovations"
+    assert dvh.get_innovation_message(
+        log_est_format_version_2, 'innovation_variance') == "estimator_innovation_variances"
+    assert dvh.get_innovation_message(
+        log_est_format_version_1, 'innovation_test_ratio') is None
+    assert dvh.get_innovation_message(
+        log_est_format_version_2, 'innovation_test_ratio') == "estimator_innovation_test_ratios"
+
+
 test_data = [
     ("est_format_version_1", 'innovation', 'vel_pos', True),
     ("est_format_version_1", 'innovation', 'gps_vvel', False),
