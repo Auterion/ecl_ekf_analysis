@@ -2,8 +2,9 @@
 """
 function collection for handling different versions of log files
 """
-from pyulog import ULog
 from typing import Tuple
+
+from pyulog import ULog
 
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 
