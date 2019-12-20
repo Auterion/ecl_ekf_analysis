@@ -11,6 +11,7 @@ from ecl_ekf_analysis.checks.base_check import Check
 from ecl_ekf_analysis.check_data_interfaces.check_data import CheckType, CheckStatisticType
 from ecl_ekf_analysis.log_processing.analysis import calculate_windowed_mean_per_airphase, \
     calculate_stat_from_signal
+from ecl_ekf_analysis.log_processing.data_version_handling import get_output_tracking_error_message
 from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
 import ecl_ekf_analysis.config.params as params
 import ecl_ekf_analysis.config.thresholds as thresholds
@@ -128,7 +129,8 @@ class IMU_Output_Predictor_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        ekf2_innovation_data = self.ulog.get_dataset('ekf2_innovations').data
+        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_data = self.ulog.get_dataset(output_tracking_error_msg).data
 
         imu_metrics = dict()
 
@@ -140,7 +142,7 @@ class IMU_Output_Predictor_Check(Check):
             # TODO: currently takes the mean instead of median
             imu_metrics['{:s}_windowed_mean'.format(result)] = \
                 calculate_windowed_mean_per_airphase(
-                    ekf2_innovation_data, 'ekf2_innovations', signal,
+                    output_tracking_error_data, output_tracking_error_msg, signal,
                     self._in_air_detector_no_ground_effects, window_len_s=params.ecl_window_len_s())
 
         return imu_metrics
@@ -151,13 +153,15 @@ class IMU_Output_Predictor_Check(Check):
         :return:
         """
         imu_metrics = self.calculate_metrics()
-        ekf2_innovation_data = self.ulog.get_dataset('ekf2_innovations').data
+
+        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_data = self.ulog.get_dataset(output_tracking_error_msg).data
 
         # observed angle error statistic average
         imu_observed_angle_error_avg = self.add_statistic(
             CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0)
         imu_observed_angle_error_avg.value = float(calculate_stat_from_signal(
-            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[0]',
+            output_tracking_error_data, output_tracking_error_msg, 'output_tracking_error[0]',
             self._in_air_detector_no_ground_effects, np.median))
         imu_observed_angle_error_avg.thresholds.warning = \
             thresholds.imu_observed_angle_error_warning_avg()
@@ -174,7 +178,7 @@ class IMU_Output_Predictor_Check(Check):
         imu_observed_velocity_error_avg = self.add_statistic(
             CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0)
         imu_observed_velocity_error_avg.value = float(calculate_stat_from_signal(
-            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[1]',
+            output_tracking_error_data, output_tracking_error_msg, 'output_tracking_error[1]',
             self._in_air_detector_no_ground_effects, np.median))
         imu_observed_velocity_error_avg.thresholds.warning = \
             thresholds.imu_observed_velocity_error_warning_avg()
@@ -191,7 +195,7 @@ class IMU_Output_Predictor_Check(Check):
         imu_observed_position_error_avg = self.add_statistic(
             CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0)
         imu_observed_position_error_avg.value = float(calculate_stat_from_signal(
-            ekf2_innovation_data, 'ekf2_innovations', 'output_tracking_error[2]',
+            output_tracking_error_data, output_tracking_error_msg, 'output_tracking_error[2]',
             self._in_air_detector_no_ground_effects, np.median))
         imu_observed_position_error_avg.thresholds.warning = \
             thresholds.imu_observed_position_error_warning_avg()
