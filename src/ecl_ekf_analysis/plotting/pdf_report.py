@@ -29,23 +29,20 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     # create summary plots
     # save the plots to PDF
 
-    try:
-        estimator_status = ulog.get_dataset('estimator_status').data
-        print('found estimator_status data')
-    except:
+    messages = {elem.name for elem in ulog.data_list}
+
+    if 'estimator_innovations' in messages:
+        raise NotImplementedError('pdf report not implemented for new log file format')
+    elif 'estimator_status' not in messages:
         raise PreconditionError('could not find estimator_status data')
-
-    try:
-        ekf2_innovations = ulog.get_dataset('ekf2_innovations').data
-        print('found ekf2_innovation data')
-    except:
+    elif 'ekf2_innovations' not in messages:
         raise PreconditionError('could not find ekf2_innovation data')
-
-    try:
-        sensor_preflight = ulog.get_dataset('sensor_preflight').data
-        print('found sensor_preflight data')
-    except:
+    elif 'sensor_preflight' not in messages:
         raise PreconditionError('could not find sensor_preflight data')
+
+    estimator_status = ulog.get_dataset('estimator_status').data
+    ekf2_innovations = ulog.get_dataset('ekf2_innovations').data
+    sensor_preflight = ulog.get_dataset('sensor_preflight').data
 
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status)
 
