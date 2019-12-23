@@ -4,8 +4,6 @@ function collection for plotting
 """
 
 # matplotlib don't use Xwindows backend (must be before pyplot import)
-from typing import Tuple
-
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib.backends.backend_pdf import PdfPages
@@ -14,8 +12,6 @@ from pyulog import ULog
 
 from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
     get_estimator_check_flags
-from ecl_ekf_analysis.log_processing.data_version_handling import get_innovation_message, \
-    get_field_name_from_message_and_descriptor, get_innovation_message_and_field_name
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot, \
     ControlModeSummaryPlot, CheckFlagsPlot
@@ -33,27 +29,27 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     # create summary plots
     # save the plots to PDF
 
-    messages = {elem.name for elem in ulog.data_list}
-    new_log_format = 'estimator_innovations' in messages
+    try:
+        estimator_status = ulog.get_dataset('estimator_status').data
+        print('found estimator_status data')
+    except:
+        raise PreconditionError('could not find estimator_status data')
 
-    test_ratio_msg = get_innovation_message(ulog, topic='innovation_test_ratio')
-    if test_ratio_msg not in messages:
-        raise PreconditionError('could not find {:s} data'.format(test_ratio_msg))
-    test_ratio_data = ulog.get_dataset(test_ratio_msg).data
+    try:
+        ekf2_innovations = ulog.get_dataset('ekf2_innovations').data
+        print('found ekf2_innovation data')
+    except:
+        raise PreconditionError('could not find ekf2_innovation data')
 
-    innovation_message = get_innovation_message(ulog, topic='innovation')
-    innovation_data = ulog.get_dataset(innovation_message).data
-
-    innovation_variance_message = get_innovation_message(ulog, topic='innovation_variance')
-    innovation_variance_data = ulog.get_dataset(innovation_variance_message).data
-
-    if 'sensor_preflight' not in messages:
+    try:
+        sensor_preflight = ulog.get_dataset('sensor_preflight').data
+        print('found sensor_preflight data')
+    except:
         raise PreconditionError('could not find sensor_preflight data')
-    sensor_preflight = ulog.get_dataset('sensor_preflight').data
 
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status)
 
-    status_time = 1e-6 * test_ratio_data['timestamp']
+    status_time = 1e-6 * estimator_status['timestamp']
 
     b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, \
     on_ground_transition_time = detect_airtime(control_mode, status_time)
@@ -71,65 +67,59 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
             data_plot.save()
             data_plot.close()
 
-        if not new_log_format:
-            # vertical velocity and position innovations
-            data_plot = InnovationPlot(
-                innovation_data, [('vel_pos_innov[2]', 'vel_pos_innov_var[2]'),
-                                  ('vel_pos_innov[5]', 'vel_pos_innov_var[5]')],
-                x_labels=['time (sec)', 'time (sec)'],
-                y_labels=['Down Vel (m/s)', 'Down Pos (m)'], plot_title='Vertical Innovations',
-                pdf_handle=pdf_pages)
-            data_plot.save()
-            data_plot.close()
+        # vertical velocity and position innovations
+        data_plot = InnovationPlot(
+            ekf2_innovations, [('vel_pos_innov[2]', 'vel_pos_innov_var[2]'),
+                               ('vel_pos_innov[5]', 'vel_pos_innov_var[5]')],
+            x_labels=['time (sec)', 'time (sec)'],
+            y_labels=['Down Vel (m/s)', 'Down Pos (m)'], plot_title='Vertical Innovations',
+            pdf_handle=pdf_pages)
+        data_plot.save()
+        data_plot.close()
 
-            # horizontal velocity innovations
-            data_plot = InnovationPlot(
-                innovation_data, [('vel_pos_innov[0]', 'vel_pos_innov_var[0]'),
-                                  ('vel_pos_innov[1]', 'vel_pos_innov_var[1]')],
-                x_labels=['time (sec)', 'time (sec)'],
-                y_labels=['North Vel (m/s)', 'East Vel (m/s)'],
-                plot_title='Horizontal Velocity  Innovations', pdf_handle=pdf_pages)
-            data_plot.save()
-            data_plot.close()
+        # horizontal velocity innovations
+        data_plot = InnovationPlot(
+            ekf2_innovations, [('vel_pos_innov[0]', 'vel_pos_innov_var[0]'),
+                               ('vel_pos_innov[1]', 'vel_pos_innov_var[1]')],
+            x_labels=['time (sec)', 'time (sec)'],
+            y_labels=['North Vel (m/s)', 'East Vel (m/s)'],
+            plot_title='Horizontal Velocity  Innovations', pdf_handle=pdf_pages)
+        data_plot.save()
+        data_plot.close()
 
-            # horizontal position innovations
-            data_plot = InnovationPlot(
-                innovation_data, [('vel_pos_innov[3]', 'vel_pos_innov_var[3]'),
-                                  ('vel_pos_innov[4]', 'vel_pos_innov_var[4]')],
-                x_labels=['time (sec)', 'time (sec)'],
-                y_labels=['North Pos (m)', 'East Pos (m)'],
-                plot_title='Horizontal Position Innovations', pdf_handle=pdf_pages)
-            data_plot.save()
-            data_plot.close()
+        # horizontal position innovations
+        data_plot = InnovationPlot(
+            ekf2_innovations, [('vel_pos_innov[3]', 'vel_pos_innov_var[3]'),
+                               ('vel_pos_innov[4]', 'vel_pos_innov_var[4]')],
+            x_labels=['time (sec)', 'time (sec)'],
+            y_labels=['North Pos (m)', 'East Pos (m)'],
+            plot_title='Horizontal Position Innovations', pdf_handle=pdf_pages)
+        data_plot.save()
+        data_plot.close()
 
-        mag_innov_field, plot_data = get_plot_data_field_name_from_ulog(ulog, 'mag_field')
         # magnetometer innovations
         data_plot = InnovationPlot(
-            plot_data, [('{:s}[0]'.format(mag_innov_field), '{:s}_var[0]'.format(mag_innov_field)),
-                        ('{:s}[1]'.format(mag_innov_field), '{:s}_var[1]'.format(mag_innov_field)),
-                        ('{:s}[2]'.format(mag_innov_field), '{:s}_var[2]'.format(mag_innov_field))],
+            ekf2_innovations, [('mag_innov[0]', 'mag_innov_var[0]'),
+                               ('mag_innov[1]', 'mag_innov_var[1]'),
+                               ('mag_innov[2]', 'mag_innov_var[2]')],
             x_labels=['time (sec)', 'time (sec)', 'time (sec)'],
             y_labels=['X (Gauss)', 'Y (Gauss)', 'Z (Gauss)'], plot_title='Magnetometer Innovations',
             pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
-        heading_field, plot_data = get_plot_data_field_name_from_ulog(ulog, 'heading')
         # magnetic heading innovations
         data_plot = InnovationPlot(
-            plot_data, [(heading_field, '{:s}_var'.format(heading_field))],
+            ekf2_innovations, [('heading_innov', 'heading_innov_var')],
             x_labels=['time (sec)'], y_labels=['Heading (rad)'],
             plot_title='Magnetic Heading Innovations', pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
-        airspeed_field, plot_data = get_plot_data_field_name_from_ulog(ulog, 'airspeed')
-        beta_field, beta_plot_data = get_plot_data_field_name_from_ulog(ulog, 'beta')
-        plot_data.update(beta_plot_data)
         # air data innovations
         data_plot = InnovationPlot(
-            plot_data, [(airspeed_field, '{:s}_var'.format(airspeed_field)),
-                        (beta_field, '{:s}_var'.format(beta_field))],
+            ekf2_innovations,
+            [('airspeed_innov', 'airspeed_innov_var'), ('beta_innov', 'beta_innov_var')],
             x_labels=['time (sec)', 'time (sec)'],
             y_labels=['innovation (m/sec)', 'innovation (rad)'],
             sub_titles=['True Airspeed Innovations', 'Synthetic Sideslip Innovations'],
@@ -137,46 +127,33 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         data_plot.save()
         data_plot.close()
 
-        flow_field, plot_data = get_plot_data_field_name_from_ulog(ulog, 'flow')
         # optical flow innovations
         data_plot = InnovationPlot(
-            plot_data, [('{:s}[0]'.format(flow_field), '{:s}_var[0]'.format(flow_field)),
-                        ('{:s}[1]'.format(flow_field), '{:s}_var[1]'.format(flow_field))],
+            ekf2_innovations, [('flow_innov[0]', 'flow_innov_var[0]'),
+                               ('flow_innov[1]', 'flow_innov_var[1]')],
             x_labels=['time (sec)', 'time (sec)'],
             y_labels=['X (rad/sec)', 'Y (rad/sec)'],
             plot_title='Optical Flow Innovations', pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
 
-        test_ratio_message, mag_field = get_innovation_message_and_field_name(
-            ulog, 'mag_field', topic='innovation_test_ratio')
         # plot normalised innovation test levels
         # define variables to plot
-        field_descriptors = [['mag_field'], ['vel', 'pos'], ['hgt']]
-        variables = [
-            [get_innovation_message_and_field_name(
-                ulog, var, topic='innovation_test_ratio')[1] for var in field_descriptor]
-            for field_descriptor in field_descriptors
-        ]
-
+        variables = [['mag_test_ratio'], ['vel_test_ratio', 'pos_test_ratio'], ['hgt_test_ratio']]
         y_labels = ['mag', 'vel, pos', 'hgt']
         legend = [['mag'], ['vel', 'pos'], ['hgt']]
-        _, hagl_field_name = get_innovation_message_and_field_name(
-            ulog, 'hagl', topic='innovation_test_ratio')
-        if np.amax(test_ratio_data[hagl_field_name]) > 0.0:  # plot hagl ratio, if applicable
-            variables[-1].append(hagl_field_name)
+        if np.amax(estimator_status['hagl_test_ratio']) > 0.0:  # plot hagl ratio, if applicable
+            variables[-1].append('hagl_test_ratio')
             y_labels[-1] += ', hagl'
             legend[-1].append('hagl')
 
-        _, airspeed_field_name = get_innovation_message_and_field_name(
-            ulog, 'airspeed', topic='innovation_test_ratio')
-        if np.amax(test_ratio_data[airspeed_field_name]) > 0.0:  # plot airspeed sensor test ratio
-            variables.append([airspeed_field_name])
+        if np.amax(estimator_status['tas_test_ratio']) > 0.0:  # plot airspeed sensor test ratio
+            variables.append(['tas_test_ratio'])
             y_labels.append('TAS')
             legend.append(['airspeed'])
 
         data_plot = CheckFlagsPlot(
-            status_time, test_ratio_data, variables, x_label='time (sec)', y_labels=y_labels,
+            status_time, estimator_status, variables, x_label='time (sec)', y_labels=y_labels,
             plot_title='Normalised Innovation Test Levels', pdf_handle=pdf_pages, annotate=True,
             legend=legend
         )
@@ -344,36 +321,6 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
             annotate=False, pdf_handle=pdf_pages)
         data_plot.save()
         data_plot.close()
-
-
-def get_plot_data_field_name_from_ulog(ulog, field_descriptor: str) -> Tuple[str, dict]:
-    """
-    :param ulog:
-    :param field_descriptor:
-    :return:
-    """
-
-    messages = {elem.name for elem in ulog.data_list}
-    new_log_format = 'estimator_innovations' in messages
-
-    innovation_message, field_name = get_innovation_message_and_field_name(
-        ulog, field_descriptor, topic='innovation')
-    innovation_variance_message, field_name_var = get_innovation_message_and_field_name(
-        ulog, field_descriptor, topic='innovation_variance')
-
-    innovation_data = ulog.get_dataset(innovation_message).data
-    innovation_variance_data = ulog.get_dataset(innovation_variance_message).data
-
-    if new_log_format:
-        plot_data = {
-            innovation_data['{:s}[{:d}]'.format(field_name, axis)] for axis in [0, 1, 2]}
-        plot_data.update({
-            innovation_variance_data['{:s}_var[{:d}]'.format(
-                field_name_var, axis)] for axis in [0, 1, 2]})
-    else:
-        plot_data = innovation_data
-
-    return field_name, plot_data
 
 
 def detect_airtime(control_mode, status_time):
