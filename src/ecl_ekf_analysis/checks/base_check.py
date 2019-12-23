@@ -81,11 +81,12 @@ class Check():
         """
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
-        precondition function that is being run before running the check. meant to assign the
-        _does_apply member variable. running the check is skipped, if _does_apply is set to False.
+        precondition function that is being run before running the check. should return true if all
+        preconditions are met, false otherwise.
         """
+        return True
 
 
     def run(self) -> None:
@@ -93,7 +94,7 @@ class Check():
         runs the check functions for calculating the statistics and calculates the check status
         :return:
         """
-        self.run_precondition()
+        self._does_apply = self.run_precondition()
         if not self._does_apply:
             self._check_result.status = CheckStatus.DOES_NOT_APPLY
             return

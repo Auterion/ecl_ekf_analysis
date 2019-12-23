@@ -213,11 +213,11 @@ class MagnetometerCheck(EstimatorCheck):
             innov_fail_names=['magx_innov_fail', 'magy_innov_fail', 'magz_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(self._control_mode_flags['yaw_aligned']) > 0.5
+        return np.amax(self._control_mode_flags['yaw_aligned']) > 0.5
 
 
 class MagneticHeadingCheck(EstimatorCheck):
@@ -237,11 +237,11 @@ class MagneticHeadingCheck(EstimatorCheck):
             check_id='yaw', test_ratio_name=None, innov_fail_names=['yaw_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(self._control_mode_flags['yaw_aligned']) > 0.5
+        return np.amax(self._control_mode_flags['yaw_aligned']) > 0.5
 
 
 class VelocityCheck(EstimatorCheck):
@@ -262,11 +262,11 @@ class VelocityCheck(EstimatorCheck):
             innov_fail_names=['vel_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(self._control_mode_flags['using_gps']) > 0.5
+        return np.amax(self._control_mode_flags['using_gps']) > 0.5
 
 
 class PositionCheck(EstimatorCheck):
@@ -287,11 +287,11 @@ class PositionCheck(EstimatorCheck):
             innov_fail_names=['posh_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = params.ecl_pos_checks_when_sensors_not_fused() or np.amax(
+        return params.ecl_pos_checks_when_sensors_not_fused() or np.amax(
             self._control_mode_flags['using_gps']) > 0.5 or np.amax(
                 self._control_mode_flags['using_evpos']) > 0.5
 
@@ -332,11 +332,11 @@ class HeightAboveGroundCheck(EstimatorCheck):
             innov_fail_names=['hagl_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(
+        return np.amax(
             self.ulog.get_dataset('estimator_status').data['hagl_test_ratio']) > 0.0
 
 
@@ -357,11 +357,11 @@ class AirspeedCheck(EstimatorCheck):
             check_id='airspeed', test_ratio_name='tas_test_ratio',
             innov_fail_names=['tas_innov_fail'])
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(
+        return np.amax(
             self.ulog.get_dataset('estimator_status').data['tas_test_ratio']) > 0.0
 
 
@@ -382,11 +382,11 @@ class SideSlipCheck(EstimatorCheck):
             check_id='side_slip', test_ratio_name='beta_test_ratio',
             innov_fail_names=['sli_innov_fail'])
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(
+        return np.amax(
             self.ulog.get_dataset('estimator_status').data['beta_test_ratio']) > 0.0
 
 
@@ -408,8 +408,8 @@ class OpticalFlowCheck(EstimatorCheck):
             innov_fail_names=['ofx_innov_fail', 'ofy_innov_fail'])
 
 
-    def run_precondition(self) -> None:
+    def run_precondition(self) -> bool:
         """
         :return:
         """
-        self._does_apply = np.amax(self._control_mode_flags['using_optflow']) > 0.5
+        return np.amax(self._control_mode_flags['using_optflow']) > 0.5
