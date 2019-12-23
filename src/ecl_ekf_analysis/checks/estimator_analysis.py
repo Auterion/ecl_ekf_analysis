@@ -15,7 +15,7 @@ from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
 import ecl_ekf_analysis.config.params as params
 import ecl_ekf_analysis.config.thresholds as thresholds
 from ecl_ekf_analysis.log_processing.data_version_handling import \
-    get_innovation_message_and_field_name
+    get_innovation_message_and_field_names
 
 
 class EstimatorCheck(Check):
@@ -40,10 +40,11 @@ class EstimatorCheck(Check):
         self._control_mode_flags = control_mode_flags
         self._check_id = check_id
         if test_ratio_name is None:
-            self._test_ratio_message, self._test_ratio_name = None, None
+            self._test_ratio_message, self._test_ratio_names = None, []
         else:
-            self._test_ratio_message, self._test_ratio_name = get_innovation_message_and_field_name(
-                self.ulog, test_ratio_name, topic='innovation_test_ratio'
+            self._test_ratio_message, self._test_ratio_names = \
+                get_innovation_message_and_field_names(
+                    self.ulog, test_ratio_name, topic='innovation_test_ratio'
             )
         self._innov_fail_names = innov_fail_names
         if self._innov_fail_names is None:
@@ -60,7 +61,7 @@ class EstimatorCheck(Check):
                 ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds())
 
 
-    def calc_test_ratio_metrics(self) -> Dict[str, list]:
+    def calc_test_ratio_metrics(self, test_ratio_name: str) -> Dict[str, list]:
         """
         calculates the estimator status metrics
         :return:
@@ -72,19 +73,19 @@ class EstimatorCheck(Check):
         # add windowed metrics
         test_ratio_metrics['{:s}_percentage_red_windowed'.format(self._check_id)] = \
             calculate_windowed_mean_per_airphase(
-                test_ratio_data, self._test_ratio_message, self._test_ratio_name,
+                test_ratio_data, self._test_ratio_message, test_ratio_name,
                 self._in_air_detector, threshold=params.ecl_red_thresh(),
                 window_len_s=params.ecl_window_len_s())
 
         test_ratio_metrics['{:s}_percentage_amber_windowed'.format(self._check_id)] = \
             calculate_windowed_mean_per_airphase(
-                test_ratio_data, self._test_ratio_message, self._test_ratio_name,
+                test_ratio_data, self._test_ratio_message, test_ratio_name,
                 self._in_air_detector, threshold=params.ecl_amb_thresh(),
                 window_len_s=params.ecl_window_len_s())
 
         test_ratio_metrics['{:s}_test_windowed_mean'.format(self._check_id)] = \
             calculate_windowed_mean_per_airphase(
-                test_ratio_data, self._test_ratio_message, self._test_ratio_name,
+                test_ratio_data, self._test_ratio_message, test_ratio_name,
                 self._in_air_detector, window_len_s=params.ecl_window_len_s())
 
         return test_ratio_metrics
@@ -111,63 +112,60 @@ class EstimatorCheck(Check):
         """
         :return:
         """
+        for i, test_ratio_name in enumerate(self._test_ratio_names):
+            test_ratio_metrics = self.calc_test_ratio_metrics(test_ratio_name)
+            test_ratio_data = self.ulog.get_dataset(self._test_ratio_message).data
 
-        if self._test_ratio_name is None:
-            return
+            innov_red_pct = self.add_statistic(
+                CheckStatisticType.INNOVATION_RED_PCT, statistic_instance=i)
+            innov_red_pct.value = float(calculate_stat_from_signal(
+                test_ratio_data, self._test_ratio_message, test_ratio_name,
+                self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
 
-        test_ratio_metrics = self.calc_test_ratio_metrics()
-        test_ratio_data = self.ulog.get_dataset(self._test_ratio_message).data
+            #TODO: remove subtraction of innov_red_pct and tune parameters
+            innov_amber_pct = self.add_statistic(
+                CheckStatisticType.INNOVATION_AMBER_PCT, statistic_instance=i)
+            innov_amber_pct.value = float(calculate_stat_from_signal(
+                test_ratio_data, self._test_ratio_message, test_ratio_name, self._in_air_detector,
+                lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
+            innov_amber_pct.thresholds.warning = thresholds.ecl_amber_warning_pct(self._check_id)
+            innov_amber_pct.thresholds.failure = thresholds.ecl_amber_failure_pct(self._check_id)
 
-        innov_red_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_RED_PCT, statistic_instance=0)
-        innov_red_pct.value = float(calculate_stat_from_signal(
-            test_ratio_data, self._test_ratio_message, self._test_ratio_name,
-            self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
+            innov_red_windowed_pct = self.add_statistic(
+                CheckStatisticType.INNOVATION_RED_WINDOWED_PCT, statistic_instance=i)
+            innov_red_windowed_pct.value = float(max(
+                [np.max(metric) for _, metric in test_ratio_metrics[
+                    '{:s}_percentage_red_windowed'.format(self._check_id)]]))
 
-        #TODO: remove subtraction of innov_red_pct and tune parameters
-        innov_amber_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_AMBER_PCT, statistic_instance=0)
-        innov_amber_pct.value = float(calculate_stat_from_signal(
-            test_ratio_data, self._test_ratio_message, self._test_ratio_name, self._in_air_detector,
-            lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
-        innov_amber_pct.thresholds.warning = thresholds.ecl_amber_warning_pct(self._check_id)
-        innov_amber_pct.thresholds.failure = thresholds.ecl_amber_failure_pct(self._check_id)
+            innov_amber_windowed_pct = self.add_statistic(
+                CheckStatisticType.INNOVATION_AMBER_WINDOWED_PCT, statistic_instance=i)
+            innov_amber_windowed_pct.value = float(max(
+                [np.max(metric) for _, metric in test_ratio_metrics[
+                    '{:s}_percentage_amber_windowed'.format(self._check_id)]]))
 
-        innov_red_windowed_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_RED_WINDOWED_PCT, statistic_instance=0)
-        innov_red_windowed_pct.value = float(max(
-            [np.max(metric) for _, metric in test_ratio_metrics[
-                '{:s}_percentage_red_windowed'.format(self._check_id)]]))
+            # the max and mean ratio of samples above / below std dev
+            test_ratio_max = self.add_statistic(
+                CheckStatisticType.ESTIMATOR_FAILURE_MAX, statistic_instance=i)
+            test_ratio_max.value = float(calculate_stat_from_signal(
+                test_ratio_data, self._test_ratio_message, test_ratio_name,
+                self._in_air_detector, np.amax))
 
-        innov_amber_windowed_pct = self.add_statistic(
-            CheckStatisticType.INNOVATION_AMBER_WINDOWED_PCT, statistic_instance=0)
-        innov_amber_windowed_pct.value = float(max(
-            [np.max(metric) for _, metric in test_ratio_metrics[
-                '{:s}_percentage_amber_windowed'.format(self._check_id)]]))
+            test_ratio_avg = self.add_statistic(
+                CheckStatisticType.ESTIMATOR_FAILURE_AVG, statistic_instance=i)
+            test_ratio_avg.value = float(0.0)
 
-        # the max and mean ratio of samples above / below std dev
-        test_ratio_max = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_MAX, statistic_instance=0)
-        test_ratio_max.value = float(calculate_stat_from_signal(
-            test_ratio_data, self._test_ratio_message, self._test_ratio_name,
-            self._in_air_detector, np.amax))
+            if test_ratio_max.value > 0.0:
+                test_ratio_avg.value = float(calculate_stat_from_signal(
+                    test_ratio_data, self._test_ratio_message, test_ratio_name,
+                    self._in_air_detector, np.mean))
 
-        test_ratio_avg = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_AVG, statistic_instance=0)
-        test_ratio_avg.value = float(0.0)
+            test_ratio_windowed_avg = self.add_statistic(
+                CheckStatisticType.ESTIMATOR_FAILURE_WINDOWED_AVG, statistic_instance=i)
 
-        if test_ratio_max.value > 0.0:
-            test_ratio_avg.value = float(calculate_stat_from_signal(
-                test_ratio_data, self._test_ratio_message, self._test_ratio_name,
-                self._in_air_detector, np.mean))
-
-        test_ratio_windowed_avg = self.add_statistic(
-            CheckStatisticType.ESTIMATOR_FAILURE_WINDOWED_AVG, statistic_instance=0)
-
-        test_ratio_windowed_avg.value = float(max(
-            [float(np.mean(metric)) for _, metric in test_ratio_metrics[
-                '{:s}_test_windowed_mean'.format(self._check_id)]]
-        ))
+            test_ratio_windowed_avg.value = float(max(
+                [float(np.mean(metric)) for _, metric in test_ratio_metrics[
+                    '{:s}_test_windowed_mean'.format(self._check_id)]]
+            ))
 
 
     def calc_innovation_statistics(self) -> None:
@@ -343,10 +341,10 @@ class HeightAboveGroundCheck(EstimatorCheck):
         """
         :return:
         """
-        test_ratio_msg, test_ratio_field_name = get_innovation_message_and_field_name(
+        test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'hagl', topic='innovation_test_ratio')
         return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_name]) > 0.0
+            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class AirspeedCheck(EstimatorCheck):
@@ -370,10 +368,10 @@ class AirspeedCheck(EstimatorCheck):
         """
         :return:
         """
-        test_ratio_msg, test_ratio_field_name = get_innovation_message_and_field_name(
+        test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'airspeed', topic='innovation_test_ratio')
         return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_name]) > 0.0
+            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class SideSlipCheck(EstimatorCheck):
@@ -397,10 +395,10 @@ class SideSlipCheck(EstimatorCheck):
         """
         :return:
         """
-        test_ratio_msg, test_ratio_field_name = get_innovation_message_and_field_name(
+        test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'beta', topic='innovation_test_ratio')
         return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_name]) > 0.0
+            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class OpticalFlowCheck(EstimatorCheck):

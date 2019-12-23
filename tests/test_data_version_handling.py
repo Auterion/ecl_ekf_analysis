@@ -187,7 +187,9 @@ def test_get_field_name_from_message_and_descriptor(
     """
     log = testing_args[est_format_version]
 
-    message_name, field_name = dvh.get_innovation_message_and_field_name(
+    message_name, field_names = dvh.get_innovation_message_and_field_names(
         log, field_name_req, topic=topic)
-    print(message_name, field_name)
-    assert dvh.check_if_field_name_exists_in_message(log, message_name, field_name) == should_exist
+    print(message_name, str(field_names))
+    for field_name in field_names:
+        assert dvh.check_if_field_name_exists_in_message(log, message_name, field_name) \
+               == should_exist

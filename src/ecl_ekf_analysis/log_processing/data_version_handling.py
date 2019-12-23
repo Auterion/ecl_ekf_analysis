@@ -120,18 +120,28 @@ def get_field_name_from_message_and_descriptor(
     return field_name
 
 
-def get_innovation_message_and_field_name(
-        ulog: ULog, field_descriptor: str, topic: str = 'innovation') -> Tuple[str, str]:
+def get_innovation_message_and_field_names(
+        ulog: ULog, field_descriptor: str, topic: str = 'innovation') -> Tuple[str, List[str]]:
     """
     :param ulog:
     :param field_descriptor:
     :param topic: one of (innovation | innovation_variance | innovation_test_ratio)
     :return:
     """
+    field_names = []
     message = get_innovation_message(ulog, topic=topic)
     field_name = get_field_name_from_message_and_descriptor(message, field_descriptor, topic=topic)
+    innov_data = ulog.get_dataset(message).data
 
-    return message, field_name
+    if field_name in innov_data:
+        field_names.append(field_name)
+    else:
+        i = 0
+        while '{:s}[{:d}]'.format(field_name, i) in innov_data:
+            field_names.append('{:s}[{:d}]'.format(field_name, i))
+            i += 1
+
+    return message, field_names
 
 
 def get_field_names_for_innovation_messages(ulog: ULog, field_descriptors: List[str]) -> List[str]:
@@ -145,6 +155,21 @@ def get_field_names_for_innovation_messages(ulog: ULog, field_descriptors: List[
 
 
 def check_if_field_name_exists_in_message(ulog: ULog, message: str, field_name: str) -> bool:
+    """
+        Check if a field is part of a message in a certain log
+    """
+    exists = True
+
+    if message not in [elem.name for elem in ulog.data_list]:
+        exists = False
+    elif field_name not in ulog.get_dataset(message).data.keys():
+        exists = False
+
+    return exists
+
+
+def check_if_field_name_exists_in_message_escape_axis(
+        ulog: ULog, message: str, field_name: str) -> bool:
     """
         Check if a field is part of a message in a certain log
     """
