@@ -36,9 +36,10 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     messages = {elem.name for elem in ulog.data_list}
     new_log_format = 'estimator_innovations' in messages
 
-    if 'estimator_status' not in messages:
-        raise PreconditionError('could not find estimator_status data')
-    estimator_status = ulog.get_dataset('estimator_status').data
+    test_ratio_msg = get_innovation_message(ulog, topic='innovation_test_ratio')
+    if test_ratio_msg not in messages:
+        raise PreconditionError('could not find {:s} data'.format(test_ratio_msg))
+    test_ratio_data = ulog.get_dataset(test_ratio_msg).data
 
     innovation_message = get_innovation_message(ulog, topic='innovation')
     innovation_data = ulog.get_dataset(innovation_message).data
@@ -52,7 +53,7 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
     control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status)
 
-    status_time = 1e-6 * estimator_status['timestamp']
+    status_time = 1e-6 * test_ratio_data['timestamp']
 
     b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, \
     on_ground_transition_time = detect_airtime(control_mode, status_time)
@@ -147,23 +148,35 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         data_plot.save()
         data_plot.close()
 
+        test_ratio_message, mag_field = get_innovation_message_and_field_name(
+            ulog, 'mag_field', topic='innovation_test_ratio')
         # plot normalised innovation test levels
         # define variables to plot
-        variables = [['mag_test_ratio'], ['vel_test_ratio', 'pos_test_ratio'], ['hgt_test_ratio']]
+        field_descriptors = [['mag_field'], ['vel', 'pos'], ['hgt']]
+        variables = [
+            [get_innovation_message_and_field_name(
+                ulog, var, topic='innovation_test_ratio')[1] for var in field_descriptor]
+            for field_descriptor in field_descriptors
+        ]
+
         y_labels = ['mag', 'vel, pos', 'hgt']
         legend = [['mag'], ['vel', 'pos'], ['hgt']]
-        if np.amax(estimator_status['hagl_test_ratio']) > 0.0:  # plot hagl ratio, if applicable
-            variables[-1].append('hagl_test_ratio')
+        _, hagl_field_name = get_innovation_message_and_field_name(
+            ulog, 'hagl', topic='innovation_test_ratio')
+        if np.amax(test_ratio_data[hagl_field_name]) > 0.0:  # plot hagl ratio, if applicable
+            variables[-1].append(hagl_field_name)
             y_labels[-1] += ', hagl'
             legend[-1].append('hagl')
 
-        if np.amax(estimator_status['tas_test_ratio']) > 0.0:  # plot airspeed sensor test ratio
-            variables.append(['tas_test_ratio'])
+        _, airspeed_field_name = get_innovation_message_and_field_name(
+            ulog, 'airspeed', topic='innovation_test_ratio')
+        if np.amax(test_ratio_data[airspeed_field_name]) > 0.0:  # plot airspeed sensor test ratio
+            variables.append([airspeed_field_name])
             y_labels.append('TAS')
             legend.append(['airspeed'])
 
         data_plot = CheckFlagsPlot(
-            status_time, estimator_status, variables, x_label='time (sec)', y_labels=y_labels,
+            status_time, test_ratio_data, variables, x_label='time (sec)', y_labels=y_labels,
             plot_title='Normalised Innovation Test Levels', pdf_handle=pdf_pages, annotate=True,
             legend=legend
         )

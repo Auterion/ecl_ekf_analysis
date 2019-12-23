@@ -343,7 +343,7 @@ class CheckFlagsPlot(DataPlot):
     def __init__(
             self, data_time: np.ndarray, plot_data: dict, variable_names: List[List[str]],
             x_label: str, y_labels: List[str], y_lim: Optional[Tuple[int, int]] = None,
-            plot_title: str = '', legend: Optional[List[str]] = None,
+            plot_title: str = '', legend: Optional[List[List[str]]] = None,
             sub_titles: Optional[List[str]] = None, pdf_handle: Optional[PdfPages] = None,
             annotate: bool = False) -> None:
         """

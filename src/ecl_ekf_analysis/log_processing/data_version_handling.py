@@ -127,7 +127,7 @@ def get_innovation_message_and_field_name(
     """
     :param ulog:
     :param field_descriptor:
-    :param topic:
+    :param topic: one of (innovation | innovation_variance | innovation_test_ratio)
     :return:
     """
     message = get_innovation_message(ulog, topic=topic)
