@@ -2,10 +2,9 @@
 """
 function collection for handling different versions of log files
 """
-from typing import List
+from typing import List, Tuple
 
 from pyulog import ULog
-from typing import Tuple
 
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 
@@ -74,9 +73,8 @@ def get_field_name_from_message_and_descriptor(
     :return: str (if field not found, None will be returned)
     """
     field_name = ''
-    if message in [
-        'estimator_innovations', 'estimator_innovation_variances',
-        'estimator_innovation_test_ratios']:
+    if message in ['estimator_innovations', 'estimator_innovation_variances',
+                   'estimator_innovation_test_ratios']:
         field_name = field_descriptor
     elif message in ['ekf2_innovations', 'estimator_status']:
         if topic == 'innovation':

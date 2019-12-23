@@ -80,13 +80,12 @@ class Check():
         _check_status and write _check_statistics
         """
 
-
     def run_precondition(self) -> bool:
         """
         precondition function that is being run before running the check. should return true if all
         preconditions are met, false otherwise.
         """
-        return True
+        return self._does_apply
 
 
     def run(self) -> None:

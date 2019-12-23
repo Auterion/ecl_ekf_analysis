@@ -33,11 +33,11 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
     if 'estimator_innovations' in messages:
         raise NotImplementedError('pdf report not implemented for new log file format')
-    elif 'estimator_status' not in messages:
+    if 'estimator_status' not in messages:
         raise PreconditionError('could not find estimator_status data')
-    elif 'ekf2_innovations' not in messages:
+    if 'ekf2_innovations' not in messages:
         raise PreconditionError('could not find ekf2_innovation data')
-    elif 'sensor_preflight' not in messages:
+    if 'sensor_preflight' not in messages:
         raise PreconditionError('could not find sensor_preflight data')
 
     estimator_status = ulog.get_dataset('estimator_status').data
