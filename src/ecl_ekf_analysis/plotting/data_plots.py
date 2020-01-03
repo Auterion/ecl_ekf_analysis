@@ -18,7 +18,7 @@ def get_min_arg_time_value(
     :param data_time:
     :return:
     """
-    min_arg = np.argmin(time_series_data)
+    min_arg = int(np.argmin(time_series_data))
     min_time = data_time[min_arg]
     min_value = np.amin(time_series_data)
     return (min_arg, min_value, min_time)
@@ -31,7 +31,7 @@ def get_max_arg_time_value(
     :param data_time:
     :return:
     """
-    max_arg = np.argmax(time_series_data)
+    max_arg = int(np.argmax(time_series_data))
     max_time = data_time[max_arg]
     max_value = np.amax(time_series_data)
     return max_arg, max_value, max_time
