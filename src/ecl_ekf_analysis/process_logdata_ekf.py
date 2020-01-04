@@ -30,8 +30,9 @@ def get_arguments():
         description='Analyse the estimator_status and ekf2_innovation message data for a single'
                     'ulog file.')
     parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
-    parser.add_argument('--no-plots', action='store_true',
-                        help='Whether to only analyse and not plot the summaries for developers.')
+    parser.add_argument('--plots', action='store_true',
+                        help='Whether to plot an innovation summary for developers (only available '
+                             'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -97,7 +98,7 @@ def main() -> None:
     args = get_arguments()
 
     try:
-        test_results = process_logdata_ekf(args.filename, plot=not args.no_plots)
+        test_results = process_logdata_ekf(args.filename, plot=args.plots)
     except Exception as e:
         print(str(e))
         sys.exit(-1)
