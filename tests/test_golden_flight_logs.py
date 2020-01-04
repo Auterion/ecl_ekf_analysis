@@ -19,7 +19,7 @@ def testing_args():
     :return: test arguments
     """
     return {'golden_flight_logs_path': os.path.join(os.path.dirname(__file__), 'flight_logs'),
-            'golden_flight_logs': ['short_f450_log.ulg']}
+            'golden_flight_logs': ['short_f450_log.ulg', 'SITL_VTOL_standard_d7b958.ulg']}
 
 
 def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:

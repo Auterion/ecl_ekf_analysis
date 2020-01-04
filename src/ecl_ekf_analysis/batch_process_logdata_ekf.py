@@ -29,8 +29,9 @@ def get_arguments():
         help='Whether to overwrite an already analysed file. If a file with .pdf extension exists '
              'for a .ulg file, the log file will be skipped from analysis unless this flag has '
              'been set.')
-    parser.add_argument('--no-plots', action='store_true',
-                        help='Whether to only analyse and not plot the summaries for developers.')
+    parser.add_argument('--plots', action='store_true',
+                        help='Whether to plot an innovation summary for developers (only available '
+                             'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -66,7 +67,7 @@ def main() -> None:
         print('analysing file {:d}/{:d}: {:s}'.format(i, n_files, ulog_file))
 
         try:
-            _ = process_logdata_ekf(ulog_file, plot=not args.no_plots)
+            _ = process_logdata_ekf(ulog_file, plot=args.plots)
 
         except Exception as e:
             print(str(e))
