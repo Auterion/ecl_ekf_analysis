@@ -17,7 +17,7 @@ def testing_args():
     """
     flight_logs_path = os.path.join(os.path.dirname(__file__), 'flight_logs')
     log_est_format_v1 = ULog(os.path.join(flight_logs_path, 'short_f450_log.ulg'))
-    log_est_format_v2 = ULog(os.path.join(flight_logs_path, 'estimator_innovations.ulg'))
+    log_est_format_v2 = ULog(os.path.join(flight_logs_path, 'SITL_VTOL_standard_d7b958.ulg'))
 
     return {'log_est_format_v1': log_est_format_v1,
             'log_est_format_v2': log_est_format_v2}
