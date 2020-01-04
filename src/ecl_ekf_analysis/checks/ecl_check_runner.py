@@ -7,7 +7,8 @@ from pyulog import ULog
 from ecl_ekf_analysis.checks.base_runner import CheckRunner, AnalysisStatus
 from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, MagneticHeadingCheck, \
     VelocityCheck, PositionCheck, HeightCheck, HeightAboveGroundCheck, AirspeedCheck, \
-    SideSlipCheck, OpticalFlowCheck
+    SideSlipCheck, OpticalFlowCheck, GPSVelocityCheck, GPSPositionCheck, EVVelocityCheck, \
+    EVPositionCheck, GPSHeightCheck, EVHeightCheck, BarometerHeightCheck, RangeSensorHeightCheck
 from ecl_ekf_analysis.checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, \
     IMU_Output_Predictor_Check
 from ecl_ekf_analysis.checks.numerical_analysis import NumericalCheck
@@ -45,6 +46,14 @@ class EclCheckRunner(CheckRunner):
             self.append(IMU_Bias_Check(ulog))
             self.append(IMU_Output_Predictor_Check(ulog))
             self.append(NumericalCheck(ulog))
+            self.append(GPSVelocityCheck(ulog, innov_flags, control_mode_flags))
+            self.append(EVVelocityCheck(ulog, innov_flags, control_mode_flags))
+            self.append(GPSPositionCheck(ulog, innov_flags, control_mode_flags))
+            self.append(EVPositionCheck(ulog, innov_flags, control_mode_flags))
+            self.append(GPSHeightCheck(ulog, innov_flags, control_mode_flags))
+            self.append(EVHeightCheck(ulog, innov_flags, control_mode_flags))
+            self.append(BarometerHeightCheck(ulog, innov_flags, control_mode_flags))
+            self.append(RangeSensorHeightCheck(ulog, innov_flags, control_mode_flags))
         except Exception as e:
             capture_message(str(e))
             self.error_message = str(e)

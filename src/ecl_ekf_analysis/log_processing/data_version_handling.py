@@ -130,7 +130,10 @@ def get_innovation_message_and_field_names(
     """
     field_names = []
     message = get_innovation_message(ulog, topic=topic)
-    field_name = get_field_name_from_message_and_descriptor(message, field_descriptor, topic=topic)
+
+    field_name = get_field_name_from_message_and_descriptor(
+        message, field_descriptor, topic=topic)
+
     innov_data = ulog.get_dataset(message).data
 
     if field_name in innov_data:
@@ -140,6 +143,11 @@ def get_innovation_message_and_field_names(
         while '{:s}[{:d}]'.format(field_name, i) in innov_data:
             field_names.append('{:s}[{:d}]'.format(field_name, i))
             i += 1
+
+        if field_name.endswith('_vel'):
+            field_names.append('{:s}_h{:s}[0]'.format(field_name[:3], field_name[-3:]))
+            field_names.append('{:s}_h{:s}[1]'.format(field_name[:3], field_name[-3:]))
+            field_names.append('{:s}_v{:s}'.format(field_name[:3], field_name[-3:]))
 
     return message, field_names
 

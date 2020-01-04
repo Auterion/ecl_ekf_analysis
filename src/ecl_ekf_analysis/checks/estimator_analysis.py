@@ -39,16 +39,10 @@ class EstimatorCheck(Check):
         self._innov_flags = innov_flags
         self._control_mode_flags = control_mode_flags
         self._check_id = check_id
-        if test_ratio_name is None:
-            self._test_ratio_message, self._test_ratio_names = None, []
-        else:
-            self._test_ratio_message, self._test_ratio_names = \
-                get_innovation_message_and_field_names(
-                    self.ulog, test_ratio_name, topic='innovation_test_ratio'
-            )
-        self._innov_fail_names = innov_fail_names
-        if self._innov_fail_names is None:
-            self._innov_fail_names = list()
+        self._test_ratio_name = test_ratio_name
+        self._test_ratio_message, self._test_ratio_names = None, []
+
+        self._innov_fail_names = innov_fail_names if innov_fail_names is not None else []
 
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
@@ -59,6 +53,17 @@ class EstimatorCheck(Check):
         else:
             self._in_air_detector = InAirDetector(
                 ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds())
+
+
+    def init_test_ratio_message_and_names(self):
+        """
+        :return:
+        """
+        if self._test_ratio_name is not None:
+            self._test_ratio_message, self._test_ratio_names = \
+                get_innovation_message_and_field_names(
+                    self.ulog, self._test_ratio_name, topic='innovation_test_ratio'
+                )
 
 
     def calc_test_ratio_metrics(self, test_ratio_name: str) -> Dict[str, list]:
@@ -197,6 +202,7 @@ class EstimatorCheck(Check):
         """
         :return:
         """
+        self.init_test_ratio_message_and_names()
         self.calc_estimator_statistics()
         self.calc_innovation_statistics()
 
@@ -274,6 +280,58 @@ class VelocityCheck(EstimatorCheck):
         return np.amax(self._control_mode_flags['using_gps']) > 0.5
 
 
+class GPSVelocityCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(GPSVelocityCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.GPS_VELOCITY_STATUS,
+            check_id='gps_velocity', test_ratio_name='gps_vel')
+
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_gps']) > 0.5
+
+
+class EVVelocityCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(EVVelocityCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.EXTERNAL_VISION_VELOCITY_STATUS,
+            check_id='ev_velocity', test_ratio_name='ev_vel')
+
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['ev_vel']) > 0.5
+
+
 class PositionCheck(EstimatorCheck):
     """
     the compass check
@@ -301,6 +359,58 @@ class PositionCheck(EstimatorCheck):
                 self._control_mode_flags['using_evpos']) > 0.5
 
 
+class GPSPositionCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(GPSPositionCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.GPS_POSITION_STATUS,
+            check_id='gps_position', test_ratio_name='gps_hpos')
+
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_gps']) > 0.5
+
+
+class EVPositionCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(EVPositionCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.EXTERNAL_VISION_POSITION_STATUS,
+            check_id='ev_position', test_ratio_name='ev_hpos')
+
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_evpos']) > 0.5
+
+
 class HeightCheck(EstimatorCheck):
     """
     the compass check
@@ -317,6 +427,107 @@ class HeightCheck(EstimatorCheck):
             check_type=CheckType.HEIGHT_SENSOR_STATUS,
             check_id='height', test_ratio_name='hgt',
             innov_fail_names=['posv_innov_fail'])
+
+
+class GPSHeightCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(GPSHeightCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.GPS_HEIGHT_STATUS,
+            check_id='gps_height', test_ratio_name='gps_vpos')
+
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_gpshgt']) > 0.5
+
+
+class EVHeightCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(EVHeightCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.EXTERNAL_VISION_HEIGHT_STATUS,
+            check_id='ev_height', test_ratio_name='ev_vpos')
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_evhgt']) > 0.5
+
+
+class BarometerHeightCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(BarometerHeightCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.BAROMETER_HEIGHT_STATUS,
+            check_id='baro_height', test_ratio_name='baro_vpos')
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_barohgt']) > 0.5
+
+
+class RangeSensorHeightCheck(EstimatorCheck):
+    """
+    the compass check
+    """
+
+    def __init__(
+            self, ulog: ULog, innov_flags: Dict[str, float],
+            control_mode_flags: Dict[str, float]) -> None:
+        """
+        :param ulog:
+        """
+        super(RangeSensorHeightCheck, self).__init__(
+            ulog, innov_flags, control_mode_flags,
+            check_type=CheckType.RANGE_SENSOR_HEIGHT_STATUS,
+            check_id='range_sensor_height', test_ratio_name='rng_vpos')
+
+    def run_precondition(self) -> bool:
+        """
+        :return:
+        """
+        messages = {elem.name for elem in self.ulog.data_list}
+        return 'estimator_innovations' in messages and \
+               np.amax(self._control_mode_flags['using_rnghgt']) > 0.5
 
 
 class HeightAboveGroundCheck(EstimatorCheck):
