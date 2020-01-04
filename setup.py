@@ -53,5 +53,5 @@ setup(
             ],
     },
     include_package_data=True,
-    version="0.01",
+    version="0.1",
 )
