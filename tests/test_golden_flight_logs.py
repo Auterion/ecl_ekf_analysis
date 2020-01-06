@@ -9,7 +9,6 @@ from tempfile import TemporaryDirectory
 import simplejson as json
 import pytest
 
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 from ecl_ekf_analysis.checks.comparison import compare_check_analysis_result_ground_truth
 
 @pytest.fixture(scope="module")
@@ -42,7 +41,7 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
 
         assert os.path.exists(tmp_log_filename), '{:s} does not exist.'.format(tmp_log_filename)
 
-        process_logdata_ekf(tmp_log_filename, plot=False)
+        os.system('process_logdata_ekf {:s}'.format(tmp_log_filename))
 
         analysis_result_filename = os.path.join(
             tmp_dir, '{:s}.json'.format(os.path.splitext(tmp_log_filename)[0]))
