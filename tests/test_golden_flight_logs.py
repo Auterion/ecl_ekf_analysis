@@ -9,7 +9,6 @@ from tempfile import TemporaryDirectory
 import simplejson as json
 import pytest
 
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 from ecl_ekf_analysis.checks.comparison import compare_check_analysis_result_ground_truth
 
 @pytest.fixture(scope="module")
