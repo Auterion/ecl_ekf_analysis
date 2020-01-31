@@ -285,7 +285,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta angle
         imu_high_freq_delta_angle_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX, statistic_instance=0)
         imu_high_freq_delta_angle_max.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', 'vibe[1]',
             self._in_air_detector_no_ground_effects, np.amax))
@@ -294,7 +294,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta angle
         imu_high_freq_delta_angle_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG, statistic_instance=0)
         imu_high_freq_delta_angle_avg.value = float(0.0)
 
         if imu_high_freq_delta_angle_max.value > 0.0:
@@ -306,7 +306,7 @@ class IMU_Vibration_Check(Check):
 
         # windowed avg high frequency delta angle
         imu_high_freq_delta_angle_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG, statistic_instance=0)
         imu_high_freq_delta_angle_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in imu_metrics['imu_hfdang_windowed_mean']]))
 
@@ -320,7 +320,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta velocity
         imu_high_freq_delta_velocity_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX, statistic_instance=0)
         imu_high_freq_delta_velocity_max.value = float(calculate_stat_from_signal(
             estimator_status_data, 'estimator_status', 'vibe[2]',
             self._in_air_detector_no_ground_effects, np.amax))
@@ -329,7 +329,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta velocity
         imu_high_freq_delta_velocity_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG, statistic_instance=0)
         imu_high_freq_delta_velocity_avg.value = float(0.0)
 
         if imu_high_freq_delta_velocity_max.value > 0.0:
@@ -342,7 +342,7 @@ class IMU_Vibration_Check(Check):
 
         # windowed avg high frequency delta velocity
         imu_high_freq_delta_velocity_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG)
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG, statistic_instance=0)
         imu_high_freq_delta_velocity_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in
              imu_metrics['imu_hfdvel_windowed_mean']]))
