@@ -251,6 +251,69 @@
   {
     "statistics": [
       {
+        "value": 0.0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "INNOVATION_RED_PCT"
+      },
+      {
+        "value": 0.0,
+        "thresholds": {
+          "warning": 5.0,
+          "failure": 50.0
+        },
+        "instance": 0,
+        "type": "INNOVATION_AMBER_PCT"
+      },
+      {
+        "value": 0.0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "INNOVATION_RED_WINDOWED_PCT"
+      },
+      {
+        "value": 0.0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "INNOVATION_AMBER_WINDOWED_PCT"
+      },
+      {
+        "value": 0.0014177156845107675,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "ESTIMATOR_FAILURE_MAX"
+      },
+      {
+        "value": 6.895148544572294e-05,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "ESTIMATOR_FAILURE_AVG"
+      },
+      {
+        "value": 3.733404810191132e-05,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        },
+        "instance": 0,
+        "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
+      },
+      {
         "instance": 0,
         "value": 0.0,
         "type": "FAIL_RATIO_PCT",

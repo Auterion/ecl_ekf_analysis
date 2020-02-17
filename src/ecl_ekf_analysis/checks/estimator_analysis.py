@@ -242,10 +242,12 @@ class MagneticHeadingCheck(EstimatorCheck):
         """
         :param ulog:
         """
+        messages = {elem.name for elem in ulog.data_list}
+        test_ratio_name = 'heading' if 'estimator_innovation_test_ratios' in messages else None
         super(MagneticHeadingCheck, self).__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.MAGNETIC_HEADING_STATUS,
-            check_id='yaw', test_ratio_name=None, innov_fail_names=['yaw_innov_fail'])
+            check_id='yaw', test_ratio_name=test_ratio_name, innov_fail_names=['yaw_innov_fail'])
 
 
     def run_precondition(self) -> bool:

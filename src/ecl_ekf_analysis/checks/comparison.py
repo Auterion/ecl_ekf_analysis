@@ -46,8 +46,8 @@ def compare_check_analysis_result_ground_truth(
             log_id)
 
     assert len(check_result['statistics']) == len(ground_truth_check_result['statistics']), \
-        'number of check statistics in {:s} from analysis differed to number of ground truth ' \
-        'statistics.'.format(check_result['type'])
+        'number of check statistics of {:s} in {:s} from analysis differed to number of ground ' \
+        'truth statistics.'.format(check_result['type'], log_id)
 
     for check_statistic, ground_truth_check_statistic in zip(
             check_result['statistics'], ground_truth_check_result['statistics']):
