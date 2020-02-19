@@ -262,8 +262,8 @@
       {
         "value": 0.0,
         "thresholds": {
-          "warning": 5.0,
-          "failure": 50.0
+          "warning": null,
+          "failure": null
         },
         "instance": 0,
         "type": "INNOVATION_AMBER_PCT"
@@ -280,8 +280,8 @@
       {
         "value": 0.0,
         "thresholds": {
-          "warning": null,
-          "failure": null
+          "warning": 15.0,
+          "failure": 50.0
         },
         "instance": 0,
         "type": "INNOVATION_AMBER_WINDOWED_PCT"

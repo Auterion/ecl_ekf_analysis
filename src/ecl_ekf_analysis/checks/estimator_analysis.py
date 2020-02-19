@@ -133,8 +133,12 @@ class EstimatorCheck(Check):
             innov_amber_pct.value = float(calculate_stat_from_signal(
                 test_ratio_data, self._test_ratio_message, test_ratio_name, self._in_air_detector,
                 lambda x: 100.0 * np.mean(x > params.ecl_amb_thresh()))) - innov_red_pct.value
-            innov_amber_pct.thresholds.warning = thresholds.ecl_amber_warning_pct(self._check_id)
-            innov_amber_pct.thresholds.failure = thresholds.ecl_amber_failure_pct(self._check_id)
+            if thresholds.ecl_amber_warning_pct_exists(self._check_id):
+                innov_amber_pct.thresholds.warning = \
+                    thresholds.ecl_amber_warning_pct(self._check_id)
+            if thresholds.ecl_amber_failure_pct_exists(self._check_id):
+                innov_amber_pct.thresholds.failure = \
+                    thresholds.ecl_amber_failure_pct(self._check_id)
 
             innov_red_windowed_pct = self.add_statistic(
                 CheckStatisticType.INNOVATION_RED_WINDOWED_PCT, statistic_instance=i)
@@ -147,6 +151,12 @@ class EstimatorCheck(Check):
             innov_amber_windowed_pct.value = float(max(
                 [np.max(metric) for _, metric in test_ratio_metrics[
                     '{:s}_percentage_amber_windowed'.format(self._check_id)]]))
+            if thresholds.ecl_amber_warning_windowed_pct_exists(self._check_id):
+                innov_amber_windowed_pct.thresholds.warning = \
+                    thresholds.ecl_amber_warning_windowed_pct(self._check_id)
+            if thresholds.ecl_amber_failure_windowed_pct_exists(self._check_id):
+                innov_amber_windowed_pct.thresholds.failure = \
+                    thresholds.ecl_amber_failure_windowed_pct(self._check_id)
 
             # the max and mean ratio of samples above / below std dev
             test_ratio_max = self.add_statistic(
