@@ -74,8 +74,8 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
     """
     try:
         ulog = ULog(filename)
-    except:
-        raise PreconditionError('could not open {:s}'.format(filename))
+    except Exception as e:
+        raise PreconditionError('could not open {:s}'.format(filename)) from e
 
     test_results = analyse_logdata_ekf(ulog)
 

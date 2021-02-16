@@ -25,7 +25,7 @@ class IMU_Bias_Check(Check):
         """
         :param ulog:
         """
-        super(IMU_Bias_Check, self).__init__(
+        super().__init__(
             ulog, check_type=CheckType.IMU_BIAS_STATUS)
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
@@ -117,7 +117,7 @@ class IMU_Output_Predictor_Check(Check):
         """
         :param ulog:
         """
-        super(IMU_Output_Predictor_Check, self).__init__(
+        super().__init__(
             ulog, check_type=CheckType.IMU_OUTPUT_PREDICTOR_STATUS)
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
@@ -217,7 +217,7 @@ class IMU_Vibration_Check(Check):
         """
         :param ulog:
         """
-        super(IMU_Vibration_Check, self).__init__(
+        super().__init__(
             ulog, check_type=CheckType.IMU_VIBRATION_STATUS)
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),

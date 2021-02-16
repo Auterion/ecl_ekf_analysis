@@ -43,11 +43,11 @@ class InAirDetector():
         try:
             self._vehicle_land_detected = ulog.get_dataset('vehicle_land_detected').data
             self._landed = self._vehicle_land_detected['landed']
-        except:
+        except Exception as e:
             self._in_air = []
             raise PreconditionError(
                 'InAirDetector: Could not find vehicle land detected message and/or landed field'
-                ' and thus not find any airtime.')
+                ' and thus not find any airtime.') from e
 
         self._log_start = self._ulog.start_timestamp / 1.0e6
 
@@ -222,8 +222,8 @@ class InAirDetector():
         """
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
-        except:
-            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
+        except Exception as e:
+            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset)) from e
 
         return self.get_total_airtime_for_timestamp(
             data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
@@ -263,8 +263,8 @@ class InAirDetector():
         """
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
-        except:
-            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset))
+        except Exception as e:
+            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset)) from e
 
         return self.get_airtime_per_phase_for_timestamp(
             data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
