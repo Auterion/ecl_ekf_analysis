@@ -34,7 +34,7 @@ class EstimatorCheck(Check):
         :param test_ratio_name:
         :param innov_fail_names:
         """
-        super(EstimatorCheck, self).__init__(
+        super().__init__(
             ulog, check_type=check_type)
         self._innov_flags = innov_flags
         self._control_mode_flags = control_mode_flags
@@ -227,7 +227,7 @@ class MagnetometerCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(MagnetometerCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.MAGNETOMETER_STATUS,
             check_id='magnetometer', test_ratio_name='mag_field',
@@ -254,7 +254,7 @@ class MagneticHeadingCheck(EstimatorCheck):
         """
         messages = {elem.name for elem in ulog.data_list}
         test_ratio_name = 'heading' if 'estimator_innovation_test_ratios' in messages else None
-        super(MagneticHeadingCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.MAGNETIC_HEADING_STATUS,
             check_id='yaw', test_ratio_name=test_ratio_name, innov_fail_names=['yaw_innov_fail'])
@@ -278,7 +278,7 @@ class VelocityCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(VelocityCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.VELOCITY_SENSOR_STATUS,
             check_id='velocity', test_ratio_name='vel',
@@ -303,7 +303,7 @@ class GPSVelocityCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(GPSVelocityCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.GPS_VELOCITY_STATUS,
             check_id='gps_velocity', test_ratio_name='gps_vel')
@@ -329,7 +329,7 @@ class EVVelocityCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(EVVelocityCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.EXTERNAL_VISION_VELOCITY_STATUS,
             check_id='ev_velocity', test_ratio_name='ev_vel')
@@ -355,7 +355,7 @@ class PositionCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(PositionCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.POSITION_SENSOR_STATUS,
             check_id='position', test_ratio_name='pos',
@@ -382,7 +382,7 @@ class GPSPositionCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(GPSPositionCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.GPS_POSITION_STATUS,
             check_id='gps_position', test_ratio_name='gps_hpos')
@@ -408,7 +408,7 @@ class EVPositionCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(EVPositionCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.EXTERNAL_VISION_POSITION_STATUS,
             check_id='ev_position', test_ratio_name='ev_hpos')
@@ -434,7 +434,7 @@ class HeightCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(HeightCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.HEIGHT_SENSOR_STATUS,
             check_id='height', test_ratio_name='hgt',
@@ -452,7 +452,7 @@ class GPSHeightCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(GPSHeightCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.GPS_HEIGHT_STATUS,
             check_id='gps_height', test_ratio_name='gps_vpos')
@@ -478,7 +478,7 @@ class EVHeightCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(EVHeightCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.EXTERNAL_VISION_HEIGHT_STATUS,
             check_id='ev_height', test_ratio_name='ev_vpos')
@@ -503,7 +503,7 @@ class BarometerHeightCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(BarometerHeightCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.BAROMETER_HEIGHT_STATUS,
             check_id='baro_height', test_ratio_name='baro_vpos')
@@ -528,7 +528,7 @@ class RangeSensorHeightCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(RangeSensorHeightCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.RANGE_SENSOR_HEIGHT_STATUS,
             check_id='range_sensor_height', test_ratio_name='rng_vpos')
@@ -553,7 +553,7 @@ class HeightAboveGroundCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(HeightAboveGroundCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.HEIGHT_ABOVE_GROUND_SENSOR_STATUS,
             check_id='height_above_ground', test_ratio_name='hagl',
@@ -581,7 +581,7 @@ class AirspeedCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(AirspeedCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.AIRSPEED_SENSOR_STATUS,
             check_id='airspeed', test_ratio_name='airspeed',
@@ -608,7 +608,7 @@ class SideSlipCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(SideSlipCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.SIDESLIP_SENSOR_STATUS,
             check_id='side_slip', test_ratio_name='beta',
@@ -635,7 +635,7 @@ class OpticalFlowCheck(EstimatorCheck):
         """
         :param ulog:
         """
-        super(OpticalFlowCheck, self).__init__(
+        super().__init__(
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.OPTICAL_FLOW_STATUS,
             check_id='optical_flow', test_ratio_name=None,

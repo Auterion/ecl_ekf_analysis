@@ -28,9 +28,9 @@ class PositionAnalyzer():
 
         try:
             self._vehicle_local_position = self._ulog.get_dataset('vehicle_local_position').data
-        except:
+        except Exception as e:
             raise PreconditionError(
-                'PositionAnalyzer: Could not find vehicle local position message.')
+                'PositionAnalyzer: Could not find vehicle local position message.') from e
 
         self._position_intervals = intervals.closed(
             0.0, (self._ulog.last_timestamp - self._ulog.start_timestamp) / 1.0e6)
@@ -97,8 +97,10 @@ class PositionAnalyzer():
         """
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
-        except:
-            raise PreconditionError('PositionAnalyzer: {:s} not found in log.'.format(dataset))
+        except Exception as e:
+            raise PreconditionError(
+                'PositionAnalyzer: {:s} not found in log.'.format(dataset)
+            ) from e
 
         valid_position_indices = []
 
@@ -121,8 +123,10 @@ class PositionAnalyzer():
         """
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
-        except:
-            raise PreconditionError('PositionAnalyzer: {:s} not found in log.'.format(dataset))
+        except Exception as e:
+            raise PreconditionError(
+                'PositionAnalyzer: {:s} not found in log.'.format(dataset)
+            ) from e
 
         position_intervals = []
 

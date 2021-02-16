@@ -25,7 +25,7 @@ class EclCheckRunner(CheckRunner):
         """
         :param ulog:
         """
-        super(EclCheckRunner, self).__init__()
+        super().__init__()
 
         try:
             estimator_status_data = ulog.get_dataset('estimator_status').data

@@ -18,7 +18,7 @@ class NumericalCheck(Check):
         """
         :param ulog:
         """
-        super(NumericalCheck, self).__init__(
+        super().__init__(
             ulog, check_type=CheckType.FILTER_FAULT_STATUS)
 
 
