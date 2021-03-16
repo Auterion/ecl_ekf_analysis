@@ -267,13 +267,13 @@ class IMU_Vibration_Check(Check):
             imu_coning_avg.value = float(calculate_stat_from_signal(
                 estimator_status_data, 'estimator_status', 'vibe[0]',
                 self._in_air_detector_no_ground_effects, np.mean))
-        imu_coning_avg.thresholds.warning = thresholds.imu_coning_warning_avg()
 
         # windowed avg coning
         imu_coning_windowed_avg = self.add_statistic(
             CheckStatisticType.IMU_CONING_WINDOWED_AVG, statistic_instance=0)
         imu_coning_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in imu_metrics['imu_coning_windowed_mean']]))
+        imu_coning_windowed_avg.thresholds.warning = thresholds.imu_coning_warning_rolling_avg()
 
 
     def calc_high_freq_delta_angle_statistics(
@@ -301,14 +301,14 @@ class IMU_Vibration_Check(Check):
             imu_high_freq_delta_angle_avg.value = float(calculate_stat_from_signal(
                 estimator_status_data, 'estimator_status', 'vibe[1]',
                 self._in_air_detector_no_ground_effects, np.mean))
-        imu_high_freq_delta_angle_avg.thresholds.warning = \
-            thresholds.imu_high_freq_delta_angle_warning_avg()
 
         # windowed avg high frequency delta angle
         imu_high_freq_delta_angle_windowed_avg = self.add_statistic(
             CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG, statistic_instance=0)
         imu_high_freq_delta_angle_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in imu_metrics['imu_hfdang_windowed_mean']]))
+        imu_high_freq_delta_angle_windowed_avg.thresholds.warning = \
+            thresholds.imu_high_freq_delta_angle_warning_rolling_avg()
 
 
     def calc_high_freq_delta_velocity_statistics(
@@ -337,15 +337,14 @@ class IMU_Vibration_Check(Check):
                 estimator_status_data, 'estimator_status', 'vibe[2]',
                 self._in_air_detector_no_ground_effects, np.mean))
 
-        imu_high_freq_delta_velocity_avg.thresholds.warning = \
-            thresholds.imu_high_freq_delta_velocity_warning_avg()
-
         # windowed avg high frequency delta velocity
         imu_high_freq_delta_velocity_windowed_avg = self.add_statistic(
             CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG, statistic_instance=0)
         imu_high_freq_delta_velocity_windowed_avg.value = float(max(
             [np.max(signal) for _, signal in
              imu_metrics['imu_hfdvel_windowed_mean']]))
+        imu_high_freq_delta_velocity_windowed_avg.thresholds.warning = \
+            thresholds.imu_high_freq_delta_velocity_warning_rolling_avg()
 
 
     def calc_statistics(self) -> None:

@@ -43,20 +43,20 @@ def ecl_filter_fault_flag_failure() -> float:
 def imu_coning_warning_max() -> float:
     return _thresholds.getfloat('DEFAULT', 'imu_coning_warning_max')
 
-def imu_coning_warning_avg() -> float:
-    return _thresholds.getfloat('DEFAULT', 'imu_coning_warning_avg')
+def imu_coning_warning_rolling_avg() -> float:
+    return _thresholds.getfloat('DEFAULT', 'imu_coning_warning_rolling_avg')
 
 def imu_high_freq_delta_angle_warning_max() -> float:
     return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_angle_warning_max')
 
-def imu_high_freq_delta_angle_warning_avg() -> float:
-    return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_angle_warning_avg')
+def imu_high_freq_delta_angle_warning_rolling_avg() -> float:
+    return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_angle_warning_rolling_avg')
 
 def imu_high_freq_delta_velocity_warning_max() -> float:
     return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_velocity_warning_max')
 
-def imu_high_freq_delta_velocity_warning_avg() -> float:
-    return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_velocity_warning_avg')
+def imu_high_freq_delta_velocity_warning_rolling_avg() -> float:
+    return _thresholds.getfloat('DEFAULT', 'imu_high_freq_delta_velocity_warning_rolling_avg')
 
 def imu_observed_angle_error_warning_avg() -> float:
     return _thresholds.getfloat('DEFAULT', 'imu_observed_angle_error_warning_avg')
