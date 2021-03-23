@@ -433,7 +433,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 1.8e-05
+          "warning": 8e-05
         },
         "instance": 0,
         "value": 1.4525997357850429e-05,
@@ -442,7 +442,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 3.6e-06
+          "warning": null
         },
         "instance": 0,
         "value": 1.7784452666091966e-06,
@@ -451,7 +451,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": null
+          "warning": 2.5e-05
         },
         "instance": 0,
         "value": 4.937323865306098e-06,
@@ -460,7 +460,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 0.004
+          "warning": 0.01
         },
         "instance": 0,
         "value": 0.003721016924828291,
@@ -469,7 +469,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 0.002
+          "warning": null
         },
         "instance": 0,
         "value": 0.0017436499474570155,
@@ -478,7 +478,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": null
+          "warning": 0.007
         },
         "instance": 0,
         "value": 0.0023362908978015184,
@@ -487,7 +487,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 0.08
+          "warning": 0.3
         },
         "instance": 0,
         "value": 0.07891786098480225,
@@ -496,7 +496,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": 0.04
+          "warning": null
         },
         "instance": 0,
         "value": 0.03141993284225464,
@@ -505,7 +505,7 @@
       {
         "thresholds": {
           "failure": null,
-          "warning": null
+          "warning": 0.2
         },
         "instance": 0,
         "value": 0.04837441444396973,

@@ -434,7 +434,7 @@
         "value": 2.058212942301907e-07,
         "type": "IMU_CONING_MAX",
         "thresholds": {
-          "warning": 1.8e-05,
+          "warning": 8e-05,
           "failure": null
         }
       },
@@ -443,7 +443,7 @@
         "value": 1.317040432269323e-08,
         "type": "IMU_CONING_AVG",
         "thresholds": {
-          "warning": 3.6e-06,
+          "warning": null,
           "failure": null
         }
       },
@@ -452,7 +452,7 @@
         "value": 2.9517568833625774e-08,
         "type": "IMU_CONING_WINDOWED_AVG",
         "thresholds": {
-          "warning": null,
+          "warning": 2.5e-05,
           "failure": null
         }
       },
@@ -461,7 +461,7 @@
         "value": 0.000106104722362943,
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_MAX",
         "thresholds": {
-          "warning": 0.004,
+          "warning": 0.01,
           "failure": null
         }
       },
@@ -470,7 +470,7 @@
         "value": 2.7555492124520242e-05,
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_AVG",
         "thresholds": {
-          "warning": 0.002,
+          "warning": null,
           "failure": null
         }
       },
@@ -479,7 +479,7 @@
         "value": 3.187061520293355e-05,
         "type": "IMU_HIGH_FREQ_DELTA_ANGLE_WINDOWED_AVG",
         "thresholds": {
-          "warning": null,
+          "warning": 0.007,
           "failure": null
         }
       },
@@ -488,7 +488,7 @@
         "value": 0.006760145537555218,
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_MAX",
         "thresholds": {
-          "warning": 0.08,
+          "warning": 0.3,
           "failure": null
         }
       },
@@ -497,7 +497,7 @@
         "value": 0.00033429687027819455,
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_AVG",
         "thresholds": {
-          "warning": 0.04,
+          "warning": null,
           "failure": null
         }
       },
@@ -506,7 +506,7 @@
         "value": 0.0003659541253000498,
         "type": "IMU_HIGH_FREQ_DELTA_VELOCITY_WINDOWED_AVG",
         "thresholds": {
-          "warning": null,
+          "warning": 0.2,
           "failure": null
         }
       }
