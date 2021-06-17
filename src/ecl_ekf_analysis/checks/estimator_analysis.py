@@ -104,11 +104,16 @@ class EstimatorCheck(Check):
         innovation_metrics = dict()
 
         for innov_fail_name in self._innov_fail_names:
-            innovation_metrics['{:s}_windowed_mean'.format(innov_fail_name)] = \
+            innovation_metrics['{:s}_fail_short_window_mean'.format(innov_fail_name)] = \
                 calculate_windowed_mean_per_airphase(
                     self._innov_flags, 'estimator_status', innov_fail_name,
                     self._in_air_detector_no_ground_effects, threshold=0.5,
-                    window_len_s=params.ecl_window_len_s())
+                    window_len_s=params.ecl_short_rolling_window_len_s())
+            innovation_metrics['{:s}_fail_long_window_mean'.format(innov_fail_name)] = \
+                calculate_windowed_mean_per_airphase(
+                    self._innov_flags, 'estimator_status', innov_fail_name,
+                    self._in_air_detector_no_ground_effects, threshold=0.5,
+                    window_len_s=params.ecl_long_rolling_window_len_s())
 
         return innovation_metrics
 
@@ -196,16 +201,29 @@ class EstimatorCheck(Check):
             innov_stats_fail_pct.value = float(calculate_stat_from_signal(
                 self._innov_flags, 'estimator_status', innov_fail_name,
                 self._in_air_detector_no_ground_effects, lambda x: 100.0 * np.mean(x > 0.5)))
-            innov_stats_fail_pct.thresholds.failure = thresholds.ecl_innovation_failure_pct(
-                self._check_id)
+            if thresholds.ecl_innovation_failure_pct_exists(self._check_id):
+                innov_stats_fail_pct.thresholds.failure = thresholds.ecl_innovation_failure_pct(
+                    self._check_id)
 
-            innov_stats_fail_windowed_pct = self.add_statistic(
-                CheckStatisticType.FAIL_RATIO_WINDOWED_PCT, statistic_instance=i)
-
-            innov_stats_fail_windowed_pct.value = float(max(
+            innov_stats_fail_short_window_pct = self.add_statistic(
+                CheckStatisticType.FAIL_RATIO_SHORT_WINDOW_PCT, statistic_instance=i)
+            innov_stats_fail_short_window_pct.value = float(max(
                 [np.max(metric) for _, metric in innovation_metrics[
-                    '{:s}_windowed_mean'.format(innov_fail_name)]]
+                    '{:s}_fail_short_window_mean'.format(innov_fail_name)]]
             ))
+            if thresholds.ecl_short_rolling_innovation_failure_pct_exists(self._check_id):
+                innov_stats_fail_short_window_pct.thresholds.failure = \
+                    thresholds.ecl_short_rolling_innovation_failure_pct(self._check_id)
+
+            innov_stats_fail_long_window_pct = self.add_statistic(
+                CheckStatisticType.FAIL_RATIO_LONG_WINDOW_PCT, statistic_instance=i)
+            innov_stats_fail_long_window_pct.value = float(max(
+                [np.max(metric) for _, metric in innovation_metrics[
+                    '{:s}_fail_long_window_mean'.format(innov_fail_name)]]
+            ))
+            if thresholds.ecl_long_rolling_innovation_warning_pct_exists(self._check_id):
+                innov_stats_fail_long_window_pct.thresholds.warning = \
+                    thresholds.ecl_long_rolling_innovation_warning_pct(self._check_id)
 
 
     def calc_statistics(self) -> None:
