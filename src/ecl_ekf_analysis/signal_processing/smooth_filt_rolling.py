@@ -24,8 +24,8 @@ from scipy.signal import butter, filtfilt
 
 
 def butter_filter_1d(
-        input_signal: np.ndarray, cut_off: float, sample_rate: float, order: int = 5,
-        btype: str = 'low') -> np.ndarray:
+    input_signal: np.ndarray, cut_off: float, sample_rate: float, order: int = 5, btype: str = "low"
+) -> np.ndarray:
     """
     simple butterworth filter implementation. This assumes a regularly sampled input signal!
     :param input_signal:
@@ -43,8 +43,8 @@ def butter_filter_1d(
 
 
 def apply_rolling_fun_1d_boundaries(
-        input_signal: np.ndarray, fun: Callable, window_len: int = 51,
-        mode: str = 'valid') -> np.ndarray:
+    input_signal: np.ndarray, fun: Callable, window_len: int = 51, mode: str = "valid"
+) -> np.ndarray:
     """
     apply's a function to a rolling window for 1d signals.
     :param input_signal: the 1d input signal.
@@ -60,26 +60,35 @@ def apply_rolling_fun_1d_boundaries(
                     mirroring the input signal at it's begin and end.
     :return: the resulting 1d output signal.
     """
-    if mode == 'mirror':
+    if mode == "mirror":
         extended_signal = np.concatenate(
-            (input_signal[int(window_len / 2):0:-1], input_signal,
-             input_signal[-2:-int(window_len / 2) - 2:-1]))
+            (
+                input_signal[int(window_len / 2) : 0 : -1],
+                input_signal,
+                input_signal[-2 : -int(window_len / 2) - 2 : -1],
+            )
+        )
         filtered_signal = apply_rolling_fun_1d(extended_signal, fun, window_len)
-    elif mode == 'same':
+    elif mode == "same":
         extended_signal = np.concatenate(
-            (np.zeros(int(window_len / 2)), input_signal, np.zeros(int(window_len / 2))))
+            (np.zeros(int(window_len / 2)), input_signal, np.zeros(int(window_len / 2)))
+        )
         filtered_signal = apply_rolling_fun_1d(extended_signal, fun, window_len)
-    elif mode == 'valid':
+    elif mode == "valid":
         filtered_signal = apply_rolling_fun_1d(input_signal, fun, window_len)
     else:
-        raise NotImplementedError('mode {:s} not implemented'.format(mode))
+        raise NotImplementedError("mode {:s} not implemented".format(mode))
 
     return filtered_signal
 
 
 def smooth_1d_boundaries(
-        input_signal: np.ndarray, window_len: int = 51, window_type: str = 'flat',
-        mode: str = 'mirror', mean_for_short_signals: bool = False) -> np.ndarray:
+    input_signal: np.ndarray,
+    window_len: int = 51,
+    window_type: str = "flat",
+    mode: str = "mirror",
+    mean_for_short_signals: bool = False,
+) -> np.ndarray:
     """
     apply's a smoothing function to a rolling window for 1d signals using convolution. This
     function is generally faster than the apply_rolling_fun_1d_boundaries.
@@ -111,15 +120,15 @@ def smooth_1d_boundaries(
         raise ValueError("the signal needs to be longer than the window")
 
     # moving average
-    if window_type == 'flat':
-        c_filter = np.ones(window_len, dtype='float32')
-    elif window_type == 'hanning':
+    if window_type == "flat":
+        c_filter = np.ones(window_len, dtype="float32")
+    elif window_type == "hanning":
         c_filter = np.hanning(window_len)
-    elif window_type == 'hamming':
+    elif window_type == "hamming":
         c_filter = np.hamming(window_len)
-    elif window_type == 'bartlett':
+    elif window_type == "bartlett":
         c_filter = np.bartlett(window_len)
-    elif window_type == 'blackman':
+    elif window_type == "blackman":
         c_filter = np.blackman(window_len)
     else:
         raise ValueError("unknown window type")
@@ -132,7 +141,8 @@ def smooth_1d_boundaries(
 
 
 def convolve_1d_boundaries(
-        input_signal: np.ndarray, inp_filter: np.ndarray, mode: str = 'valid') -> np.ndarray:
+    input_signal: np.ndarray, inp_filter: np.ndarray, mode: str = "valid"
+) -> np.ndarray:
     """
     convolve a 1d input signal with a filter with the option to mirror the signal at the boundaries.
     :param input_signal:
@@ -140,11 +150,15 @@ def convolve_1d_boundaries(
     :param mode:
     :return:
     """
-    if mode == 'mirror':
+    if mode == "mirror":
         extended_signal = np.concatenate(
-            (input_signal[int(inp_filter.shape[0] / 2):0:-1], input_signal,
-             input_signal[-2:-int(inp_filter.shape[0] / 2) - 2:-1]))
-        filtered_signal = np.convolve(inp_filter, extended_signal, mode='valid')
+            (
+                input_signal[int(inp_filter.shape[0] / 2) : 0 : -1],
+                input_signal,
+                input_signal[-2 : -int(inp_filter.shape[0] / 2) - 2 : -1],
+            )
+        )
+        filtered_signal = np.convolve(inp_filter, extended_signal, mode="valid")
     else:
         filtered_signal = np.convolve(inp_filter, input_signal, mode=mode)
 
@@ -164,7 +178,8 @@ def rolling_window_1d(a: np.ndarray, window_len: int) -> np.ndarray:
 
 
 def apply_rolling_fun_1d(
-        input_signal: np.ndarray, fun: Callable, window_len, stepsize: int = 1) -> np.ndarray:
+    input_signal: np.ndarray, fun: Callable, window_len, stepsize: int = 1
+) -> np.ndarray:
     """
     apply's a rolling function to 1d signals.
     :param input_signal:

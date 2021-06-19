@@ -3,6 +3,7 @@
 custom exception handling
 """
 
+
 class PreconditionError(Exception):
     """
     an exception for detecting precondition error

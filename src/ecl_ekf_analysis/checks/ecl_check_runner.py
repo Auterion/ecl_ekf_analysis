@@ -4,16 +4,34 @@ an estimator check runner class
 """
 from pyulog import ULog
 
-from ecl_ekf_analysis.checks.base_runner import CheckRunner, AnalysisStatus
-from ecl_ekf_analysis.checks.estimator_analysis import MagnetometerCheck, MagneticHeadingCheck, \
-    VelocityCheck, PositionCheck, HeightCheck, HeightAboveGroundCheck, AirspeedCheck, \
-    SideSlipCheck, OpticalFlowCheck, GPSVelocityCheck, GPSPositionCheck, EVVelocityCheck, \
-    EVPositionCheck, GPSHeightCheck, EVHeightCheck, BarometerHeightCheck, RangeSensorHeightCheck
-from ecl_ekf_analysis.checks.imu_analysis import IMU_Vibration_Check, IMU_Bias_Check, \
-    IMU_Output_Predictor_Check
+from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
+from ecl_ekf_analysis.checks.base_runner import AnalysisStatus, CheckRunner
+from ecl_ekf_analysis.checks.estimator_analysis import (
+    AirspeedCheck,
+    BarometerHeightCheck,
+    EVHeightCheck,
+    EVPositionCheck,
+    EVVelocityCheck,
+    GPSHeightCheck,
+    GPSPositionCheck,
+    GPSVelocityCheck,
+    HeightAboveGroundCheck,
+    HeightCheck,
+    MagneticHeadingCheck,
+    MagnetometerCheck,
+    OpticalFlowCheck,
+    PositionCheck,
+    RangeSensorHeightCheck,
+    SideSlipCheck,
+    VelocityCheck,
+)
+from ecl_ekf_analysis.checks.imu_analysis import (
+    IMU_Bias_Check,
+    IMU_Output_Predictor_Check,
+    IMU_Vibration_Check,
+)
 from ecl_ekf_analysis.checks.numerical_analysis import NumericalCheck
 from ecl_ekf_analysis.log_processing.custom_exceptions import capture_message
-from ecl_ekf_analysis.analysis.post_processing import get_estimator_check_flags
 
 
 class EclCheckRunner(CheckRunner):
@@ -21,6 +39,7 @@ class EclCheckRunner(CheckRunner):
     a runner for performing the load analyses.
 
     """
+
     def __init__(self, ulog: ULog):
         """
         :param ulog:
@@ -28,8 +47,8 @@ class EclCheckRunner(CheckRunner):
         super().__init__()
 
         try:
-            estimator_status_data = ulog.get_dataset('estimator_status').data
-            print('found estimator_status data')
+            estimator_status_data = ulog.get_dataset("estimator_status").data
+            print("found estimator_status data")
 
             control_mode_flags, innov_flags, _ = get_estimator_check_flags(estimator_status_data)
 

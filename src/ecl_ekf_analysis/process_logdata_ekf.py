@@ -12,13 +12,13 @@ import os
 import sys
 from typing import List
 
-from pyulog import ULog
 import simplejson as json
+from pyulog import ULog
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
 from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 
 
 def get_arguments():
@@ -27,12 +27,16 @@ def get_arguments():
     :return:
     """
     parser = argparse.ArgumentParser(
-        description='Analyse the estimator_status and ekf2_innovation message data for a single'
-                    'ulog file.')
-    parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
-    parser.add_argument('--plots', action='store_true',
-                        help='Whether to plot an innovation summary for developers (only available '
-                             'for old estimator innovation messages).')
+        description="Analyse the estimator_status and ekf2_innovation message data for a single"
+        "ulog file."
+    )
+    parser.add_argument("filename", metavar="file.ulg", help="ULog input file")
+    parser.add_argument(
+        "--plots",
+        action="store_true",
+        help="Whether to plot an innovation summary for developers (only available "
+        "for old estimator innovation messages).",
+    )
     return parser.parse_args()
 
 
@@ -55,12 +59,12 @@ def get_master_status_from_test_results(test_results: List[dict]) -> str:
     :param test_results:
     :return:
     """
-    master_status = 'Pass'
+    master_status = "Pass"
     for test_result in test_results:
-        if test_result['status'] == 'CHECK_STATUS_WARNING' and master_status == 'Pass':
-            master_status = 'Warning'
-        elif test_result['status'] == 'CHECK_STATUS_FAIL':
-            master_status = 'Fail'
+        if test_result["status"] == "CHECK_STATUS_WARNING" and master_status == "Pass":
+            master_status = "Warning"
+        elif test_result["status"] == "CHECK_STATUS_FAIL":
+            master_status = "Fail"
             break
     return master_status
 
@@ -75,16 +79,16 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
     try:
         ulog = ULog(filename)
     except Exception as e:
-        raise PreconditionError('could not open {:s}'.format(filename)) from e
+        raise PreconditionError("could not open {:s}".format(filename)) from e
 
     test_results = analyse_logdata_ekf(ulog)
 
-    with open('{:s}.json'.format(os.path.splitext(filename)[0]), 'w') as file:
+    with open("{:s}.json".format(os.path.splitext(filename)[0]), "w") as file:
         json.dump(test_results, file, indent=2)
 
     if plot:
-        create_pdf_report(ulog, '{:s}.pdf'.format(filename))
-        print('Plots saved to {:s}.pdf'.format(filename))
+        create_pdf_report(ulog, "{:s}.pdf".format(filename))
+        print("Plots saved to {:s}.pdf".format(filename))
 
     return test_results
 
@@ -106,14 +110,14 @@ def main() -> None:
     master_status = get_master_status_from_test_results(test_results)
 
     # print master test status to console
-    if master_status == 'Pass':
-        print('No anomalies detected')
-    elif master_status == 'Warning':
-        print('Minor anomalies detected')
-    elif master_status == 'Fail':
-        print('Major anomalies detected')
+    if master_status == "Pass":
+        print("No anomalies detected")
+    elif master_status == "Warning":
+        print("Minor anomalies detected")
+    elif master_status == "Fail":
+        print("Major anomalies detected")
         sys.exit(-1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
