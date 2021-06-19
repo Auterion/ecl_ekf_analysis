@@ -50,7 +50,7 @@ def main() -> None:
     print("found {:d} .ulg files in {:s}".format(len(ulog_files), ulog_directory))
 
     # remove the files already analysed unless the overwrite flag was specified. A
-    # ulog file is consired to be analysed if # a corresponding .pdf file exists.'
+    # ulog file is considered to be analysed if # a corresponding .pdf file exists.'
     if not args.overwrite:
         print("skipping already analysed ulg files.")
         ulog_files = [ulog_file for ulog_file in ulog_files if
