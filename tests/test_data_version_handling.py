@@ -182,7 +182,7 @@ test_data = [
 def test_get_field_name_from_message_and_descriptor(
         testing_args, est_format_version, topic, field_name_req, should_exist):
     """
-        Test logs of different verison for the existence/inexistence
+        Test logs of different version for the existence/inexistence
         of innovation and innovation_variance fields
     """
     log = testing_args[est_format_version]
