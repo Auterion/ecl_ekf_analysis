@@ -3,9 +3,15 @@
 utility functions for check data.
 """
 from typing import List
-from ecl_ekf_analysis.check_data_interfaces.check_data import (CheckResult, CheckStatistic,
-                                                               CheckStatisticType, CheckStatus,
-                                                               CheckType)
+
+from ecl_ekf_analysis.check_data_interfaces.check_data import (
+    CheckResult,
+    CheckStatistic,
+    CheckStatisticType,
+    CheckStatus,
+    CheckType,
+)
+
 
 def deserialize_check_statistic(check_statistic: CheckStatistic) -> dict:
     """
@@ -19,8 +25,8 @@ def deserialize_check_statistic(check_statistic: CheckStatistic) -> dict:
         'instance': check_statistic.statistic_instance,
         'thresholds': {
             'warning': check_statistic.thresholds.warning,
-            'failure': check_statistic.thresholds.failure
-        }
+            'failure': check_statistic.thresholds.failure,
+        },
     }
 
 
@@ -33,7 +39,7 @@ def deserialize_check_result(check_result: CheckResult) -> dict:
     check_result_dict = {
         'status': check_result.status.name,
         'type': check_result.check_type.name,
-        'statistics': list()
+        'statistics': list(),
     }
     for check_statistic in check_result.statistics:
         check_result_dict['statistics'].append(deserialize_check_statistic(check_statistic))
@@ -74,8 +80,10 @@ def serialize_check_result(check_result_dict: dict) -> CheckResult:
     check_result.status = CheckStatus[check_result_dict.get('status', 'UNDEFINED')]
     check_result.type = CheckType[check_result_dict.get('type', 'UNDEFINED')]
     check_result.statistics.extend(
-        [serialize_check_statistic(check_statistic)
-         for check_statistic in check_result_dict.get('statistics')]
+        [
+            serialize_check_statistic(check_statistic)
+            for check_statistic in check_result_dict.get('statistics')
+        ]
     )
     return check_result
 

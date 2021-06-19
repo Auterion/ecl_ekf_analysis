@@ -3,26 +3,31 @@
 base check runner class
 """
 
-from typing import List, Set, Dict
 from enum import IntEnum
+from typing import Dict, List, Set
 
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError, capture_exception
 from ecl_ekf_analysis.check_data_interfaces.check_data import CheckResult, CheckStatus
-from ecl_ekf_analysis.check_data_interfaces.check_data_utils import deserialize_check_results, \
-    deserialize_check_result
+from ecl_ekf_analysis.check_data_interfaces.check_data_utils import (
+    deserialize_check_result,
+    deserialize_check_results,
+)
 from ecl_ekf_analysis.checks.base_check import Check
+from ecl_ekf_analysis.log_processing.custom_exceptions import (
+    PreconditionError,
+    capture_exception,
+)
 
 
 class AnalysisStatus(IntEnum):
     """
     an enum for the analysis status
     """
+
     UNDEFINED = 0
     SUCCESS = 1
     UNEXPECTED_ERROR = 2
     RUNTIME_ERROR = 3
     PRECONDITION_ERROR = 4
-
 
     @property
     def status_name(self) -> str:
@@ -33,11 +38,11 @@ class AnalysisStatus(IntEnum):
         return self._name_
 
 
-
-class CheckRunner():
+class CheckRunner:
     """
     a runner class for checks
     """
+
     def __init__(self):
         """
         initialize the class
@@ -48,7 +53,6 @@ class CheckRunner():
         self._check_results = list()
         self._results_table = list()
 
-
     def append(self, check: Check):
         """
 
@@ -56,7 +60,6 @@ class CheckRunner():
         :return:
         """
         self._checks.append(check)
-
 
     def _create_results_table(self) -> Dict[str, tuple]:
         """
@@ -70,7 +73,6 @@ class CheckRunner():
             results_table[check_name] = (check_status, '', check_data)
 
         return results_table
-
 
     def run_checks(self):
         """
@@ -114,7 +116,6 @@ class CheckRunner():
             else:
                 self._analysis_status = max(analyses_statuses)
 
-
     @property
     def results(self) -> List[CheckResult]:
         """
@@ -151,14 +152,16 @@ class CheckRunner():
         """
         return self._create_results_table()
 
-
     @property
     def does_not_apply(self) -> Set[str]:
         """
         :return: a set with checks that don't apply
         """
-        return {check.check_type.name for check in self._check_results
-                if check.status == CheckStatus.DOES_NOT_APPLY}
+        return {
+            check.check_type.name
+            for check in self._check_results
+            if check.status == CheckStatus.DOES_NOT_APPLY
+        }
 
     @property
     def error_message(self) -> str:

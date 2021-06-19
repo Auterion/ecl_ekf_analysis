@@ -3,6 +3,7 @@
 Testing the data version handler.
 """
 import os
+
 import pytest
 from pyulog import ULog
 
@@ -19,64 +20,81 @@ def testing_args():
     log_est_format_v1 = ULog(os.path.join(flight_logs_path, 'short_f450_log.ulg'))
     log_est_format_v2 = ULog(os.path.join(flight_logs_path, 'SITL_VTOL_standard_d7b958.ulg'))
 
-    return {'log_est_format_v1': log_est_format_v1,
-            'log_est_format_v2': log_est_format_v2}
+    return {'log_est_format_v1': log_est_format_v1, 'log_est_format_v2': log_est_format_v2}
 
 
 def test_get_output_tracking_error_message(testing_args):
     """
-        Test if the right message name will be returned for different log file versions
+    Test if the right message name will be returned for different log file versions
     """
 
     log_est_format_v1 = testing_args['log_est_format_v1']
     log_est_format_v2 = testing_args['log_est_format_v2']
 
     output_tracking_error_message = dvh.get_output_tracking_error_message(log_est_format_v1)
-    assert output_tracking_error_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(
-            output_tracking_error_message)
+    assert (
+        output_tracking_error_message == "ekf2_innovations"
+    ), 'returned innovation message {:s} was not ekf2_innovations'.format(
+        output_tracking_error_message
+    )
     output_tracking_error_message = dvh.get_output_tracking_error_message(log_est_format_v2)
-    assert output_tracking_error_message == "estimator_status", \
-        'returned innovation message {:s} was not estimator_status'.format(
-            output_tracking_error_message)
+    assert (
+        output_tracking_error_message == "estimator_status"
+    ), 'returned innovation message {:s} was not estimator_status'.format(
+        output_tracking_error_message
+    )
 
 
 def test_get_innovation_message(testing_args):
     """
-        Test if the right message name will be returned for different log file versions
+    Test if the right message name will be returned for different log file versions
     """
 
     log_est_format_v1 = testing_args['log_est_format_v1']
     log_est_format_v2 = testing_args['log_est_format_v2']
 
     innovation_message = dvh.get_innovation_message(log_est_format_v1, topic='innovation')
-    assert innovation_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(innovation_message)
+    assert (
+        innovation_message == "ekf2_innovations"
+    ), 'returned innovation message {:s} was not ekf2_innovations'.format(innovation_message)
     innovation_message = dvh.get_innovation_message(log_est_format_v2, topic='innovation')
-    assert innovation_message == "estimator_innovations", \
-        'returned innovation message {:s} was not estimator_innovations'.format(innovation_message)
+    assert (
+        innovation_message == "estimator_innovations"
+    ), 'returned innovation message {:s} was not estimator_innovations'.format(innovation_message)
 
     innovation_variance_message = dvh.get_innovation_message(
-        log_est_format_v1, topic='innovation_variance')
-    assert innovation_variance_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(
-            innovation_variance_message)
+        log_est_format_v1, topic='innovation_variance'
+    )
+    assert (
+        innovation_variance_message == "ekf2_innovations"
+    ), 'returned innovation message {:s} was not ekf2_innovations'.format(
+        innovation_variance_message
+    )
     innovation_variance_message = dvh.get_innovation_message(
-        log_est_format_v2, topic='innovation_variance')
-    assert innovation_variance_message == "estimator_innovation_variances", \
-        'returned innovation message {:s} was not estimator_innovation_variances'.format(
-            innovation_variance_message)
+        log_est_format_v2, topic='innovation_variance'
+    )
+    assert (
+        innovation_variance_message == "estimator_innovation_variances"
+    ), 'returned innovation message {:s} was not estimator_innovation_variances'.format(
+        innovation_variance_message
+    )
 
     innovation_test_ratio_message = dvh.get_innovation_message(
-        log_est_format_v1, topic='innovation_test_ratio')
-    assert innovation_test_ratio_message == "estimator_status", \
-        'returned innovation message {:s} was not estimator_status'.format(
-            innovation_test_ratio_message)
+        log_est_format_v1, topic='innovation_test_ratio'
+    )
+    assert (
+        innovation_test_ratio_message == "estimator_status"
+    ), 'returned innovation message {:s} was not estimator_status'.format(
+        innovation_test_ratio_message
+    )
     innovation_test_ratio_message = dvh.get_innovation_message(
-        log_est_format_v2, topic='innovation_test_ratio')
-    assert innovation_test_ratio_message == "estimator_innovation_test_ratios", \
-        'returned innovation message {:s} was not estimator_innovation_test_ratios'.format(
-            innovation_test_ratio_message)
+        log_est_format_v2, topic='innovation_test_ratio'
+    )
+    assert (
+        innovation_test_ratio_message == "estimator_innovation_test_ratios"
+    ), 'returned innovation message {:s} was not estimator_innovation_test_ratios'.format(
+        innovation_test_ratio_message
+    )
 
 
 test_data = [
@@ -176,20 +194,22 @@ test_data = [
     ("log_est_format_v2", 'innovation_test_ratio', 'drag', True),
 ]
 
-@pytest.mark.parametrize(
-    "est_format_version,topic,field_name_req,should_exist", test_data)
 
+@pytest.mark.parametrize("est_format_version,topic,field_name_req,should_exist", test_data)
 def test_get_field_name_from_message_and_descriptor(
-        testing_args, est_format_version, topic, field_name_req, should_exist):
+    testing_args, est_format_version, topic, field_name_req, should_exist
+):
     """
-        Test logs of different verison for the existence/inexistence
-        of innovation and innovation_variance fields
+    Test logs of different verison for the existence/inexistence
+    of innovation and innovation_variance fields
     """
     log = testing_args[est_format_version]
 
     message_name, field_names = dvh.get_innovation_message_and_field_names(
-        log, field_name_req, topic=topic)
+        log, field_name_req, topic=topic
+    )
     print(message_name, str(field_names))
     for field_name in field_names:
-        assert dvh.check_if_field_name_exists_in_message(log, message_name, field_name) \
-               == should_exist
+        assert (
+            dvh.check_if_field_name_exists_in_message(log, message_name, field_name) == should_exist
+        )

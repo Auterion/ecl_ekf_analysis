@@ -7,11 +7,12 @@ from enum import IntEnum
 from typing import Optional
 
 
-#pylint: disable=too-few-public-methods
-class Thresholds():
+# pylint: disable=too-few-public-methods
+class Thresholds:
     """
     threshold struct.
     """
+
     def __init__(self, warning: Optional[float] = None, failure: Optional[float] = None) -> None:
         self.warning = warning
         self.failure = failure
@@ -21,6 +22,7 @@ class CheckStatisticType(IntEnum):
     """
     an enum for the check statistic type
     """
+
     UNDEFINED = 0
     ESTIMATOR_FAILURE_MAX = 1
     ESTIMATOR_FAILURE_AVG = 2
@@ -52,7 +54,6 @@ class CheckStatisticType(IntEnum):
     IMU_DELTA_VELOCITY_BIAS_WINDOWED_AVG = 28
     FILTER_FAULT_FLAG = 29
 
-
     @property
     def type_name(self) -> str:
         """
@@ -62,14 +63,18 @@ class CheckStatisticType(IntEnum):
         return self._name_
 
 
-class CheckStatistic():
+class CheckStatistic:
     """
     check statistic struct.
     """
+
     def __init__(
-            self, statistic_type: CheckStatisticType = CheckStatisticType.UNDEFINED,
-            value: Optional[float] = None, thresholds: Optional[Thresholds] = None,
-            statistic_instance: int = 0) -> None:
+        self,
+        statistic_type: CheckStatisticType = CheckStatisticType.UNDEFINED,
+        value: Optional[float] = None,
+        thresholds: Optional[Thresholds] = None,
+        statistic_instance: int = 0,
+    ) -> None:
         self.statistic_type = statistic_type
         self.statistic_instance = statistic_instance
         self.value = value
@@ -80,12 +85,12 @@ class CheckStatus(IntEnum):
     """
     an enum for the analysis result to enable comparisons
     """
+
     UNDEFINED = 0
     PASS = 1
     WARNING = 2
     FAIL = 3
     DOES_NOT_APPLY = 4
-
 
     @property
     def status_name(self) -> str:
@@ -108,6 +113,7 @@ class CheckType(IntEnum):
     """
     an enum for the check type
     """
+
     UNDEFINED = 0
     MAGNETOMETER_STATUS = 1
     MAGNETIC_HEADING_STATUS = 2
@@ -144,6 +150,7 @@ class CheckStatisticsList(list):
     """
     check statistics list struct.
     """
+
     def add(self) -> CheckStatistic:
         """
         :return:
@@ -153,14 +160,16 @@ class CheckStatisticsList(list):
         return statistic
 
 
-class CheckResult():
+class CheckResult:
     """
     check statistic struct.
     """
+
     def __init__(
-            self, status: CheckStatus = CheckStatus.UNDEFINED,
-            check_type: CheckType = CheckType.UNDEFINED) -> None:
+        self,
+        status: CheckStatus = CheckStatus.UNDEFINED,
+        check_type: CheckType = CheckType.UNDEFINED,
+    ) -> None:
         self.status = status
         self.check_type = check_type
         self.statistics = CheckStatisticsList()
-

@@ -4,24 +4,24 @@ the imu analysis
 """
 from typing import Dict
 
-from pyulog import ULog
 import numpy as np
+from pyulog import ULog
 
-from ecl_ekf_analysis.checks.base_check import Check
+import ecl_ekf_analysis.config.params as params
+import ecl_ekf_analysis.config.thresholds as thresholds
+from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
 from ecl_ekf_analysis.check_data_interfaces.check_data import (
-    CheckType,
     CheckStatisticType,
+    CheckType,
 )
+from ecl_ekf_analysis.checks.base_check import Check
 from ecl_ekf_analysis.log_processing.analysis import (
-    calculate_windowed_mean_per_airphase,
     calculate_stat_from_signal,
+    calculate_windowed_mean_per_airphase,
 )
 from ecl_ekf_analysis.log_processing.data_version_handling import (
     get_output_tracking_error_message,
 )
-from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
-import ecl_ekf_analysis.config.params as params
-import ecl_ekf_analysis.config.thresholds as thresholds
 
 
 class IMU_Bias_Check(Check):
@@ -74,9 +74,7 @@ class IMU_Bias_Check(Check):
             "states[14]",
             "states[15]",
         ]:
-            imu_metrics[
-                "{:s}_windowed_mean".format(signal)
-            ] = calculate_windowed_mean_per_airphase(
+            imu_metrics["{:s}_windowed_mean".format(signal)] = calculate_windowed_mean_per_airphase(
                 estimator_states_data,
                 self._estimator_states_msg,
                 signal,
@@ -105,10 +103,7 @@ class IMU_Bias_Check(Check):
         ]:
             imu_state_metrics["{:s}_windowed_mean".format(signal)] = float(
                 max(
-                    [
-                        np.max(phase)
-                        for _, phase in imu_metrics["{:s}_windowed_mean".format(signal)]
-                    ]
+                    [np.max(phase) for _, phase in imu_metrics["{:s}_windowed_mean".format(signal)]]
                 )
             )
 
@@ -135,9 +130,7 @@ class IMU_Bias_Check(Check):
                 )
             )
         )
-        imu_delta_angle_bias_avg.thresholds.warning = (
-            thresholds.imu_delta_angle_bias_warning_avg()
-        )
+        imu_delta_angle_bias_avg.thresholds.warning = thresholds.imu_delta_angle_bias_warning_avg()
 
         # delta angle bias windowed
         imu_delta_angle_bias_windowed_avg = self.add_statistic(
@@ -230,9 +223,7 @@ class IMU_Output_Predictor_Check(Check):
         :return:
         """
         output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
-        output_tracking_error_data = self.ulog.get_dataset(
-            output_tracking_error_msg
-        ).data
+        output_tracking_error_data = self.ulog.get_dataset(output_tracking_error_msg).data
 
         imu_metrics = dict()
 
@@ -244,9 +235,7 @@ class IMU_Output_Predictor_Check(Check):
         ]:
             # calculate a windowed version of the stat:
             # TODO: currently takes the mean instead of median
-            imu_metrics[
-                "{:s}_windowed_mean".format(result)
-            ] = calculate_windowed_mean_per_airphase(
+            imu_metrics["{:s}_windowed_mean".format(result)] = calculate_windowed_mean_per_airphase(
                 output_tracking_error_data,
                 output_tracking_error_msg,
                 signal,
@@ -263,9 +252,7 @@ class IMU_Output_Predictor_Check(Check):
         imu_metrics = self.calculate_metrics()
 
         output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
-        output_tracking_error_data = self.ulog.get_dataset(
-            output_tracking_error_msg
-        ).data
+        output_tracking_error_data = self.ulog.get_dataset(output_tracking_error_msg).data
 
         # observed angle error statistic average
         imu_observed_angle_error_avg = self.add_statistic(
@@ -294,9 +281,7 @@ class IMU_Output_Predictor_Check(Check):
             max(
                 [
                     metric.max()
-                    for _, metric in imu_metrics[
-                        "output_obs_ang_err_median_windowed_mean"
-                    ]
+                    for _, metric in imu_metrics["output_obs_ang_err_median_windowed_mean"]
                 ]
             )
         )
@@ -328,9 +313,7 @@ class IMU_Output_Predictor_Check(Check):
             max(
                 [
                     metric.max()
-                    for _, metric in imu_metrics[
-                        "output_obs_vel_err_median_windowed_mean"
-                    ]
+                    for _, metric in imu_metrics["output_obs_vel_err_median_windowed_mean"]
                 ]
             )
         )
@@ -362,9 +345,7 @@ class IMU_Output_Predictor_Check(Check):
             max(
                 [
                     metric.max()
-                    for _, metric in imu_metrics[
-                        "output_obs_pos_err_median_windowed_mean"
-                    ]
+                    for _, metric in imu_metrics["output_obs_pos_err_median_windowed_mean"]
                 ]
             )
         )
@@ -402,9 +383,7 @@ class IMU_Vibration_Check(Check):
             ("vibe[2]", "imu_hfdvel"),
         ]:
 
-            imu_metrics[
-                "{:s}_windowed_mean".format(result)
-            ] = calculate_windowed_mean_per_airphase(
+            imu_metrics["{:s}_windowed_mean".format(result)] = calculate_windowed_mean_per_airphase(
                 estimator_status_data,
                 "estimator_status",
                 signal,
@@ -414,18 +393,14 @@ class IMU_Vibration_Check(Check):
 
         return imu_metrics
 
-    def calc_coning_statistics(
-        self, imu_metrics: dict, estimator_status_data: dict
-    ) -> None:
+    def calc_coning_statistics(self, imu_metrics: dict, estimator_status_data: dict) -> None:
         """
         calculates the statistics for the coning metric
         :param estimator_status_data:
         :return:
         """
         # max coning
-        imu_coning_max = self.add_statistic(
-            CheckStatisticType.IMU_CONING_MAX, statistic_instance=0
-        )
+        imu_coning_max = self.add_statistic(CheckStatisticType.IMU_CONING_MAX, statistic_instance=0)
         imu_coning_max.value = float(
             calculate_stat_from_signal(
                 estimator_status_data,
@@ -438,9 +413,7 @@ class IMU_Vibration_Check(Check):
         imu_coning_max.thresholds.warning = thresholds.imu_coning_warning_max()
 
         # avg coning
-        imu_coning_avg = self.add_statistic(
-            CheckStatisticType.IMU_CONING_AVG, statistic_instance=0
-        )
+        imu_coning_avg = self.add_statistic(CheckStatisticType.IMU_CONING_AVG, statistic_instance=0)
         imu_coning_avg.value = float(0.0)
 
         if imu_coning_max.value > 0.0:
@@ -459,16 +432,9 @@ class IMU_Vibration_Check(Check):
             CheckStatisticType.IMU_CONING_WINDOWED_AVG, statistic_instance=0
         )
         imu_coning_windowed_avg.value = float(
-            max(
-                [
-                    np.max(signal)
-                    for _, signal in imu_metrics["imu_coning_windowed_mean"]
-                ]
-            )
+            max([np.max(signal) for _, signal in imu_metrics["imu_coning_windowed_mean"]])
         )
-        imu_coning_windowed_avg.thresholds.warning = (
-            thresholds.imu_coning_warning_rolling_avg()
-        )
+        imu_coning_windowed_avg.thresholds.warning = thresholds.imu_coning_warning_rolling_avg()
 
     def calc_high_freq_delta_angle_statistics(
         self, imu_metrics: dict, estimator_status_data: dict
@@ -518,12 +484,7 @@ class IMU_Vibration_Check(Check):
             statistic_instance=0,
         )
         imu_high_freq_delta_angle_windowed_avg.value = float(
-            max(
-                [
-                    np.max(signal)
-                    for _, signal in imu_metrics["imu_hfdang_windowed_mean"]
-                ]
-            )
+            max([np.max(signal) for _, signal in imu_metrics["imu_hfdang_windowed_mean"]])
         )
         imu_high_freq_delta_angle_windowed_avg.thresholds.warning = (
             thresholds.imu_high_freq_delta_angle_warning_rolling_avg()
@@ -577,12 +538,7 @@ class IMU_Vibration_Check(Check):
             statistic_instance=0,
         )
         imu_high_freq_delta_velocity_windowed_avg.value = float(
-            max(
-                [
-                    np.max(signal)
-                    for _, signal in imu_metrics["imu_hfdvel_windowed_mean"]
-                ]
-            )
+            max([np.max(signal) for _, signal in imu_metrics["imu_hfdvel_windowed_mean"]])
         )
         imu_high_freq_delta_velocity_windowed_avg.thresholds.warning = (
             thresholds.imu_high_freq_delta_velocity_warning_rolling_avg()
@@ -597,6 +553,4 @@ class IMU_Vibration_Check(Check):
 
         self.calc_coning_statistics(imu_metrics, estimator_status_data)
         self.calc_high_freq_delta_angle_statistics(imu_metrics, estimator_status_data)
-        self.calc_high_freq_delta_velocity_statistics(
-            imu_metrics, estimator_status_data
-        )
+        self.calc_high_freq_delta_velocity_statistics(imu_metrics, estimator_status_data)

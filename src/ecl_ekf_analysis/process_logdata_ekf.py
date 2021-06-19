@@ -12,13 +12,13 @@ import os
 import sys
 from typing import List
 
-from pyulog import ULog
 import simplejson as json
+from pyulog import ULog
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 
 
 def get_arguments():
@@ -28,11 +28,15 @@ def get_arguments():
     """
     parser = argparse.ArgumentParser(
         description='Analyse the estimator_status and ekf2_innovation message data for a single'
-                    'ulog file.')
+        'ulog file.'
+    )
     parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
-    parser.add_argument('--plots', action='store_true',
-                        help='Whether to plot an innovation summary for developers (only available '
-                             'for old estimator innovation messages).')
+    parser.add_argument(
+        '--plots',
+        action='store_true',
+        help='Whether to plot an innovation summary for developers (only available '
+        'for old estimator innovation messages).',
+    )
     return parser.parse_args()
 
 

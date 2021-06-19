@@ -70,7 +70,8 @@ def get_control_mode_flags(estimator_status: dict) -> dict:
     control_mode['using_evhgt'] = ((2 ** 14 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['fuse_beta'] = ((2 ** 15 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['mag_field_disturbed'] = (
-        (2 ** 16 & estimator_status['control_mode_flags']) > 0) * 1
+        (2 ** 16 & estimator_status['control_mode_flags']) > 0
+    ) * 1
     control_mode['fixed_wing'] = ((2 ** 17 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['mag_fault'] = ((2 ** 18 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['fuse_aspd'] = ((2 ** 19 & estimator_status['control_mode_flags']) > 0) * 1
@@ -78,7 +79,8 @@ def get_control_mode_flags(estimator_status: dict) -> dict:
     control_mode['rng_stuck'] = ((2 ** 21 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['gps_yaw'] = ((2 ** 22 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['mag_aligned_in_flight'] = (
-        (2 ** 23 & estimator_status['control_mode_flags']) > 0) * 1
+        (2 ** 23 & estimator_status['control_mode_flags']) > 0
+    ) * 1
     control_mode['ev_vel'] = ((2 ** 24 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['synthetic_mag_z'] = ((2 ** 25 & estimator_status['control_mode_flags']) > 0) * 1
     return control_mode
@@ -156,10 +158,14 @@ def magnetic_field_estimates_from_status(estimator_status: dict) -> Tuple[float,
     """
     rad2deg = 57.2958
     field_strength = np.sqrt(
-        estimator_status['states[16]'] ** 2 + estimator_status['states[17]'] ** 2 +
-        estimator_status['states[18]'] ** 2)
-    declination = rad2deg * np.arctan2(estimator_status['states[17]'],
-                                       estimator_status['states[16]'])
+        estimator_status['states[16]'] ** 2
+        + estimator_status['states[17]'] ** 2
+        + estimator_status['states[18]'] ** 2
+    )
+    declination = rad2deg * np.arctan2(
+        estimator_status['states[17]'], estimator_status['states[16]']
+    )
     inclination = rad2deg * np.arcsin(
-        estimator_status['states[18]'] / np.maximum(field_strength, np.finfo(np.float32).eps))
+        estimator_status['states[18]'] / np.maximum(field_strength, np.finfo(np.float32).eps)
+    )
     return declination, field_strength, inclination

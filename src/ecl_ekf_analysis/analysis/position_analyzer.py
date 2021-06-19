@@ -4,18 +4,19 @@ a class for analyzing UAS position.
 """
 from typing import List
 
+import intervals
 import numpy as np
 from pyulog import ULog
-import intervals
 
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 from ecl_ekf_analysis.signal_processing.flag_analysis import detect_flag_value_changes
 
 
-class PositionAnalyzer():
+class PositionAnalyzer:
     """
     this class is used for analyzing UAS position.
     """
+
     def __init__(self, ulog: ULog) -> None:
         """
         initializes a PositionAnalyzer instance.
@@ -30,15 +31,19 @@ class PositionAnalyzer():
             self._vehicle_local_position = self._ulog.get_dataset('vehicle_local_position').data
         except Exception as e:
             raise PreconditionError(
-                'PositionAnalyzer: Could not find vehicle local position message.') from e
+                'PositionAnalyzer: Could not find vehicle local position message.'
+            ) from e
 
         self._position_intervals = intervals.closed(
-            0.0, (self._ulog.last_timestamp - self._ulog.start_timestamp) / 1.0e6)
-
+            0.0, (self._ulog.last_timestamp - self._ulog.start_timestamp) / 1.0e6
+        )
 
     def _above_min_ground_distance_intervals(
-            self, ground_distance_meters: float, phase_change_margin_seconds: float = 0.0,
-            min_interval_duration_seconds: float = 0.0)  -> intervals.Interval:
+        self,
+        ground_distance_meters: float,
+        phase_change_margin_seconds: float = 0.0,
+        min_interval_duration_seconds: float = 0.0,
+    ) -> intervals.Interval:
         """
         :param ground_distance_meters:
         :return:
@@ -56,38 +61,48 @@ class PositionAnalyzer():
         above_min_ground_distance = dist_bottom > ground_distance_meters
 
         interval_starts, interval_ends = detect_flag_value_changes(
-            above_min_ground_distance.astype(int))
+            above_min_ground_distance.astype(int)
+        )
 
         for interval_start, interval_end in zip(interval_starts, interval_ends):
-            if (timestamp[interval_end] / 1.0e6 - phase_change_margin_seconds) - \
-                    (timestamp[interval_start] / 1.0e6 +
-                     phase_change_margin_seconds) >= min_interval_duration_seconds:
-                intervals_above_min_ground_distance = intervals_above_min_ground_distance | \
-                        intervals.closed(
-                            (timestamp[interval_start] - self._ulog.start_timestamp) / \
-                            1.0e6 + phase_change_margin_seconds,
-                            (timestamp[interval_end] - self._ulog.start_timestamp) / \
-                            1.0e6 - phase_change_margin_seconds)
+            if (timestamp[interval_end] / 1.0e6 - phase_change_margin_seconds) - (
+                timestamp[interval_start] / 1.0e6 + phase_change_margin_seconds
+            ) >= min_interval_duration_seconds:
+                intervals_above_min_ground_distance = (
+                    intervals_above_min_ground_distance
+                    | intervals.closed(
+                        (timestamp[interval_start] - self._ulog.start_timestamp) / 1.0e6
+                        + phase_change_margin_seconds,
+                        (timestamp[interval_end] - self._ulog.start_timestamp) / 1.0e6
+                        - phase_change_margin_seconds,
+                    )
+                )
 
         if intervals_above_min_ground_distance.is_empty():
             print('PositionAnalyzer: flag was never activated.')
 
         return intervals_above_min_ground_distance
 
-
     def set_min_ground_distance(
-            self, ground_distance_meters: float, phase_change_margin_seconds: float = 0.0,
-            min_interval_duration_seconds: float = 0.0) -> None:
+        self,
+        ground_distance_meters: float,
+        phase_change_margin_seconds: float = 0.0,
+        min_interval_duration_seconds: float = 0.0,
+    ) -> None:
         """
         :param ground_distance_meters:
         :param phase_change_margin_seconds:
         :param min_interval_duration_seconds:
         :return:
         """
-        self._position_intervals = self._above_min_ground_distance_intervals(
-            ground_distance_meters, phase_change_margin_seconds=phase_change_margin_seconds,
-            min_interval_duration_seconds=min_interval_duration_seconds) & self._position_intervals
-
+        self._position_intervals = (
+            self._above_min_ground_distance_intervals(
+                ground_distance_meters,
+                phase_change_margin_seconds=phase_change_margin_seconds,
+                min_interval_duration_seconds=min_interval_duration_seconds,
+            )
+            & self._position_intervals
+        )
 
     def get_valid_position(self, dataset: str, multi_instance: int = 0) -> list:
         """
@@ -107,12 +122,12 @@ class PositionAnalyzer():
         for interval in self._position_intervals:
             valid_position_indices.extend(
                 np.where(
-                    ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                     interval.lower) & ((data['timestamp'] - self._ulog.start_timestamp) /
-                                        1.0e6 < interval.upper))[0])
+                    ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >= interval.lower)
+                    & ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 < interval.upper)
+                )[0]
+            )
 
         return valid_position_indices
-
 
     def get_position_intervals(self, dataset: str, multi_instance: int = 0) -> List[list]:
         """
@@ -132,9 +147,10 @@ class PositionAnalyzer():
 
         for interval in self._position_intervals:
             position_intervals.append(
-                np.where(((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >=
-                          interval.lower) &
-                         ((data['timestamp'] - self._ulog.start_timestamp) /
-                          1.0e6 < interval.upper))[0])
+                np.where(
+                    ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 >= interval.lower)
+                    & ((data['timestamp'] - self._ulog.start_timestamp) / 1.0e6 < interval.upper)
+                )[0]
+            )
 
         return position_intervals

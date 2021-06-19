@@ -4,17 +4,22 @@ base classes for running checks
 """
 from pyulog import ULog
 
-from ecl_ekf_analysis.check_data_interfaces.check_data import CheckResult, CheckStatistic, \
-    CheckType, CheckStatisticType, CheckStatus
+from ecl_ekf_analysis.check_data_interfaces.check_data import (
+    CheckResult,
+    CheckStatistic,
+    CheckStatisticType,
+    CheckStatus,
+    CheckType,
+)
 from ecl_ekf_analysis.log_processing.custom_exceptions import capture_message
 
 
-class Check():
+class Check:
     """
     A check interface.
     """
-    def __init__(
-            self, ulog: ULog, check_type: CheckType = CheckType.UNDEFINED) -> None:
+
+    def __init__(self, ulog: ULog, check_type: CheckType = CheckType.UNDEFINED) -> None:
         """
         Initializes the check interface.
         :param ulog: a handle to the open ulog file
@@ -26,10 +31,9 @@ class Check():
         self._error_message = ''
         self._does_apply = True
 
-
     def add_statistic(
-            self, check_statistic_type: CheckStatisticType,
-            statistic_instance: int = 0) -> CheckStatistic:
+        self, check_statistic_type: CheckStatisticType, statistic_instance: int = 0
+    ) -> CheckStatistic:
         """
         add a check statistic to the check results
         :param type:
@@ -40,14 +44,12 @@ class Check():
         statistic.statistic_instance = statistic_instance
         return statistic
 
-
     @property
     def status(self) -> CheckStatus:
         """
         :return:
         """
         return self._check_result.status
-
 
     @status.setter
     def status(self, check_status: CheckStatus) -> None:
@@ -57,7 +59,6 @@ class Check():
         """
         self._check_result.status = check_status
 
-
     @property
     def result(self) -> CheckResult:
         """
@@ -65,14 +66,12 @@ class Check():
         """
         return self._check_result
 
-
     @property
     def check_type(self) -> CheckType:
         """
         :return:
         """
         return self._check_result.check_type
-
 
     def calc_statistics(self) -> None:
         """
@@ -86,7 +85,6 @@ class Check():
         preconditions are met, false otherwise.
         """
         return self._does_apply
-
 
     def run(self) -> None:
         """
@@ -109,10 +107,14 @@ class Check():
                 self._check_result.status = CheckStatus.PASS
 
             if statistic.value is not None:
-                if statistic.thresholds.failure is not None and \
-                    statistic.value > statistic.thresholds.failure:
+                if (
+                    statistic.thresholds.failure is not None
+                    and statistic.value > statistic.thresholds.failure
+                ):
                     self._check_result.status = CheckStatus.FAIL
-                if statistic.thresholds.warning is not None and \
-                    statistic.value > statistic.thresholds.warning:
+                if (
+                    statistic.thresholds.warning is not None
+                    and statistic.value > statistic.thresholds.warning
+                ):
                     if self._check_result.status != CheckStatus.FAIL:
                         self._check_result.status = CheckStatus.WARNING

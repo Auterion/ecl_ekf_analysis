@@ -3,7 +3,7 @@
 Library for ecl ekf analysis.
 """
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -44,13 +44,13 @@ setup(
     install_requires=['pyulog', 'matplotlib', 'python-intervals', 'simplejson', 'scipy'],
     tests_require=['pytest'],
     test_suite='pytest',
-    package_dir = {'': 'src'},
+    package_dir={'': 'src'},
     packages=find_packages('src'),
-    entry_points = {
-            'console_scripts': [
-                'batch_process_logdata_ekf=ecl_ekf_analysis.batch_process_logdata_ekf:main',
-                'process_logdata_ekf=ecl_ekf_analysis.process_logdata_ekf:main'
-            ],
+    entry_points={
+        'console_scripts': [
+            'batch_process_logdata_ekf=ecl_ekf_analysis.batch_process_logdata_ekf:main',
+            'process_logdata_ekf=ecl_ekf_analysis.process_logdata_ekf:main',
+        ],
     },
     include_package_data=True,
     version="0.1",
