@@ -191,56 +191,83 @@
         }
       },
       {
-        "instance": 0,
-        "value": 0.0,
         "type": "FAIL_RATIO_PCT",
-        "thresholds": {
-          "warning": null,
-          "failure": 0.0
-        }
-      },
-      {
-        "instance": 0,
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
           "failure": null
         }
       },
       {
-        "instance": 1,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": 50.0
         }
       },
       {
-        "instance": 1,
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
+      },
+      {
+        "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 1,
         "thresholds": {
           "warning": null,
           "failure": null
         }
       },
       {
-        "instance": 2,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT",
+        "instance": 1,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": 50.0
         }
       },
       {
-        "instance": 2,
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 1,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
+      },
+      {
+        "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 2,
         "thresholds": {
           "warning": null,
+          "failure": null
+        }
+      },
+      {
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 2,
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 2,
+        "thresholds": {
+          "warning": 10.0,
           "failure": null
         }
       }
@@ -314,20 +341,29 @@
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
-        "instance": 0,
-        "value": 0.0,
         "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": null
         }
       },
       {
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
           "failure": null
         }
       }
@@ -338,20 +374,29 @@
   {
     "statistics": [
       {
-        "instance": 0,
-        "value": 0.0,
         "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": null
         }
       },
       {
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
           "failure": null
         }
       }
@@ -362,20 +407,29 @@
   {
     "statistics": [
       {
-        "instance": 0,
-        "value": 0.0,
         "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": null
         }
       },
       {
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
           "failure": null
         }
       }
@@ -386,20 +440,29 @@
   {
     "statistics": [
       {
-        "instance": 0,
-        "value": 0.0,
         "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
+        "instance": 0,
         "thresholds": {
           "warning": null,
-          "failure": 0.0
+          "failure": null
         }
       },
       {
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT",
+        "instance": 0,
         "thresholds": {
           "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
           "failure": null
         }
       }

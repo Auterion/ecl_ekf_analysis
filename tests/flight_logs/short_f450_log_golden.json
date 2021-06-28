@@ -66,58 +66,85 @@
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
-        "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
+        "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
         "instance": 0,
-        "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
+        "value": 0.0,
         "instance": 0,
-        "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
       },
       {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
         "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
+          "warning": 10.0,
+          "failure": null
+        }
+      },
+      {
+        "type": "FAIL_RATIO_PCT",
+        "value": 0.0,
         "instance": 1,
-        "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
+        "value": 0.0,
         "instance": 1,
-        "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
       },
       {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 1,
         "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
-        "instance": 2,
+          "warning": 10.0,
+          "failure": null
+        }
+      },
+      {
+        "type": "FAIL_RATIO_PCT",
         "value": 20.295767465578788,
-        "type": "FAIL_RATIO_PCT"
+        "instance": 2,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
+        "value": 100.00000074505806,
         "instance": 2,
-        "value": 76.19047462940216,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 48.474575695581734,
+        "instance": 2,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
       }
     ],
     "type": "MAGNETOMETER_STATUS"
@@ -126,22 +153,31 @@
     "status": "PASS",
     "statistics": [
       {
-        "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
       }
     ],
     "type": "MAGNETIC_HEADING_STATUS"
@@ -213,22 +249,31 @@
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
-        "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
       }
     ],
     "type": "VELOCITY_SENSOR_STATUS"
@@ -300,22 +345,31 @@
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
-        "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
       }
     ],
     "type": "POSITION_SENSOR_STATUS"
@@ -387,22 +441,31 @@
         "type": "ESTIMATOR_FAILURE_WINDOWED_AVG"
       },
       {
-        "thresholds": {
-          "failure": 0.0,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": null
+        }
       },
       {
-        "thresholds": {
-          "failure": null,
-          "warning": null
-        },
-        "instance": 0,
+        "type": "FAIL_RATIO_SHORT_WINDOW_PCT",
         "value": 0.0,
-        "type": "FAIL_RATIO_WINDOWED_PCT"
+        "instance": 0,
+        "thresholds": {
+          "warning": null,
+          "failure": 50.0
+        }
+      },
+      {
+        "type": "FAIL_RATIO_LONG_WINDOW_PCT",
+        "value": 0.0,
+        "instance": 0,
+        "thresholds": {
+          "warning": 10.0,
+          "failure": null
+        }
       }
     ],
     "type": "HEIGHT_SENSOR_STATUS"
