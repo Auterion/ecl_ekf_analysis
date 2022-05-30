@@ -7,7 +7,7 @@ import numpy as np
 
 from ecl_ekf_analysis.checks.base_check import Check
 from ecl_ekf_analysis.check_data_interfaces.check_data import CheckType, CheckStatisticType
-import ecl_ekf_analysis.config.thresholds as thresholds
+from ecl_ekf_analysis.config import thresholds
 
 
 class NumericalCheck(Check):

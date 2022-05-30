@@ -12,8 +12,8 @@ from ecl_ekf_analysis.check_data_interfaces.check_data import CheckType, CheckSt
 from ecl_ekf_analysis.log_processing.analysis import calculate_windowed_mean_per_airphase, \
     calculate_stat_from_signal
 from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
-import ecl_ekf_analysis.config.params as params
-import ecl_ekf_analysis.config.thresholds as thresholds
+from ecl_ekf_analysis.config import params
+from ecl_ekf_analysis.config import thresholds
 from ecl_ekf_analysis.log_processing.data_version_handling import \
     get_innovation_message_and_field_names
 

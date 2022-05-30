@@ -20,8 +20,8 @@ from ecl_ekf_analysis.log_processing.data_version_handling import (
     get_output_tracking_error_message,
 )
 from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
-import ecl_ekf_analysis.config.params as params
-import ecl_ekf_analysis.config.thresholds as thresholds
+from ecl_ekf_analysis.config import params
+from ecl_ekf_analysis.config import thresholds
 
 
 class IMU_Bias_Check(Check):
