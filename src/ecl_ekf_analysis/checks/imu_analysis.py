@@ -75,7 +75,7 @@ class IMU_Bias_Check(Check):
             "states[15]",
         ]:
             imu_metrics[
-                "{:s}_windowed_mean".format(signal)
+                f"{signal:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 estimator_states_data,
                 self._estimator_states_msg,
@@ -103,11 +103,11 @@ class IMU_Bias_Check(Check):
             "states[14]",
             "states[15]",
         ]:
-            imu_state_metrics["{:s}_windowed_mean".format(signal)] = float(
+            imu_state_metrics[f"{signal:s}_windowed_mean"] = float(
                 max(
                     [
                         np.max(phase)
-                        for _, phase in imu_metrics["{:s}_windowed_mean".format(signal)]
+                        for _, phase in imu_metrics[f"{signal:s}_windowed_mean"]
                     ]
                 )
             )
@@ -245,7 +245,7 @@ class IMU_Output_Predictor_Check(Check):
             # calculate a windowed version of the stat:
             # TODO: currently takes the mean instead of median
             imu_metrics[
-                "{:s}_windowed_mean".format(result)
+                f"{result:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 output_tracking_error_data,
                 output_tracking_error_msg,
@@ -403,7 +403,7 @@ class IMU_Vibration_Check(Check):
         ]:
 
             imu_metrics[
-                "{:s}_windowed_mean".format(result)
+                f"{result:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 estimator_status_data,
                 "estimator_status",

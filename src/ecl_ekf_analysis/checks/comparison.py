@@ -66,13 +66,13 @@ def compare_check_analysis_result_ground_truth(
             rel_tol=rel_tol, abs_tol=abs_tol)
 
         compare_float_values(
-            '{:s} failure threshold'.format(check_statistic['type']), log_id,
+            f"{check_statistic['type']:s} failure threshold", log_id,
             check_statistic['thresholds']['failure'],
             ground_truth_check_statistic['thresholds']['failure'], parent_name=check_result['type'],
             rel_tol=rel_tol, abs_tol=abs_tol)
 
         compare_float_values(
-            '{:s} warning threshold'.format(check_statistic['type']), log_id,
+            f"{check_statistic['type']:s} warning threshold", log_id,
             check_statistic['thresholds']['warning'],
             ground_truth_check_statistic['thresholds']['warning'], parent_name=check_result['type'],
             rel_tol=rel_tol, abs_tol=abs_tol)

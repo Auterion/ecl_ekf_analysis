@@ -241,11 +241,11 @@ class InnovationPlot(DataPlot):
                 self.plot_data[self._variable_names[i][0]], 1e-6 * self.plot_data['timestamp'])
 
             plt.text(
-                max_time, max_value, 'max={:.2f}'.format(max_value), fontsize=12,
+                max_time, max_value, f'max={max_value:.2f}', fontsize=12,
                 horizontalalignment='left',
                 verticalalignment='bottom')
             plt.text(
-                min_time, min_value, 'min={:.2f}'.format(min_value), fontsize=12,
+                min_time, min_value, f'min={min_value:.2f}', fontsize=12,
                 horizontalalignment='left',
                 verticalalignment='top')
 
@@ -402,7 +402,7 @@ class CheckFlagsPlot(DataPlot):
 
                     plt.text(
                         max_time, max_value,
-                        'max={:.4f}, mean={:.4f}'.format(max_value, mean_value), color=col,
+                        f'max={max_value:.4f}, mean={mean_value:.4f}', color=col,
                         fontsize=12, horizontalalignment='left', verticalalignment='bottom')
 
         self.fig.tight_layout(rect=[0, 0.03, 1, 0.95])

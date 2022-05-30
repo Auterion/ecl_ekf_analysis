@@ -75,16 +75,16 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
     try:
         ulog = ULog(filename)
     except Exception as e:
-        raise PreconditionError('could not open {:s}'.format(filename)) from e
+        raise PreconditionError(f'could not open {filename:s}') from e
 
     test_results = analyse_logdata_ekf(ulog)
 
-    with open('{:s}.json'.format(os.path.splitext(filename)[0]), 'w') as file:
+    with open(f'{os.path.splitext(filename)[0]:s}.json', 'w') as file:
         json.dump(test_results, file, indent=2)
 
     if plot:
-        create_pdf_report(ulog, '{:s}.pdf'.format(filename))
-        print('Plots saved to {:s}.pdf'.format(filename))
+        create_pdf_report(ulog, f'{filename:s}.pdf')
+        print(f'Plots saved to {filename:s}.pdf')
 
     return test_results
 

@@ -72,7 +72,7 @@ def apply_rolling_fun_1d_boundaries(
     elif mode == 'valid':
         filtered_signal = apply_rolling_fun_1d(input_signal, fun, window_len)
     else:
-        raise NotImplementedError('mode {:s} not implemented'.format(mode))
+        raise NotImplementedError(f'mode {mode:s} not implemented')
 
     return filtered_signal
 

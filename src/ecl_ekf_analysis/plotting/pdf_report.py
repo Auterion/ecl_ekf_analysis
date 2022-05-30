@@ -185,13 +185,13 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
                     on_ground_transition_time)))
         if in_air_duration > 0.0:
             airborne_annotations.append(((in_air_transition_time + on_ground_transition_time) / 2,
-                                         'duration = {:.1f} sec'.format(in_air_duration)))
+                                         f'duration = {in_air_duration:.1f} sec'))
         if np.amax(np.diff(control_mode['airborne'])) < 0.5:
             airborne_annotations.append(
                 (in_air_transition_time, 'ground to air transition not detected'))
         else:
             airborne_annotations.append(
-                (in_air_transition_time, 'in-air at {:.1f} sec'.format(in_air_transition_time)))
+                (in_air_transition_time, f'in-air at {in_air_transition_time:.1f} sec'))
 
         data_plot = ControlModeSummaryPlot(
             status_time, control_mode, [['airborne'], ['estimating_wind']],

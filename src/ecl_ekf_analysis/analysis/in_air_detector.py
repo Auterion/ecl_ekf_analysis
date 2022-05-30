@@ -173,7 +173,7 @@ class InAirDetector():
         try:
             data = self._ulog.get_dataset(dataset).data
         except:
-            print('InAirDetector: {:s} not found in log.'.format(dataset))
+            print(f'InAirDetector: {dataset:s} not found in log.')
             return []
 
         if self.airtimes:
@@ -223,7 +223,7 @@ class InAirDetector():
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
         except Exception as e:
-            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset)) from e
+            raise PreconditionError(f'InAirDetector: {dataset:s} not found in log.') from e
 
         return self.get_total_airtime_for_timestamp(
             data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
@@ -264,7 +264,7 @@ class InAirDetector():
         try:
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
         except Exception as e:
-            raise PreconditionError('InAirDetector: {:s} not found in log.'.format(dataset)) from e
+            raise PreconditionError(f'InAirDetector: {dataset:s} not found in log.') from e
 
         return self.get_airtime_per_phase_for_timestamp(
             data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)

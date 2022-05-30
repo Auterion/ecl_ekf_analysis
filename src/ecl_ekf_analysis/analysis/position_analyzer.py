@@ -99,7 +99,7 @@ class PositionAnalyzer():
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
         except Exception as e:
             raise PreconditionError(
-                'PositionAnalyzer: {:s} not found in log.'.format(dataset)
+                f'PositionAnalyzer: {dataset:s} not found in log.'
             ) from e
 
         valid_position_indices = []
@@ -125,7 +125,7 @@ class PositionAnalyzer():
             data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
         except Exception as e:
             raise PreconditionError(
-                'PositionAnalyzer: {:s} not found in log.'.format(dataset)
+                f'PositionAnalyzer: {dataset:s} not found in log.'
             ) from e
 
         position_intervals = []
