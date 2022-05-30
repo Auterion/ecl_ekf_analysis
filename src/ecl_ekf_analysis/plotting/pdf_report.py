@@ -4,16 +4,17 @@ function collection for plotting
 """
 
 # matplotlib don't use Xwindows backend (must be before pyplot import)
-from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot, \
-    ControlModeSummaryPlot, CheckFlagsPlot
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
-from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
-    get_estimator_check_flags
 from pyulog import ULog
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib
 matplotlib.use('Agg')
+
+from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot, \
+    ControlModeSummaryPlot, CheckFlagsPlot
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
+    get_estimator_check_flags
 
 
 #pylint: disable=too-many-statements
