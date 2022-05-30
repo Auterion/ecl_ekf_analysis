@@ -26,7 +26,7 @@ def get_control_mode_flags(estimator_status: dict) -> dict:
     :return:
     """
 
-    control_mode = dict()
+    control_mode = {}
     # extract control mode metadata from estimator_status.control_mode_flags
     # 0 - true if the filter tilt alignment is complete
     # 1 - true if the filter yaw alignment is complete
@@ -116,7 +116,7 @@ def get_innovation_check_flags(estimator_status: dict) -> dict:
     :return:
     """
 
-    innov_flags = dict()
+    innov_flags = {}
     # innovation_check_flags summary
     # 0 - true if velocity observations have been rejected
     # 1 - true if horizontal position observations have been rejected
@@ -162,7 +162,7 @@ def get_gps_check_fail_flags(estimator_status: dict) -> dict:
     :param estimator_status:
     :return:
     """
-    gps_fail_flags = dict()
+    gps_fail_flags = {}
 
     # 0 : insufficient fix type (no 3D solution)
     # 1 : minimum required sat count fail

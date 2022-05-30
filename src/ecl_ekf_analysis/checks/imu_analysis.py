@@ -64,7 +64,7 @@ class IMU_Bias_Check(Check):
         estimator_states_data = self.ulog.get_dataset(
             self._estimator_states_msg).data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         for signal in [
             "states[10]",
@@ -95,7 +95,7 @@ class IMU_Bias_Check(Check):
             self._estimator_states_msg).data
 
         # summarize biases from all six possible states
-        imu_state_metrics = dict()
+        imu_state_metrics = {}
         for signal in [
             "states[10]",
             "states[11]",
@@ -234,7 +234,7 @@ class IMU_Output_Predictor_Check(Check):
             output_tracking_error_msg
         ).data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         # calculates the median of the output tracking error ekf innovations
         for signal, result in [
@@ -391,7 +391,7 @@ class IMU_Vibration_Check(Check):
         """
         estimator_status_data = self.ulog.get_dataset("estimator_status").data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         # calculates peak and mean for IMU vibration checks
         for signal, result in [

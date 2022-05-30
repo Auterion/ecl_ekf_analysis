@@ -59,7 +59,7 @@ class CheckRunner():
         """
         :return:
         """
-        results_table = dict()
+        results_table = {}
         for check_result in self._check_results:
             check_name = check_result.check_type.name
             check_status = check_result.status.legacy_name

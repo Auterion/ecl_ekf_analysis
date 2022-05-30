@@ -76,7 +76,7 @@ class EstimatorCheck(Check):
         calculates the estimator status metrics
         :return:
         """
-        test_ratio_metrics = dict()
+        test_ratio_metrics = {}
 
         test_ratio_data = self.ulog.get_dataset(self._test_ratio_message).data
 
@@ -105,7 +105,7 @@ class EstimatorCheck(Check):
         calculates the innovation metrics
         :return:
         """
-        innovation_metrics = dict()
+        innovation_metrics = {}
 
         for innov_fail_name in self._innov_fail_names:
             innovation_metrics[f'{innov_fail_name:s}_fail_short_window_mean'] = \
