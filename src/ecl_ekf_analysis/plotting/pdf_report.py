@@ -192,8 +192,7 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
                  'air to ground transition not detected'))
         else:
             airborne_annotations.append(
-                (on_ground_transition_time, 'on-ground at {:.1f} sec'.format(
-                    on_ground_transition_time)))
+                (on_ground_transition_time, f'on-ground at {on_ground_transition_time:.1f} sec'))
         if in_air_duration > 0.0:
             airborne_annotations.append(
                 ((in_air_transition_time + on_ground_transition_time) / 2,

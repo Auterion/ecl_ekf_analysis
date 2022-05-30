@@ -21,14 +21,13 @@ def compare_float_values(
     """
     # pylint: disable=unidiomatic-typecheck
     assert isinstance(analysis_value, type(ground_truth_value)), \
-        'analysis result type {:s} is different to the ground truth type {:s} ' \
-        'in {:s} in {:s}'.format(
-            str(type(analysis_value)),
-            str(type(ground_truth_value)), value_name, log_id)
+        f'analysis result type {str(type(analysis_value)):s} is different' \
+        f'to the ground truth type {str(type(ground_truth_value)):s} ' \
+        f'in {value_name:s} in {log_id:s}'
     if isinstance(ground_truth_value, float):
         assert analysis_value == pytest.approx(ground_truth_value, rel=rel_tol, abs=abs_tol), \
-            '{:s} {:s} statistic was different to ground truth statistic in {:s}'.format(
-                parent_name, value_name, log_id)
+            f'{parent_name:s} {value_name:s} statistic was' \
+            f'different to ground truth statistic in {log_id:s}'
 
 
 def compare_check_analysis_result_ground_truth(
@@ -42,28 +41,29 @@ def compare_check_analysis_result_ground_truth(
     :return:
     """
     assert check_result['type'] == ground_truth_check_result['type'], \
-        'analysis check result type {:s} differed from ground truth {:s} in {:s}'.format(
-            check_result['type'], ground_truth_check_result['type'], log_id)
+        f'analysis check result type {check_result["type"]:s} differed from' \
+        f'ground truth {ground_truth_check_result["type"]:s} in {log_id:s}'
 
     assert check_result['status'] == ground_truth_check_result['status'], \
-        'analysis check result status {:s} in {:s} differed from ground truth {:s} in {:s}'.format(
-            check_result['status'], check_result['type'], ground_truth_check_result['status'],
-            log_id)
+        f'analysis check result status {check_result["status"]:s} in' \
+        f'{check_result["type"]:s} differed from ground truth' \
+        f'{ground_truth_check_result["status"]:s} in {log_id:s}'
 
     assert len(check_result['statistics']) == len(ground_truth_check_result['statistics']), \
-        'number of check statistics of {:s} in {:s} from analysis differed to number of ground ' \
-        'truth statistics.'.format(check_result['type'], log_id)
+        f'number of check statistics of {check_result["type"]:s} in' \
+        f'{log_id:s} from analysis differed to number of ground ' \
+        f'truth statistics.'
 
     for check_statistic, ground_truth_check_statistic in zip(
             check_result['statistics'], ground_truth_check_result['statistics']):
 
         assert check_statistic['type'] == ground_truth_check_statistic['type'], \
-            'analysis check statistic type {:s} differed from ground truth {:s} in {:s}'.format(
-                check_statistic['type'], ground_truth_check_statistic['type'], log_id)
+            f'analysis check statistic type {check_statistic["type"]:s} differed from' \
+            f'ground truth {ground_truth_check_statistic["type"]:s} in {log_id:s}'
 
         assert check_statistic['instance'] == ground_truth_check_statistic['instance'], \
-            'analysis check statistic instance {:s} differed from ground truth {:s} in {:s}'.format(
-                check_statistic['instance'], ground_truth_check_statistic['instance'], log_id)
+            f'analysis check statistic instance {check_statistic["instance"]:s} differed' \
+            f'from ground truth {ground_truth_check_statistic["instance"]:s} in {log_id:s}'
 
         compare_float_values(
             check_statistic['type'],

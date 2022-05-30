@@ -337,8 +337,8 @@ class ControlModeSummaryPlot(DataPlot):
                     plt.text(
                         align_time,
                         v_annot_pos,
-                        'no pre-arm data - cannot calculate {:s} start time'.format(
-                            self._annotation_text[i][t]),
+                        f'no pre-arm data - cannot calculate {self._annotation_text[i][t]:s}' \
+                        f'start time',
                         fontsize=12,
                         horizontalalignment='left',
                         verticalalignment='center',
@@ -347,9 +347,7 @@ class ControlModeSummaryPlot(DataPlot):
                     plt.text(
                         align_time,
                         v_annot_pos,
-                        '{:s} at {:.1f} sec'.format(
-                            self._annotation_text[i][t],
-                            align_time),
+                        f'{self._annotation_text[i][t]:s} at {align_time:.1f} sec',
                         fontsize=12,
                         horizontalalignment='left',
                         verticalalignment='center',
