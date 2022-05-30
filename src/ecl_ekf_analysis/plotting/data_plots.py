@@ -181,7 +181,7 @@ class TimeSeriesPlot(DataPlot):
         if self.fig is None:
             return
 
-        for i in range(len(self._variable_names)):
+        for i in enumerate(self._variable_names):
             plt.subplot(len(self._variable_names), 1, i + 1)
             for v in self._variable_names[i]:
                 plt.plot(self.plot_data[v], 'b')
@@ -228,7 +228,7 @@ class InnovationPlot(DataPlot):
         if self.fig is None:
             return
 
-        for i in range(len(self._variable_names)):
+        for i in enumerate(self._variable_names):
             # create a subplot for every variable
             plt.subplot(len(self._variable_names), 1, i + 1)
             if self._sub_titles is not None:
@@ -311,7 +311,7 @@ class ControlModeSummaryPlot(DataPlot):
 
         colors = ['b', 'r', 'g', 'c']
 
-        for i in range(len(self._variable_names)):
+        for i in enumerate(self._variable_names):
             # create a subplot for every variable
             plt.subplot(len(self._variable_names), 1, i + 1)
             if self._sub_titles is not None:
@@ -326,7 +326,7 @@ class ControlModeSummaryPlot(DataPlot):
             plt.grid()
             plt.ylim(-0.1, 1.1)
 
-            for t in range(len(self._annotation_text[i])):
+            for t in enumerate(self._annotation_text[i]):
 
                 _, _, align_time = get_max_arg_time_value(
                     np.diff(self.plot_data[self._variable_names[i][t]]), self._data_time)
@@ -356,7 +356,7 @@ class ControlModeSummaryPlot(DataPlot):
                         color=colors[t])
 
             if self._additional_annotation is not None:
-                for a in range(len(self._additional_annotation[i])):
+                for a in enumerate(self._additional_annotation[i]):
                     v_annot_pos = (a + 1.0) / \
                         (len(self._additional_annotation[i]) + 1)
                     plt.text(
@@ -417,7 +417,7 @@ class CheckFlagsPlot(DataPlot):
 
         colors = ['b', 'r', 'g', 'c', 'k', 'm']
 
-        for i in range(len(self._variable_names)):
+        for i in enumerate(self._variable_names):
             # create a subplot for every variable
             plt.subplot(len(self._variable_names), 1, i + 1)
             if self._sub_titles is not None:
