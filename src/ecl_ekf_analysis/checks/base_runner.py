@@ -23,7 +23,6 @@ class AnalysisStatus(IntEnum):
     RUNTIME_ERROR = 3
     PRECONDITION_ERROR = 4
 
-
     @property
     def status_name(self) -> str:
         """
@@ -33,11 +32,11 @@ class AnalysisStatus(IntEnum):
         return self._name_
 
 
-
 class CheckRunner():
     """
     a runner class for checks
     """
+
     def __init__(self):
         """
         initialize the class
@@ -48,7 +47,6 @@ class CheckRunner():
         self._check_results = list()
         self._results_table = list()
 
-
     def append(self, check: Check):
         """
 
@@ -56,7 +54,6 @@ class CheckRunner():
         :return:
         """
         self._checks.append(check)
-
 
     def _create_results_table(self) -> Dict[str, tuple]:
         """
@@ -70,7 +67,6 @@ class CheckRunner():
             results_table[check_name] = (check_status, '', check_data)
 
         return results_table
-
 
     def run_checks(self):
         """
@@ -104,8 +100,10 @@ class CheckRunner():
 
         # merge statuses
         if len(analyses_statuses) > 0:
-            # retry the analysis if one of the sub-analyses received an unexpected error
-            if any(status == AnalysisStatus.UNEXPECTED_ERROR for status in analyses_statuses):
+            # retry the analysis if one of the sub-analyses received an
+            # unexpected error
+            if any(
+                    status == AnalysisStatus.UNEXPECTED_ERROR for status in analyses_statuses):
                 self._analysis_status = AnalysisStatus.UNEXPECTED_ERROR
             elif any(status == AnalysisStatus.SUCCESS for status in analyses_statuses):
                 # set the checks of all failing analyses to Does Not Apply, such that they don't
@@ -113,7 +111,6 @@ class CheckRunner():
                 self._analysis_status = AnalysisStatus.SUCCESS
             else:
                 self._analysis_status = max(analyses_statuses)
-
 
     @property
     def results(self) -> List[CheckResult]:
@@ -150,7 +147,6 @@ class CheckRunner():
         :return: the results table
         """
         return self._create_results_table()
-
 
     @property
     def does_not_apply(self) -> Set[str]:

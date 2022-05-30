@@ -8,7 +8,8 @@ from typing import Tuple
 import numpy as np
 
 
-def get_estimator_check_flags(estimator_status: dict) -> Tuple[dict, dict, dict]:
+def get_estimator_check_flags(
+        estimator_status: dict) -> Tuple[dict, dict, dict]:
     """
     :param estimator_status:
     :return:
@@ -52,35 +53,60 @@ def get_control_mode_flags(estimator_status: dict) -> dict:
     # 22 - true when yaw (not ground course) data from a GPS receiver is being fused
     # 23 - true when the in-flight mag field alignment has been completed
     # 24 - true when velocity data from external vision measurements are being fused
-    # 25 - true when we are using a synthesized measurement for the magnetometer Z component
-    control_mode['tilt_aligned'] = ((2 ** 0 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['yaw_aligned'] = ((2 ** 1 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_gps'] = ((2 ** 2 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_optflow'] = ((2 ** 3 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_magyaw'] = ((2 ** 4 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_mag3d'] = ((2 ** 5 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_magdecl'] = ((2 ** 6 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['airborne'] = ((2 ** 7 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['estimating_wind'] = ((2 ** 8 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_barohgt'] = ((2 ** 9 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_rnghgt'] = ((2 ** 10 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_gpshgt'] = ((2 ** 11 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_evpos'] = ((2 ** 12 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_evyaw'] = ((2 ** 13 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['using_evhgt'] = ((2 ** 14 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['fuse_beta'] = ((2 ** 15 & estimator_status['control_mode_flags']) > 0) * 1
+    # 25 - true when we are using a synthesized measurement for the
+    # magnetometer Z component
+    control_mode['tilt_aligned'] = (
+        (2 ** 0 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['yaw_aligned'] = (
+        (2 ** 1 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_gps'] = (
+        (2 ** 2 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_optflow'] = (
+        (2 ** 3 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_magyaw'] = (
+        (2 ** 4 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_mag3d'] = (
+        (2 ** 5 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_magdecl'] = (
+        (2 ** 6 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['airborne'] = (
+        (2 ** 7 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['estimating_wind'] = (
+        (2 ** 8 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_barohgt'] = (
+        (2 ** 9 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_rnghgt'] = (
+        (2 ** 10 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_gpshgt'] = (
+        (2 ** 11 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_evpos'] = (
+        (2 ** 12 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_evyaw'] = (
+        (2 ** 13 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['using_evhgt'] = (
+        (2 ** 14 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['fuse_beta'] = (
+        (2 ** 15 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['mag_field_disturbed'] = (
         (2 ** 16 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['fixed_wing'] = ((2 ** 17 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['mag_fault'] = ((2 ** 18 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['fuse_aspd'] = ((2 ** 19 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['gnd_effect'] = ((2 ** 20 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['rng_stuck'] = ((2 ** 21 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['gps_yaw'] = ((2 ** 22 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['fixed_wing'] = (
+        (2 ** 17 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['mag_fault'] = (
+        (2 ** 18 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['fuse_aspd'] = (
+        (2 ** 19 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['gnd_effect'] = (
+        (2 ** 20 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['rng_stuck'] = (
+        (2 ** 21 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['gps_yaw'] = (
+        (2 ** 22 & estimator_status['control_mode_flags']) > 0) * 1
     control_mode['mag_aligned_in_flight'] = (
         (2 ** 23 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['ev_vel'] = ((2 ** 24 & estimator_status['control_mode_flags']) > 0) * 1
-    control_mode['synthetic_mag_z'] = ((2 ** 25 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['ev_vel'] = (
+        (2 ** 24 & estimator_status['control_mode_flags']) > 0) * 1
+    control_mode['synthetic_mag_z'] = (
+        (2 ** 25 & estimator_status['control_mode_flags']) > 0) * 1
     return control_mode
 
 
@@ -104,18 +130,30 @@ def get_innovation_check_flags(estimator_status: dict) -> dict:
     # 9 - true if the height above ground observation has been rejected
     # 10 - true if the X optical flow observation has been rejected
     # 11 - true if the Y optical flow observation has been rejected
-    innov_flags['vel_innov_fail'] = ((2 ** 0 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['posh_innov_fail'] = ((2 ** 1 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['posv_innov_fail'] = ((2 ** 2 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['magx_innov_fail'] = ((2 ** 3 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['magy_innov_fail'] = ((2 ** 4 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['magz_innov_fail'] = ((2 ** 5 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['yaw_innov_fail'] = ((2 ** 6 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['tas_innov_fail'] = ((2 ** 7 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['sli_innov_fail'] = ((2 ** 8 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['hagl_innov_fail'] = ((2 ** 9 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['ofx_innov_fail'] = ((2 ** 10 & estimator_status['innovation_check_flags']) > 0) * 1
-    innov_flags['ofy_innov_fail'] = ((2 ** 11 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['vel_innov_fail'] = (
+        (2 ** 0 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['posh_innov_fail'] = (
+        (2 ** 1 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['posv_innov_fail'] = (
+        (2 ** 2 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['magx_innov_fail'] = (
+        (2 ** 3 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['magy_innov_fail'] = (
+        (2 ** 4 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['magz_innov_fail'] = (
+        (2 ** 5 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['yaw_innov_fail'] = (
+        (2 ** 6 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['tas_innov_fail'] = (
+        (2 ** 7 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['sli_innov_fail'] = (
+        (2 ** 8 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['hagl_innov_fail'] = (
+        (2 ** 9 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['ofx_innov_fail'] = (
+        (2 ** 10 & estimator_status['innovation_check_flags']) > 0) * 1
+    innov_flags['ofy_innov_fail'] = (
+        (2 ** 11 & estimator_status['innovation_check_flags']) > 0) * 1
     return innov_flags
 
 
@@ -136,27 +174,39 @@ def get_gps_check_fail_flags(estimator_status: dict) -> dict:
     # 7 : maximum allowed vertical position drift fail
     # 8 : maximum allowed horizontal speed fail
     # 9 : maximum allowed vertical velocity discrepancy fail
-    gps_fail_flags['gfix_fail'] = ((2 ** 0 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['nsat_fail'] = ((2 ** 1 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['gdop_fail'] = ((2 ** 2 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['herr_fail'] = ((2 ** 3 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['verr_fail'] = ((2 ** 4 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['serr_fail'] = ((2 ** 5 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['hdrift_fail'] = ((2 ** 6 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['vdrift_fail'] = ((2 ** 7 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['hspd_fail'] = ((2 ** 8 & estimator_status['gps_check_fail_flags']) > 0) * 1
-    gps_fail_flags['veld_diff_fail'] = ((2 ** 9 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['gfix_fail'] = (
+        (2 ** 0 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['nsat_fail'] = (
+        (2 ** 1 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['gdop_fail'] = (
+        (2 ** 2 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['herr_fail'] = (
+        (2 ** 3 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['verr_fail'] = (
+        (2 ** 4 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['serr_fail'] = (
+        (2 ** 5 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['hdrift_fail'] = (
+        (2 ** 6 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['vdrift_fail'] = (
+        (2 ** 7 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['hspd_fail'] = (
+        (2 ** 8 & estimator_status['gps_check_fail_flags']) > 0) * 1
+    gps_fail_flags['veld_diff_fail'] = (
+        (2 ** 9 & estimator_status['gps_check_fail_flags']) > 0) * 1
     return gps_fail_flags
 
 
-def magnetic_field_estimates_from_status(estimator_status: dict) -> Tuple[float, float, float]:
+def magnetic_field_estimates_from_status(
+        estimator_status: dict) -> Tuple[float, float, float]:
     """
     :param estimator_status:
     :return:
     """
     rad2deg = 57.2958
     field_strength = np.sqrt(
-        estimator_status['states[16]'] ** 2 + estimator_status['states[17]'] ** 2 +
+        estimator_status['states[16]'] ** 2 +
+        estimator_status['states[17]'] ** 2 +
         estimator_status['states[18]'] ** 2)
     declination = rad2deg * np.arctan2(estimator_status['states[17]'],
                                        estimator_status['states[16]'])

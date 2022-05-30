@@ -22,10 +22,17 @@ class EstimatorCheck(Check):
     """
     the attitude check.
     """
-    def __init__(
-            self, ulog: ULog, innov_flags: Dict[str, float], control_mode_flags: Dict[str, float],
-            check_type: CheckType = CheckType.UNDEFINED, check_id: str = '',
-            test_ratio_name: Optional[str] = '', innov_fail_names: Optional[List[str]] = None):
+
+    def __init__(self,
+                 ulog: ULog,
+                 innov_flags: Dict[str,
+                                   float],
+                 control_mode_flags: Dict[str,
+                                          float],
+                 check_type: CheckType = CheckType.UNDEFINED,
+                 check_id: str = '',
+                 test_ratio_name: Optional[str] = '',
+                 innov_fail_names: Optional[List[str]] = None):
         """
         :param ulog:
         :param innov_flags:
@@ -54,7 +61,6 @@ class EstimatorCheck(Check):
             self._in_air_detector = InAirDetector(
                 ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds())
 
-
     def init_test_ratio_message_and_names(self):
         """
         :return:
@@ -64,7 +70,6 @@ class EstimatorCheck(Check):
                 get_innovation_message_and_field_names(
                     self.ulog, self._test_ratio_name, topic='innovation_test_ratio'
                 )
-
 
     def calc_test_ratio_metrics(self, test_ratio_name: str) -> Dict[str, list]:
         """
@@ -95,7 +100,6 @@ class EstimatorCheck(Check):
 
         return test_ratio_metrics
 
-
     def calc_innovation_metrics(self) -> Dict[str, list]:
         """
         calculates the innovation metrics
@@ -117,22 +121,28 @@ class EstimatorCheck(Check):
 
         return innovation_metrics
 
-
     def calc_estimator_statistics(self) -> None:
         """
         :return:
         """
         for i, test_ratio_name in enumerate(self._test_ratio_names):
             test_ratio_metrics = self.calc_test_ratio_metrics(test_ratio_name)
-            test_ratio_data = self.ulog.get_dataset(self._test_ratio_message).data
+            test_ratio_data = self.ulog.get_dataset(
+                self._test_ratio_message).data
 
             innov_red_pct = self.add_statistic(
                 CheckStatisticType.INNOVATION_RED_PCT, statistic_instance=i)
-            innov_red_pct.value = float(calculate_stat_from_signal(
-                test_ratio_data, self._test_ratio_message, test_ratio_name,
-                self._in_air_detector, lambda x: 100.0 * np.mean(x > params.ecl_red_thresh())))
+            innov_red_pct.value = float(
+                calculate_stat_from_signal(
+                    test_ratio_data,
+                    self._test_ratio_message,
+                    test_ratio_name,
+                    self._in_air_detector,
+                    lambda x: 100.0 *
+                    np.mean(
+                        x > params.ecl_red_thresh())))
 
-            #TODO: remove subtraction of innov_red_pct and tune parameters
+            # TODO: remove subtraction of innov_red_pct and tune parameters
             innov_amber_pct = self.add_statistic(
                 CheckStatisticType.INNOVATION_AMBER_PCT, statistic_instance=i)
             innov_amber_pct.value = float(calculate_stat_from_signal(
@@ -156,10 +166,12 @@ class EstimatorCheck(Check):
             innov_amber_windowed_pct.value = float(max(
                 [np.max(metric) for _, metric in test_ratio_metrics[
                     f'{self._check_id:s}_percentage_amber_windowed']]))
-            if thresholds.ecl_amber_warning_windowed_pct_exists(self._check_id):
+            if thresholds.ecl_amber_warning_windowed_pct_exists(
+                    self._check_id):
                 innov_amber_windowed_pct.thresholds.warning = \
                     thresholds.ecl_amber_warning_windowed_pct(self._check_id)
-            if thresholds.ecl_amber_failure_windowed_pct_exists(self._check_id):
+            if thresholds.ecl_amber_failure_windowed_pct_exists(
+                    self._check_id):
                 innov_amber_windowed_pct.thresholds.failure = \
                     thresholds.ecl_amber_failure_windowed_pct(self._check_id)
 
@@ -187,7 +199,6 @@ class EstimatorCheck(Check):
                     f'{self._check_id:s}_test_windowed_mean']]
             ))
 
-
     def calc_innovation_statistics(self) -> None:
         """
         :return:
@@ -198,9 +209,15 @@ class EstimatorCheck(Check):
             innov_stats_fail_pct = self.add_statistic(
                 CheckStatisticType.FAIL_RATIO_PCT, statistic_instance=i)
 
-            innov_stats_fail_pct.value = float(calculate_stat_from_signal(
-                self._innov_flags, 'estimator_status', innov_fail_name,
-                self._in_air_detector_no_ground_effects, lambda x: 100.0 * np.mean(x > 0.5)))
+            innov_stats_fail_pct.value = float(
+                calculate_stat_from_signal(
+                    self._innov_flags,
+                    'estimator_status',
+                    innov_fail_name,
+                    self._in_air_detector_no_ground_effects,
+                    lambda x: 100.0 *
+                    np.mean(
+                        x > 0.5)))
             if thresholds.ecl_innovation_failure_pct_exists(self._check_id):
                 innov_stats_fail_pct.thresholds.failure = thresholds.ecl_innovation_failure_pct(
                     self._check_id)
@@ -211,7 +228,8 @@ class EstimatorCheck(Check):
                 [np.max(metric) for _, metric in innovation_metrics[
                     f'{innov_fail_name:s}_fail_short_window_mean']]
             ))
-            if thresholds.ecl_short_rolling_innovation_failure_pct_exists(self._check_id):
+            if thresholds.ecl_short_rolling_innovation_failure_pct_exists(
+                    self._check_id):
                 innov_stats_fail_short_window_pct.thresholds.failure = \
                     thresholds.ecl_short_rolling_innovation_failure_pct(self._check_id)
 
@@ -221,10 +239,10 @@ class EstimatorCheck(Check):
                 [np.max(metric) for _, metric in innovation_metrics[
                     f'{innov_fail_name:s}_fail_long_window_mean']]
             ))
-            if thresholds.ecl_long_rolling_innovation_warning_pct_exists(self._check_id):
+            if thresholds.ecl_long_rolling_innovation_warning_pct_exists(
+                    self._check_id):
                 innov_stats_fail_long_window_pct.thresholds.warning = \
                     thresholds.ecl_long_rolling_innovation_warning_pct(self._check_id)
-
 
     def calc_statistics(self) -> None:
         """
@@ -239,6 +257,7 @@ class MagnetometerCheck(EstimatorCheck):
     """
     the compass check
     """
+
     def __init__(
             self, ulog: ULog, innov_flags: Dict[str, float],
             control_mode_flags: Dict[str, float]) -> None:
@@ -246,11 +265,16 @@ class MagnetometerCheck(EstimatorCheck):
         :param ulog:
         """
         super().__init__(
-            ulog, innov_flags, control_mode_flags,
+            ulog,
+            innov_flags,
+            control_mode_flags,
             check_type=CheckType.MAGNETOMETER_STATUS,
-            check_id='magnetometer', test_ratio_name='mag_field',
-            innov_fail_names=['magx_innov_fail', 'magy_innov_fail', 'magz_innov_fail'])
-
+            check_id='magnetometer',
+            test_ratio_name='mag_field',
+            innov_fail_names=[
+                'magx_innov_fail',
+                'magy_innov_fail',
+                'magz_innov_fail'])
 
     def run_precondition(self) -> bool:
         """
@@ -273,10 +297,13 @@ class MagneticHeadingCheck(EstimatorCheck):
         messages = {elem.name for elem in ulog.data_list}
         test_ratio_name = 'heading' if 'estimator_innovation_test_ratios' in messages else None
         super().__init__(
-            ulog, innov_flags, control_mode_flags,
+            ulog,
+            innov_flags,
+            control_mode_flags,
             check_type=CheckType.MAGNETIC_HEADING_STATUS,
-            check_id='yaw', test_ratio_name=test_ratio_name, innov_fail_names=['yaw_innov_fail'])
-
+            check_id='yaw',
+            test_ratio_name=test_ratio_name,
+            innov_fail_names=['yaw_innov_fail'])
 
     def run_precondition(self) -> bool:
         """
@@ -302,7 +329,6 @@ class VelocityCheck(EstimatorCheck):
             check_id='velocity', test_ratio_name='vel',
             innov_fail_names=['vel_innov_fail'])
 
-
     def run_precondition(self) -> bool:
         """
         :return:
@@ -325,7 +351,6 @@ class GPSVelocityCheck(EstimatorCheck):
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.GPS_VELOCITY_STATUS,
             check_id='gps_velocity', test_ratio_name='gps_vel')
-
 
     def run_precondition(self) -> bool:
         """
@@ -351,7 +376,6 @@ class EVVelocityCheck(EstimatorCheck):
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.EXTERNAL_VISION_VELOCITY_STATUS,
             check_id='ev_velocity', test_ratio_name='ev_vel')
-
 
     def run_precondition(self) -> bool:
         """
@@ -379,7 +403,6 @@ class PositionCheck(EstimatorCheck):
             check_id='position', test_ratio_name='pos',
             innov_fail_names=['posh_innov_fail'])
 
-
     def run_precondition(self) -> bool:
         """
         :return:
@@ -405,7 +428,6 @@ class GPSPositionCheck(EstimatorCheck):
             check_type=CheckType.GPS_POSITION_STATUS,
             check_id='gps_position', test_ratio_name='gps_hpos')
 
-
     def run_precondition(self) -> bool:
         """
         :return:
@@ -430,7 +452,6 @@ class EVPositionCheck(EstimatorCheck):
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.EXTERNAL_VISION_POSITION_STATUS,
             check_id='ev_position', test_ratio_name='ev_hpos')
-
 
     def run_precondition(self) -> bool:
         """
@@ -474,7 +495,6 @@ class GPSHeightCheck(EstimatorCheck):
             ulog, innov_flags, control_mode_flags,
             check_type=CheckType.GPS_HEIGHT_STATUS,
             check_id='gps_height', test_ratio_name='gps_vpos')
-
 
     def run_precondition(self) -> bool:
         """
@@ -577,15 +597,14 @@ class HeightAboveGroundCheck(EstimatorCheck):
             check_id='height_above_ground', test_ratio_name='hagl',
             innov_fail_names=['hagl_innov_fail'])
 
-
     def run_precondition(self) -> bool:
         """
         :return:
         """
         test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'hagl', topic='innovation_test_ratio')
-        return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
+        return np.amax(self.ulog.get_dataset(
+            test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class AirspeedCheck(EstimatorCheck):
@@ -611,8 +630,8 @@ class AirspeedCheck(EstimatorCheck):
         """
         test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'airspeed', topic='innovation_test_ratio')
-        return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
+        return np.amax(self.ulog.get_dataset(
+            test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class SideSlipCheck(EstimatorCheck):
@@ -638,8 +657,8 @@ class SideSlipCheck(EstimatorCheck):
         """
         test_ratio_msg, test_ratio_field_names = get_innovation_message_and_field_names(
             self.ulog, 'beta', topic='innovation_test_ratio')
-        return np.amax(
-            self.ulog.get_dataset(test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
+        return np.amax(self.ulog.get_dataset(
+            test_ratio_msg).data[test_ratio_field_names[0]]) > 0.0
 
 
 class OpticalFlowCheck(EstimatorCheck):
@@ -658,7 +677,6 @@ class OpticalFlowCheck(EstimatorCheck):
             check_type=CheckType.OPTICAL_FLOW_STATUS,
             check_id='optical_flow', test_ratio_name=None,
             innov_fail_names=['ofx_innov_fail', 'ofy_innov_fail'])
-
 
     def run_precondition(self) -> bool:
         """

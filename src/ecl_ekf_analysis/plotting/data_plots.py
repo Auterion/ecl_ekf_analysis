@@ -11,8 +11,8 @@ from matplotlib.pyplot import Figure, Axes
 from matplotlib.backends.backend_pdf import PdfPages
 
 
-def get_min_arg_time_value(
-        time_series_data: np.ndarray, data_time: np.ndarray) -> Tuple[int, float, float]:
+def get_min_arg_time_value(time_series_data: np.ndarray,
+                           data_time: np.ndarray) -> Tuple[int, float, float]:
     """
     :param time_series_data:
     :param data_time:
@@ -24,8 +24,8 @@ def get_min_arg_time_value(
     return (min_arg, min_value, min_time)
 
 
-def get_max_arg_time_value(
-        time_series_data: np.ndarray, data_time: np.ndarray) -> Tuple[int, float, float]:
+def get_max_arg_time_value(time_series_data: np.ndarray,
+                           data_time: np.ndarray) -> Tuple[int, float, float]:
     """
     :param time_series_data:
     :param data_time:
@@ -41,6 +41,7 @@ class DataPlot():
     """
     A plotting class interface. Provides functions such as saving the figure.
     """
+
     def __init__(
             self, plot_data: Dict[str, np.ndarray], variable_names: List[List[str]],
             plot_title: str = '', sub_titles: Optional[List[str]] = None,
@@ -104,9 +105,9 @@ class DataPlot():
         creates the figure handle.
         :return:
         """
-        self._fig, self._ax = plt.subplots(frameon=True, figsize=self._fig_size)
+        self._fig, self._ax = plt.subplots(
+            frameon=True, figsize=self._fig_size)
         self._fig.suptitle(self._plot_title)
-
 
     def _generate_plot_data(self) -> None:
         """
@@ -121,7 +122,6 @@ class DataPlot():
         """
         self.fig.show()
 
-
     def save(self) -> None:
         """
         saves the figure if a pdf_handle was initialized.
@@ -133,7 +133,6 @@ class DataPlot():
             self._pdf_handle.savefig(figure=self.fig)
         else:
             print('skipping saving to pdf: handle was not initialized.')
-
 
     def close(self) -> None:
         """
@@ -147,10 +146,15 @@ class TimeSeriesPlot(DataPlot):
     """
     class for creating multiple time series plot.
     """
-    def __init__(
-            self, plot_data: dict, variable_names: List[List[str]], x_labels: List[str],
-            y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
-            pdf_handle: Optional[PdfPages] = None) -> None:
+
+    def __init__(self,
+                 plot_data: dict,
+                 variable_names: List[List[str]],
+                 x_labels: List[str],
+                 y_labels: List[str],
+                 plot_title: str = '',
+                 sub_titles: Optional[List[str]] = None,
+                 pdf_handle: Optional[PdfPages] = None) -> None:
         """
         initializes a timeseries plot
         :param plot_data:
@@ -161,8 +165,13 @@ class TimeSeriesPlot(DataPlot):
         :param pdf_handle:
         """
         super().__init__(
-            plot_data, variable_names, plot_title=plot_title, sub_titles=sub_titles,
-            x_labels=x_labels, y_labels=y_labels, pdf_handle=pdf_handle)
+            plot_data,
+            variable_names,
+            plot_title=plot_title,
+            sub_titles=sub_titles,
+            x_labels=x_labels,
+            y_labels=y_labels,
+            pdf_handle=pdf_handle)
 
     def plot(self):
         """
@@ -186,6 +195,7 @@ class InnovationPlot(DataPlot):
     """
     class for creating an innovation plot.
     """
+
     def __init__(
             self, plot_data: dict, variable_names: List[Tuple[str, str]], x_labels: List[str],
             y_labels: List[str], plot_title: str = '', sub_titles: Optional[List[str]] = None,
@@ -201,9 +211,13 @@ class InnovationPlot(DataPlot):
         :param pdf_handle:
         """
         super().__init__(
-            plot_data, variable_names, plot_title=plot_title, sub_titles=sub_titles,
-            x_labels=x_labels, y_labels=y_labels, pdf_handle=pdf_handle)
-
+            plot_data,
+            variable_names,
+            plot_title=plot_title,
+            sub_titles=sub_titles,
+            x_labels=x_labels,
+            y_labels=y_labels,
+            pdf_handle=pdf_handle)
 
     def plot(self):
         """
@@ -221,8 +235,8 @@ class InnovationPlot(DataPlot):
                 plt.title(self._sub_titles[i])
 
             # plot the value and the standard deviation
-            plt.plot(
-                1e-6 * self.plot_data['timestamp'], self.plot_data[self._variable_names[i][0]], 'b')
+            plt.plot(1e-6 * self.plot_data['timestamp'],
+                     self.plot_data[self._variable_names[i][0]], 'b')
             plt.plot(
                 1e-6 * self.plot_data['timestamp'],
                 np.sqrt(self.plot_data[self._variable_names[i][1]]), 'r')
@@ -274,12 +288,17 @@ class ControlModeSummaryPlot(DataPlot):
         :param pdf_handle:
         """
         super().__init__(
-            plot_data, variable_names, plot_title=plot_title, sub_titles=sub_titles,
-            x_labels=[x_label]*len(y_labels), y_labels=y_labels, pdf_handle=pdf_handle)
+            plot_data,
+            variable_names,
+            plot_title=plot_title,
+            sub_titles=sub_titles,
+            x_labels=[x_label] *
+            len(y_labels),
+            y_labels=y_labels,
+            pdf_handle=pdf_handle)
         self._data_time = data_time
         self._annotation_text = annotation_text
         self._additional_annotation = additional_annotation
-
 
     def plot(self):
         """
@@ -298,7 +317,8 @@ class ControlModeSummaryPlot(DataPlot):
             if self._sub_titles is not None:
                 plt.title(self._sub_titles[i])
 
-            for col, var in zip(colors[:len(self._variable_names[i])], self._variable_names[i]):
+            for col, var in zip(
+                    colors[:len(self._variable_names[i])], self._variable_names[i]):
                 plt.plot(self._data_time, self.plot_data[var], col)
 
             plt.xlabel(self._x_labels[i])
@@ -310,27 +330,43 @@ class ControlModeSummaryPlot(DataPlot):
 
                 _, _, align_time = get_max_arg_time_value(
                     np.diff(self.plot_data[self._variable_names[i][t]]), self._data_time)
-                v_annot_pos = (t+1.0)/(len(self._variable_names[i])+1) # vert annotation position
+                # vert annotation position
+                v_annot_pos = (t + 1.0) / (len(self._variable_names[i]) + 1)
 
                 if np.amin(self.plot_data[self._variable_names[i][t]]) > 0:
                     plt.text(
-                        align_time, v_annot_pos,
+                        align_time,
+                        v_annot_pos,
                         'no pre-arm data - cannot calculate {:s} start time'.format(
-                            self._annotation_text[i][t]), fontsize=12, horizontalalignment='left',
-                        verticalalignment='center', color=colors[t])
+                            self._annotation_text[i][t]),
+                        fontsize=12,
+                        horizontalalignment='left',
+                        verticalalignment='center',
+                        color=colors[t])
                 elif np.amax(self.plot_data[self._variable_names[i][t]]) > 0:
                     plt.text(
-                        align_time, v_annot_pos, '{:s} at {:.1f} sec'.format(
-                            self._annotation_text[i][t], align_time), fontsize=12,
-                        horizontalalignment='left', verticalalignment='center', color=colors[t])
+                        align_time,
+                        v_annot_pos,
+                        '{:s} at {:.1f} sec'.format(
+                            self._annotation_text[i][t],
+                            align_time),
+                        fontsize=12,
+                        horizontalalignment='left',
+                        verticalalignment='center',
+                        color=colors[t])
 
             if self._additional_annotation is not None:
                 for a in range(len(self._additional_annotation[i])):
-                    v_annot_pos = (a + 1.0) / (len(self._additional_annotation[i]) + 1)
+                    v_annot_pos = (a + 1.0) / \
+                        (len(self._additional_annotation[i]) + 1)
                     plt.text(
-                        self._additional_annotation[i][a][0], v_annot_pos,
-                        self._additional_annotation[i][a][1], fontsize=12,
-                        horizontalalignment='left', verticalalignment='center', color='b')
+                        self._additional_annotation[i][a][0],
+                        v_annot_pos,
+                        self._additional_annotation[i][a][1],
+                        fontsize=12,
+                        horizontalalignment='left',
+                        verticalalignment='center',
+                        color='b')
 
         self.fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
@@ -357,12 +393,18 @@ class CheckFlagsPlot(DataPlot):
         :param pdf_handle:
         """
         super().__init__(
-            plot_data, variable_names, plot_title=plot_title, sub_titles=sub_titles,
-            x_labels=[x_label]*len(y_labels), y_labels=y_labels, y_lim=y_lim, legend=legend,
+            plot_data,
+            variable_names,
+            plot_title=plot_title,
+            sub_titles=sub_titles,
+            x_labels=[x_label] *
+            len(y_labels),
+            y_labels=y_labels,
+            y_lim=y_lim,
+            legend=legend,
             pdf_handle=pdf_handle)
         self._data_time = data_time
         self._b_annotate = annotate
-
 
     def plot(self):
         """
@@ -381,7 +423,8 @@ class CheckFlagsPlot(DataPlot):
             if self._sub_titles is not None:
                 plt.title(self._sub_titles[i])
 
-            for col, var in zip(colors[:len(self._variable_names[i])], self._variable_names[i]):
+            for col, var in zip(
+                    colors[:len(self._variable_names[i])], self._variable_names[i]):
                 plt.plot(self._data_time, self.plot_data[var], col)
 
             plt.xlabel(self._x_labels[i])
@@ -394,15 +437,20 @@ class CheckFlagsPlot(DataPlot):
                 plt.legend(self._legend[i], loc='upper left')
 
             if self._b_annotate:
-                for col, var in zip(colors[:len(self._variable_names[i])], self._variable_names[i]):
+                for col, var in zip(
+                        colors[:len(self._variable_names[i])], self._variable_names[i]):
                     # add the maximum and minimum value as an annotation
                     _, max_value, max_time = get_max_arg_time_value(
                         self.plot_data[var], self._data_time)
                     mean_value = np.mean(self.plot_data[var])
 
                     plt.text(
-                        max_time, max_value,
-                        f'max={max_value:.4f}, mean={mean_value:.4f}', color=col,
-                        fontsize=12, horizontalalignment='left', verticalalignment='bottom')
+                        max_time,
+                        max_value,
+                        f'max={max_value:.4f}, mean={mean_value:.4f}',
+                        color=col,
+                        fontsize=12,
+                        horizontalalignment='left',
+                        verticalalignment='bottom')
 
         self.fig.tight_layout(rect=[0, 0.03, 1, 0.95])

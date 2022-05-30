@@ -14,6 +14,7 @@ class Airtime():
     """
     Airtime struct.
     """
+
     def __init__(self, take_off: float, landing: float):
         self.take_off = take_off
         self.landing = landing
@@ -41,7 +42,8 @@ class InAirDetector():
         self._in_air_margin_seconds = in_air_margin_seconds
 
         try:
-            self._vehicle_land_detected = ulog.get_dataset('vehicle_land_detected').data
+            self._vehicle_land_detected = ulog.get_dataset(
+                'vehicle_land_detected').data
             self._landed = self._vehicle_land_detected['landed']
         except Exception as e:
             self._in_air = []
@@ -52,7 +54,6 @@ class InAirDetector():
         self._log_start = self._ulog.start_timestamp / 1.0e6
 
         self._in_air = self._detect_airtime()
-
 
     def _detect_airtime(self) -> List[Airtime]:
         """
@@ -70,7 +71,9 @@ class InAirDetector():
         landings = np.where(np.diff(self._landed) > 0)[0].tolist()
 
         # check for start in air.
-        if len(take_offs) == 0 or ((len(landings) > 0) and (landings[0] < take_offs[0])):
+        if len(take_offs) == 0 or (
+            (len(landings) > 0) and (
+                landings[0] < take_offs[0])):
 
             print('Started in air. Take first timestamp value as start point.')
             take_offs = [-1] + take_offs
@@ -83,8 +86,8 @@ class InAirDetector():
         # correct for offset: add 1 to landing list
         landings = [landing + 1 for landing in landings]
 
-        assert len(landings) == len(take_offs), 'InAirDetector: different number of take offs' \
-                                                ' and landings.'
+        assert len(landings) == len(
+            take_offs), 'InAirDetector: different number of take offs' ' and landings.'
 
         in_air = []
         for take_off, landing in zip(take_offs, landings):
@@ -92,11 +95,18 @@ class InAirDetector():
                     self._in_air_margin_seconds) - \
                     (self._vehicle_land_detected['timestamp'][take_off] / 1e6 +
                      self._in_air_margin_seconds) >= self._min_flight_time_seconds:
-                in_air.append(Airtime(
-                    take_off=(self._vehicle_land_detected['timestamp'][take_off] -
-                              self._ulog.start_timestamp) / 1.0e6 + self._in_air_margin_seconds,
-                    landing=(self._vehicle_land_detected['timestamp'][landing] -
-                             self._ulog.start_timestamp) / 1.0e6 - self._in_air_margin_seconds))
+                in_air.append(
+                    Airtime(
+                        take_off=(
+                            self._vehicle_land_detected['timestamp'][take_off] -
+                            self._ulog.start_timestamp) /
+                        1.0e6 +
+                        self._in_air_margin_seconds,
+                        landing=(
+                            self._vehicle_land_detected['timestamp'][landing] -
+                            self._ulog.start_timestamp) /
+                        1.0e6 -
+                        self._in_air_margin_seconds))
         if len(in_air) == 0:
             print('InAirDetector: no airtime detected.')
 
@@ -140,9 +150,10 @@ class InAirDetector():
         :param multi_instance:
         :return:
         """
-        data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
+        data = self._ulog.get_dataset(
+            dataset, multi_instance=multi_instance).data
         sample_rate = data['timestamp'].shape[0] / \
-                      ((data['timestamp'][-1] - data['timestamp'][0]) * 1.0e-6)
+            ((data['timestamp'][-1] - data['timestamp'][0]) * 1.0e-6)
 
         return sample_rate
 
@@ -156,7 +167,8 @@ class InAirDetector():
         :param multi_instance:
         :return:
         """
-        sample_rate = self.get_sample_rate(dataset, multi_instance=multi_instance)
+        sample_rate = self.get_sample_rate(
+            dataset, multi_instance=multi_instance)
         window_len = int(window_len_s * sample_rate)
         if odd and ((window_len % 2) == 0):
             window_len += 1
@@ -172,7 +184,7 @@ class InAirDetector():
         """
         try:
             data = self._ulog.get_dataset(dataset).data
-        except:
+        except BaseException:
             print(f'InAirDetector: {dataset:s} not found in log.')
             return []
 
@@ -187,7 +199,6 @@ class InAirDetector():
             airtime_indices = []
 
         return airtime_indices
-
 
     def get_total_airtime_for_timestamp(
             self, timestamps: np.ndarray, start_time: Optional[float] = None,
@@ -213,7 +224,6 @@ class InAirDetector():
 
         return airtime_indices
 
-
     def get_airtime(self, dataset: str, multi_instance: int = 0) -> list:
         """
         return all indices of the log file that are in air
@@ -221,13 +231,16 @@ class InAirDetector():
         :return:
         """
         try:
-            data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
+            data = self._ulog.get_dataset(
+                dataset, multi_instance=multi_instance).data
         except Exception as e:
-            raise PreconditionError(f'InAirDetector: {dataset:s} not found in log.') from e
+            raise PreconditionError(
+                f'InAirDetector: {dataset:s} not found in log.') from e
 
         return self.get_total_airtime_for_timestamp(
-            data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
-
+            data['timestamp'],
+            start_time=self._ulog.start_timestamp,
+            conversion_factor=1.0e-6)
 
     def get_airtime_per_phase_for_timestamp(
             self, timestamps: np.ndarray, start_time: Optional[float] = None,
@@ -253,8 +266,10 @@ class InAirDetector():
 
         return airtime_indices
 
-
-    def get_airtime_per_phase(self, dataset: str, multi_instance: int = 0) -> List[list]:
+    def get_airtime_per_phase(
+            self,
+            dataset: str,
+            multi_instance: int = 0) -> List[list]:
         """
         return all indices of the log file that are in air
         :param dataset:
@@ -262,9 +277,13 @@ class InAirDetector():
         :return:
         """
         try:
-            data = self._ulog.get_dataset(dataset, multi_instance=multi_instance).data
+            data = self._ulog.get_dataset(
+                dataset, multi_instance=multi_instance).data
         except Exception as e:
-            raise PreconditionError(f'InAirDetector: {dataset:s} not found in log.') from e
+            raise PreconditionError(
+                f'InAirDetector: {dataset:s} not found in log.') from e
 
         return self.get_airtime_per_phase_for_timestamp(
-            data['timestamp'], start_time=self._ulog.start_timestamp, conversion_factor=1.0e-6)
+            data['timestamp'],
+            start_time=self._ulog.start_timestamp,
+            conversion_factor=1.0e-6)

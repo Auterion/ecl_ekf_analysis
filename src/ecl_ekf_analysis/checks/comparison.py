@@ -6,8 +6,13 @@ import pytest
 
 
 def compare_float_values(
-        value_name: str, log_id: str, analysis_value: float, ground_truth_value: float,
-        parent_name: str = '', rel_tol: float = 1e-6, abs_tol: float = 1e-12) -> None:
+        value_name: str,
+        log_id: str,
+        analysis_value: float,
+        ground_truth_value: float,
+        parent_name: str = '',
+        rel_tol: float = 1e-6,
+        abs_tol: float = 1e-12) -> None:
     """
     :param value_name:
     :param analysis_value:
@@ -15,7 +20,7 @@ def compare_float_values(
     :return:
     """
     # pylint: disable=unidiomatic-typecheck
-    assert type(analysis_value) == type(ground_truth_value), \
+    assert isinstance(analysis_value, type(ground_truth_value)), \
         'analysis result type {:s} is different to the ground truth type {:s} ' \
         'in {:s} in {:s}'.format(
             str(type(analysis_value)),
@@ -61,18 +66,28 @@ def compare_check_analysis_result_ground_truth(
                 check_statistic['instance'], ground_truth_check_statistic['instance'], log_id)
 
         compare_float_values(
-            check_statistic['type'], log_id, check_statistic['value'],
-            ground_truth_check_statistic['value'], parent_name=check_result['type'],
-            rel_tol=rel_tol, abs_tol=abs_tol)
+            check_statistic['type'],
+            log_id,
+            check_statistic['value'],
+            ground_truth_check_statistic['value'],
+            parent_name=check_result['type'],
+            rel_tol=rel_tol,
+            abs_tol=abs_tol)
 
         compare_float_values(
-            f"{check_statistic['type']:s} failure threshold", log_id,
+            f"{check_statistic['type']:s} failure threshold",
+            log_id,
             check_statistic['thresholds']['failure'],
-            ground_truth_check_statistic['thresholds']['failure'], parent_name=check_result['type'],
-            rel_tol=rel_tol, abs_tol=abs_tol)
+            ground_truth_check_statistic['thresholds']['failure'],
+            parent_name=check_result['type'],
+            rel_tol=rel_tol,
+            abs_tol=abs_tol)
 
         compare_float_values(
-            f"{check_statistic['type']:s} warning threshold", log_id,
+            f"{check_statistic['type']:s} warning threshold",
+            log_id,
             check_statistic['thresholds']['warning'],
-            ground_truth_check_statistic['thresholds']['warning'], parent_name=check_result['type'],
-            rel_tol=rel_tol, abs_tol=abs_tol)
+            ground_truth_check_statistic['thresholds']['warning'],
+            parent_name=check_result['type'],
+            rel_tol=rel_tol,
+            abs_tol=abs_tol)

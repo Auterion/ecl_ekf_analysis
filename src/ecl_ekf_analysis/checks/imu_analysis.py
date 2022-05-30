@@ -41,8 +41,7 @@ class IMU_Bias_Check(Check):
         )
         messages = {elem.name for elem in self.ulog.data_list}
         self._estimator_states_msg = (
-            "estimator_states" if "estimator_states" in messages else "estimator_status"
-        )
+            "estimator_states" if "estimator_states" in messages else "estimator_status")
 
     def run_precondition(self) -> bool:
         """
@@ -62,7 +61,8 @@ class IMU_Bias_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        estimator_states_data = self.ulog.get_dataset(self._estimator_states_msg).data
+        estimator_states_data = self.ulog.get_dataset(
+            self._estimator_states_msg).data
 
         imu_metrics = dict()
 
@@ -91,7 +91,8 @@ class IMU_Bias_Check(Check):
         :return:
         """
         imu_metrics = self.calculate_metrics()
-        estimator_states_data = self.ulog.get_dataset(self._estimator_states_msg).data
+        estimator_states_data = self.ulog.get_dataset(
+            self._estimator_states_msg).data
 
         # summarize biases from all six possible states
         imu_state_metrics = dict()
@@ -141,8 +142,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, statistic_instance=0)
 
         imu_delta_angle_bias_windowed_avg.value = float(
             np.sqrt(
@@ -161,8 +161,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias
         imu_delta_velocity_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, statistic_instance=0)
 
         imu_delta_velocity_bias_avg.value = float(
             np.sqrt(
@@ -229,7 +228,8 @@ class IMU_Output_Predictor_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_msg = get_output_tracking_error_message(
+            self.ulog)
         output_tracking_error_data = self.ulog.get_dataset(
             output_tracking_error_msg
         ).data
@@ -262,15 +262,15 @@ class IMU_Output_Predictor_Check(Check):
         """
         imu_metrics = self.calculate_metrics()
 
-        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_msg = get_output_tracking_error_message(
+            self.ulog)
         output_tracking_error_data = self.ulog.get_dataset(
             output_tracking_error_msg
         ).data
 
         # observed angle error statistic average
         imu_observed_angle_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0)
         imu_observed_angle_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -303,8 +303,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed velocity error statistic average
         imu_observed_velocity_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0)
         imu_observed_velocity_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -337,8 +336,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed position error statistic average
         imu_observed_position_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0)
         imu_observed_position_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -480,8 +478,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta angle
         imu_high_freq_delta_angle_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX, statistic_instance=0)
         imu_high_freq_delta_angle_max.value = float(
             calculate_stat_from_signal(
                 estimator_status_data,
@@ -497,8 +494,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta angle
         imu_high_freq_delta_angle_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG, statistic_instance=0)
         imu_high_freq_delta_angle_avg.value = float(0.0)
 
         if imu_high_freq_delta_angle_max.value > 0.0:
@@ -539,8 +535,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta velocity
         imu_high_freq_delta_velocity_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX, statistic_instance=0)
         imu_high_freq_delta_velocity_max.value = float(
             calculate_stat_from_signal(
                 estimator_status_data,
@@ -556,8 +551,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta velocity
         imu_high_freq_delta_velocity_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG, statistic_instance=0)
         imu_high_freq_delta_velocity_avg.value = float(0.0)
 
         if imu_high_freq_delta_velocity_max.value > 0.0:
@@ -596,7 +590,8 @@ class IMU_Vibration_Check(Check):
         estimator_status_data = self.ulog.get_dataset("estimator_status").data
 
         self.calc_coning_statistics(imu_metrics, estimator_status_data)
-        self.calc_high_freq_delta_angle_statistics(imu_metrics, estimator_status_data)
+        self.calc_high_freq_delta_angle_statistics(
+            imu_metrics, estimator_status_data)
         self.calc_high_freq_delta_velocity_statistics(
             imu_metrics, estimator_status_data
         )

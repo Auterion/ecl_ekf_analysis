@@ -4,17 +4,16 @@ function collection for plotting
 """
 
 # matplotlib don't use Xwindows backend (must be before pyplot import)
-import matplotlib
-matplotlib.use('Agg')
-from matplotlib.backends.backend_pdf import PdfPages
-import numpy as np
-from pyulog import ULog
-
-from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
-    get_estimator_check_flags
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 from ecl_ekf_analysis.plotting.data_plots import TimeSeriesPlot, InnovationPlot, \
     ControlModeSummaryPlot, CheckFlagsPlot
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
+from ecl_ekf_analysis.analysis.post_processing import magnetic_field_estimates_from_status, \
+    get_estimator_check_flags
+from pyulog import ULog
+import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib
+matplotlib.use('Agg')
 
 
 #pylint: disable=too-many-statements
@@ -32,7 +31,8 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     messages = {elem.name for elem in ulog.data_list}
 
     if 'estimator_innovations' in messages:
-        raise NotImplementedError('pdf report not implemented for new log file format')
+        raise NotImplementedError(
+            'pdf report not implemented for new log file format')
     if 'estimator_status' not in messages:
         raise PreconditionError('could not find estimator_status data')
     if 'ekf2_innovations' not in messages:
@@ -44,12 +44,13 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
     ekf2_innovations = ulog.get_dataset('ekf2_innovations').data
     sensor_preflight = ulog.get_dataset('sensor_preflight').data
 
-    control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(estimator_status)
+    control_mode, innov_flags, gps_fail_flags = get_estimator_check_flags(
+        estimator_status)
 
     status_time = 1e-6 * estimator_status['timestamp']
 
     b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, \
-    on_ground_transition_time = detect_airtime(control_mode, status_time)
+        on_ground_transition_time = detect_airtime(control_mode, status_time)
 
     with PdfPages(output_plot_filename) as pdf_pages:
 
@@ -136,24 +137,33 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # plot normalised innovation test levels
         # define variables to plot
-        variables = [['mag_test_ratio'], ['vel_test_ratio', 'pos_test_ratio'], ['hgt_test_ratio']]
+        variables = [
+            ['mag_test_ratio'], [
+                'vel_test_ratio', 'pos_test_ratio'], ['hgt_test_ratio']]
         y_labels = ['mag', 'vel, pos', 'hgt']
         legend = [['mag'], ['vel', 'pos'], ['hgt']]
-        if np.amax(estimator_status['hagl_test_ratio']) > 0.0:  # plot hagl ratio, if applicable
+        if np.amax(estimator_status['hagl_test_ratio']
+                   ) > 0.0:  # plot hagl ratio, if applicable
             variables[-1].append('hagl_test_ratio')
             y_labels[-1] += ', hagl'
             legend[-1].append('hagl')
 
-        if np.amax(estimator_status['tas_test_ratio']) > 0.0:  # plot airspeed sensor test ratio
+        if np.amax(estimator_status['tas_test_ratio']
+                   ) > 0.0:  # plot airspeed sensor test ratio
             variables.append(['tas_test_ratio'])
             y_labels.append('TAS')
             legend.append(['airspeed'])
 
         data_plot = CheckFlagsPlot(
-            status_time, estimator_status, variables, x_label='time (sec)', y_labels=y_labels,
-            plot_title='Normalised Innovation Test Levels', pdf_handle=pdf_pages, annotate=True,
-            legend=legend
-        )
+            status_time,
+            estimator_status,
+            variables,
+            x_label='time (sec)',
+            y_labels=y_labels,
+            plot_title='Normalised Innovation Test Levels',
+            pdf_handle=pdf_pages,
+            annotate=True,
+            legend=legend)
         data_plot.save()
         data_plot.close()
 
@@ -178,14 +188,16 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         airborne_annotations = list()
         if np.amin(np.diff(control_mode['airborne'])) > -0.5:
             airborne_annotations.append(
-                (on_ground_transition_time, 'air to ground transition not detected'))
+                (on_ground_transition_time,
+                 'air to ground transition not detected'))
         else:
             airborne_annotations.append(
                 (on_ground_transition_time, 'on-ground at {:.1f} sec'.format(
                     on_ground_transition_time)))
         if in_air_duration > 0.0:
-            airborne_annotations.append(((in_air_transition_time + on_ground_transition_time) / 2,
-                                         f'duration = {in_air_duration:.1f} sec'))
+            airborne_annotations.append(
+                ((in_air_transition_time + on_ground_transition_time) / 2,
+                 f'duration = {in_air_duration:.1f} sec'))
         if np.amax(np.diff(control_mode['airborne'])) < 0.5:
             airborne_annotations.append(
                 (in_air_transition_time, 'ground to air transition not detected'))
@@ -241,10 +253,10 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
         data_plot.close()
 
         # Plot the EKF IMU vibration metrics
-        scaled_estimator_status = {'vibe[0]': 1000. * estimator_status['vibe[0]'],
-                                   'vibe[1]': 1000. * estimator_status['vibe[1]'],
-                                   'vibe[2]': estimator_status['vibe[2]']
-                                   }
+        scaled_estimator_status = {
+            'vibe[0]': 1000. * estimator_status['vibe[0]'],
+            'vibe[1]': 1000. * estimator_status['vibe[1]'],
+            'vibe[2]': estimator_status['vibe[2]']}
         data_plot = CheckFlagsPlot(
             status_time, scaled_estimator_status, [['vibe[0]'], ['vibe[1]'], ['vibe[2]']],
             x_label='time (sec)', y_labels=['Del Ang Coning (mrad)', 'HF Del Ang (mrad)',
@@ -255,10 +267,10 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # Plot the EKF output observer tracking errors
         scaled_innovations = {
-            'output_tracking_error[0]': 1000. * ekf2_innovations['output_tracking_error[0]'],
+            'output_tracking_error[0]': 1000. *
+            ekf2_innovations['output_tracking_error[0]'],
             'output_tracking_error[1]': ekf2_innovations['output_tracking_error[1]'],
-            'output_tracking_error[2]': ekf2_innovations['output_tracking_error[2]']
-            }
+            'output_tracking_error[2]': ekf2_innovations['output_tracking_error[2]']}
         data_plot = CheckFlagsPlot(
             1e-6 * ekf2_innovations['timestamp'], scaled_innovations,
             [['output_tracking_error[0]'], ['output_tracking_error[1]'],
@@ -333,22 +345,26 @@ def detect_airtime(control_mode, status_time):
     b_finishes_in_air = False
     # calculate in-air transition time
     if np.amax(np.abs(np.diff(control_mode['airborne']))) > 0.5:
-        in_air_transtion_time_arg = np.argmax(np.diff(control_mode['airborne']))
+        in_air_transtion_time_arg = np.argmax(
+            np.diff(control_mode['airborne']))
         in_air_transition_time = status_time[in_air_transtion_time_arg]
     elif np.amax(control_mode['airborne']) > 0.5:
         in_air_transition_time = np.amin(status_time)
-        print('log starts while in-air at ' + str(round(in_air_transition_time, 1)) + ' sec')
+        print('log starts while in-air at ' +
+              str(round(in_air_transition_time, 1)) + ' sec')
         b_starts_in_air = True
     else:
         in_air_transition_time = float('NaN')
         print('always on ground')
     # calculate on-ground transition time
     if np.amin(np.diff(control_mode['airborne'])) < 0.0:
-        on_ground_transition_time_arg = np.argmin(np.diff(control_mode['airborne']))
+        on_ground_transition_time_arg = np.argmin(
+            np.diff(control_mode['airborne']))
         on_ground_transition_time = status_time[on_ground_transition_time_arg]
     elif np.amax(control_mode['airborne']) > 0.5:
         on_ground_transition_time = np.amax(status_time)
-        print('log finishes while in-air at ' + str(round(on_ground_transition_time, 1)) + ' sec')
+        print('log finishes while in-air at ' +
+              str(round(on_ground_transition_time, 1)) + ' sec')
         b_finishes_in_air = True
     else:
         on_ground_transition_time = float('NaN')
@@ -362,4 +378,4 @@ def detect_airtime(control_mode, status_time):
     else:
         in_air_duration = float('NaN')
     return b_finishes_in_air, b_starts_in_air, in_air_duration, in_air_transition_time, \
-           on_ground_transition_time
+        on_ground_transition_time

@@ -6,13 +6,13 @@ skipped from the analysis, if a
 """
 # -*- coding: utf-8 -*-
 
+from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 import argparse
 import sys
 import os
 import glob
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
 
 def get_arguments():
@@ -29,9 +29,11 @@ def get_arguments():
         help='Whether to overwrite an already analysed file. If a file with .pdf extension exists '
              'for a .ulg file, the log file will be skipped from analysis unless this flag has '
              'been set.')
-    parser.add_argument('--plots', action='store_true',
-                        help='Whether to plot an innovation summary for developers (only available '
-                             'for old estimator innovation messages).')
+    parser.add_argument(
+        '--plots',
+        action='store_true',
+        help='Whether to plot an innovation summary for developers (only available '
+        'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -45,16 +47,22 @@ def main() -> None:
 
     ulog_directory = args.directory_path
 
-    # get all the ulog files found in the specified directory and in subdirectories
-    ulog_files = glob.glob(os.path.join(ulog_directory, '**/*.ulg'), recursive=True)
+    # get all the ulog files found in the specified directory and in
+    # subdirectories
+    ulog_files = glob.glob(
+        os.path.join(
+            ulog_directory,
+            '**/*.ulg'),
+        recursive=True)
     print(f"found {len(ulog_files):d} .ulg files in {ulog_directory:s}")
 
     # remove the files already analysed unless the overwrite flag was specified. A
-    # ulog file is consired to be analysed if # a corresponding .pdf file exists.'
+    # ulog file is consired to be analysed if # a corresponding .pdf file
+    # exists.'
     if not args.overwrite:
         print("skipping already analysed ulg files.")
-        ulog_files = [ulog_file for ulog_file in ulog_files if
-                      not os.path.exists(f'{os.path.splitext(ulog_file)[0]:s}.json')]
+        ulog_files = [ulog_file for ulog_file in ulog_files if not os.path.exists(
+            f'{os.path.splitext(ulog_file)[0]:s}.json')]
 
     n_files = len(ulog_files)
 
