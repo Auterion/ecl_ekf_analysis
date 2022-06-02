@@ -59,9 +59,9 @@ def get_master_status_from_test_results(test_results: List[dict]) -> str:
     """
     master_status = 'Pass'
     for test_result in test_results:
-        if test_result['status'] == 'CHECK_STATUS_WARNING' and master_status == 'Pass':
+        if test_result['status'] == 'WARNING' and master_status == 'Pass':
             master_status = 'Warning'
-        elif test_result['status'] == 'CHECK_STATUS_FAIL':
+        elif test_result['status'] == 'FAIL':
             master_status = 'Fail'
             break
     return master_status
