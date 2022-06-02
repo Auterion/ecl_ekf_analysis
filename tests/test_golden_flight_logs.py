@@ -31,23 +31,23 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
     """
 
     golden_result_filename = os.path.join(
-        log_file_path, '{:s}_golden.json'.format(os.path.splitext(log_filename)[0]))
+        log_file_path, f'{os.path.splitext(log_filename)[0]:s}_golden.json')
 
     with TemporaryDirectory() as tmp_dir:
 
         tmp_log_filename = os.path.join(tmp_dir, os.path.basename(log_filename))
 
-        os.system('cp {:s} {:s}'.format(log_filename, tmp_log_filename))
+        os.system(f'cp {log_filename:s} {tmp_log_filename:s}')
 
-        assert os.path.exists(tmp_log_filename), '{:s} does not exist.'.format(tmp_log_filename)
+        assert os.path.exists(tmp_log_filename), f'{tmp_log_filename:s} does not exist.'
 
-        os.system('process_logdata_ekf {:s}'.format(tmp_log_filename))
+        os.system(f'process_logdata_ekf {tmp_log_filename:s}')
 
         analysis_result_filename = os.path.join(
-            tmp_dir, '{:s}.json'.format(os.path.splitext(tmp_log_filename)[0]))
+            tmp_dir, f'{os.path.splitext(tmp_log_filename)[0]:s}.json')
 
-        assert os.path.exists(analysis_result_filename), '{:s} does not exist.'.format(
-            analysis_result_filename)
+        assert os.path.exists(analysis_result_filename), \
+            f'{analysis_result_filename:s} does not exist.'
 
         with open(analysis_result_filename, 'r') as file:
             analysis_results = json.load(file)
@@ -58,7 +58,7 @@ def compare_analysis_to_golden(log_filename: str, log_file_path: str) -> None:
         print('comparing analysis to golden results')
 
         for local_analysis_check, golden_analysis_check in zip(analysis_results, golden_results):
-            print('{:s}'.format(local_analysis_check['type']))
+            print(f"{local_analysis_check['type']:s}")
             compare_check_analysis_result_ground_truth(
                 local_analysis_check, golden_analysis_check,
                 os.path.splitext(os.path.basename(tmp_log_filename))[0])
