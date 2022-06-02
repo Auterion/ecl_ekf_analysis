@@ -14,8 +14,8 @@ def detect_flag_value_changes(flag: np.ndarray) -> Tuple[list, list]:
     0 does not.
     :return: a Tuple of
     """
-    phase_starts = list()
-    phase_ends = list()
+    phase_starts = []
+    phase_ends = []
 
     if np.any(flag > 0):
         # find the indices of all phase starts and endings

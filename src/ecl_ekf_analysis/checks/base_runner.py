@@ -41,11 +41,11 @@ class CheckRunner():
         """
         initialize the class
         """
-        self._checks = list()
+        self._checks = []
         self._analysis_status = AnalysisStatus.SUCCESS
         self._error_message = ''
-        self._check_results = list()
-        self._results_table = list()
+        self._check_results = []
+        self._results_table = []
 
     def append(self, check: Check):
         """
@@ -73,7 +73,7 @@ class CheckRunner():
         runs the checks appended to this check runner.
         :return:
         """
-        analyses_statuses = list()
+        analyses_statuses = []
         for check in self._checks:
             try:
                 check.run()

@@ -185,7 +185,7 @@ def create_pdf_report(ulog: ULog, output_plot_filename: str) -> None:
 
         # plot control mode summary B
         # construct additional annotations for the airborne plot
-        airborne_annotations = list()
+        airborne_annotations = []
         if np.amin(np.diff(control_mode['airborne'])) > -0.5:
             airborne_annotations.append(
                 (on_ground_transition_time,
