@@ -83,5 +83,5 @@ def test_position_analyzer(testing_args):
 
     position_analyzer = PositionAnalyzer(ULog(filename))
     position_analyzer.set_min_ground_distance(0.2)
-    assert position_analyzer.get_valid_position('sensor_combined') == [], \
+    assert not position_analyzer.get_valid_position('sensor_combined'), \
         'returned valid positions were not empty'
