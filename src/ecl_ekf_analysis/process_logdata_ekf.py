@@ -2,13 +2,11 @@
 """
 Performs a health assessment on the ecl EKF navigation estimator data contained in a an ULog file
 Outputs a health assessment summary in a csv file named <inputfilename>.mdat.csv
-Outputs summary plots in a pdf file named <inputfilename>.pdf
 """
 
 from __future__ import print_function
 from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
 from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
-from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
 
 import argparse
 import os
@@ -30,11 +28,6 @@ def get_arguments():
         description='Analyse the estimator_status and ekf2_innovation message data for a single'
                     'ulog file.')
     parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
-    parser.add_argument(
-        '--plots',
-        action='store_true',
-        help='Whether to plot an innovation summary for developers (only available '
-        'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -67,11 +60,10 @@ def get_master_status_from_test_results(test_results: List[dict]) -> str:
     return master_status
 
 
-def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
+def process_logdata_ekf(filename: str) -> List[dict]:
     """
     main function for processing the logdata for ekf analysis.
     :param filename:
-    :param plot:
     :return:
     """
     try:
@@ -83,10 +75,6 @@ def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
 
     with open(f'{os.path.splitext(filename)[0]:s}.json', 'w') as file:
         json.dump(test_results, file, indent=2)
-
-    if plot:
-        create_pdf_report(ulog, f'{filename:s}.pdf')
-        print(f'Plots saved to {filename:s}.pdf')
 
     return test_results
 
@@ -100,7 +88,7 @@ def main() -> None:
     args = get_arguments()
 
     try:
-        test_results = process_logdata_ekf(args.filename, plot=args.plots)
+        test_results = process_logdata_ekf(args.filename)
     except Exception as e:
         print(str(e))
         sys.exit(-1)
