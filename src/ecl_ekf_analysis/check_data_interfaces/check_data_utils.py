@@ -33,7 +33,7 @@ def deserialize_check_result(check_result: CheckResult) -> dict:
     check_result_dict = {
         'status': check_result.status.name,
         'type': check_result.check_type.name,
-        'statistics': list()
+        'statistics': []
     }
     for check_statistic in check_result.statistics:
         check_result_dict['statistics'].append(deserialize_check_statistic(check_statistic))

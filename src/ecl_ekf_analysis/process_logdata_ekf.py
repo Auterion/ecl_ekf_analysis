@@ -2,10 +2,11 @@
 """
 Performs a health assessment on the ecl EKF navigation estimator data contained in a an ULog file
 Outputs a health assessment summary in a csv file named <inputfilename>.mdat.csv
-Outputs summary plots in a pdf file named <inputfilename>.pdf
 """
 
 from __future__ import print_function
+from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
+from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
 
 import argparse
 import os
@@ -16,9 +17,6 @@ from pyulog import ULog
 import simplejson as json
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from ecl_ekf_analysis.plotting.pdf_report import create_pdf_report
-from ecl_ekf_analysis.log_processing.custom_exceptions import PreconditionError
-from ecl_ekf_analysis.checks.ecl_check_runner import EclCheckRunner
 
 
 def get_arguments():
@@ -30,9 +28,6 @@ def get_arguments():
         description='Analyse the estimator_status and ekf2_innovation message data for a single'
                     'ulog file.')
     parser.add_argument('filename', metavar='file.ulg', help='ULog input file')
-    parser.add_argument('--plots', action='store_true',
-                        help='Whether to plot an innovation summary for developers (only available '
-                             'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -57,34 +52,29 @@ def get_master_status_from_test_results(test_results: List[dict]) -> str:
     """
     master_status = 'Pass'
     for test_result in test_results:
-        if test_result['status'] == 'CHECK_STATUS_WARNING' and master_status == 'Pass':
+        if test_result['status'] == 'WARNING' and master_status == 'Pass':
             master_status = 'Warning'
-        elif test_result['status'] == 'CHECK_STATUS_FAIL':
+        elif test_result['status'] == 'FAIL':
             master_status = 'Fail'
             break
     return master_status
 
 
-def process_logdata_ekf(filename: str, plot: bool = False) -> List[dict]:
+def process_logdata_ekf(filename: str) -> List[dict]:
     """
     main function for processing the logdata for ekf analysis.
     :param filename:
-    :param plot:
     :return:
     """
     try:
         ulog = ULog(filename)
     except Exception as e:
-        raise PreconditionError('could not open {:s}'.format(filename)) from e
+        raise PreconditionError(f'could not open {filename:s}') from e
 
     test_results = analyse_logdata_ekf(ulog)
 
-    with open('{:s}.json'.format(os.path.splitext(filename)[0]), 'w') as file:
+    with open(f'{os.path.splitext(filename)[0]:s}.json', 'w') as file:
         json.dump(test_results, file, indent=2)
-
-    if plot:
-        create_pdf_report(ulog, '{:s}.pdf'.format(filename))
-        print('Plots saved to {:s}.pdf'.format(filename))
 
     return test_results
 
@@ -98,7 +88,7 @@ def main() -> None:
     args = get_arguments()
 
     try:
-        test_results = process_logdata_ekf(args.filename, plot=args.plots)
+        test_results = process_logdata_ekf(args.filename)
     except Exception as e:
         print(str(e))
         sys.exit(-1)

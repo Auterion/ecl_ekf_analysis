@@ -6,13 +6,13 @@ skipped from the analysis, if a
 """
 # -*- coding: utf-8 -*-
 
+from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 import argparse
 import sys
 import os
 import glob
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from ecl_ekf_analysis.process_logdata_ekf import process_logdata_ekf
 
 
 def get_arguments():
@@ -29,9 +29,6 @@ def get_arguments():
         help='Whether to overwrite an already analysed file. If a file with .pdf extension exists '
              'for a .ulg file, the log file will be skipped from analysis unless this flag has '
              'been set.')
-    parser.add_argument('--plots', action='store_true',
-                        help='Whether to plot an innovation summary for developers (only available '
-                             'for old estimator innovation messages).')
     return parser.parse_args()
 
 
@@ -45,38 +42,44 @@ def main() -> None:
 
     ulog_directory = args.directory_path
 
-    # get all the ulog files found in the specified directory and in subdirectories
-    ulog_files = glob.glob(os.path.join(ulog_directory, '**/*.ulg'), recursive=True)
-    print("found {:d} .ulg files in {:s}".format(len(ulog_files), ulog_directory))
+    # get all the ulog files found in the specified directory and in
+    # subdirectories
+    ulog_files = glob.glob(
+        os.path.join(
+            ulog_directory,
+            '**/*.ulg'),
+        recursive=True)
+    print(f"found {len(ulog_files):d} .ulg files in {ulog_directory:s}")
 
     # remove the files already analysed unless the overwrite flag was specified. A
-    # ulog file is consired to be analysed if # a corresponding .pdf file exists.'
+    # ulog file is consired to be analysed if # a corresponding .pdf file
+    # exists.'
     if not args.overwrite:
         print("skipping already analysed ulg files.")
-        ulog_files = [ulog_file for ulog_file in ulog_files if
-                      not os.path.exists('{:s}.json'.format(os.path.splitext(ulog_file)[0]))]
+        ulog_files = [ulog_file for ulog_file in ulog_files if not os.path.exists(
+            f'{os.path.splitext(ulog_file)[0]:s}.json')]
 
     n_files = len(ulog_files)
 
-    print("analysing the {:d} .ulg files".format(n_files))
+    print(f"analysing the {n_files:d} .ulg files")
 
     i = 1
     n_skipped = 0
     # analyse all ulog files
     for ulog_file in ulog_files:
-        print('analysing file {:d}/{:d}: {:s}'.format(i, n_files, ulog_file))
+        print(f'analysing file {i:d}/{n_files:d}: {ulog_file:s}')
 
         try:
-            _ = process_logdata_ekf(ulog_file, plot=args.plots)
+            _ = process_logdata_ekf(ulog_file)
 
         except Exception as e:
             print(str(e))
-            print('an exception occurred, skipping file {:s}'.format(ulog_file))
+            print(f'an exception occurred, skipping file {ulog_file:s}')
             n_skipped = n_skipped + 1
 
         i = i + 1
 
-    print('{:d}/{:d} files analysed, {:d} skipped.'.format(n_files-n_skipped, n_files, n_skipped))
+    print(f'{n_files - n_skipped:d}/{n_files:d} files analysed, {n_skipped:d} skipped.')
 
 
 if __name__ == '__main__':

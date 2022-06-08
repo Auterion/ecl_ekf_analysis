@@ -59,7 +59,7 @@ def get_innovation_message(ulog: ULog, topic: str = 'innovation') -> str:
         else:
             raise PreconditionError('estimator innovation test ratios message not found.')
     else:
-        raise NotImplementedError('topic {:s} not supported'.format(topic))
+        raise NotImplementedError(f'topic {topic:s} not supported')
 
     return message
 
@@ -113,9 +113,9 @@ def get_field_name_from_message_and_descriptor(
             }
             field_name = msg_lookUp_dict[field_descriptor]
         else:
-            raise NotImplementedError('topic {:s} not supported'.format(topic))
+            raise NotImplementedError(f'topic {topic:s} not supported')
     else:
-        raise NotImplementedError('message {:s} not supported'.format(message))
+        raise NotImplementedError(f'message {message:s} not supported')
 
     return field_name
 
@@ -140,14 +140,14 @@ def get_innovation_message_and_field_names(
         field_names.append(field_name)
     else:
         i = 0
-        while '{:s}[{:d}]'.format(field_name, i) in innov_data:
-            field_names.append('{:s}[{:d}]'.format(field_name, i))
+        while f'{field_name:s}[{i:d}]' in innov_data:
+            field_names.append(f'{field_name:s}[{i:d}]')
             i += 1
 
         if field_name.endswith('_vel'):
-            field_names.append('{:s}_h{:s}[0]'.format(field_name[:3], field_name[-3:]))
-            field_names.append('{:s}_h{:s}[1]'.format(field_name[:3], field_name[-3:]))
-            field_names.append('{:s}_v{:s}'.format(field_name[:3], field_name[-3:]))
+            field_names.append(f'{field_name[:3]:s}_h{field_name[-3:]:s}[0]')
+            field_names.append(f'{field_name[:3]:s}_h{field_name[-3:]:s}[1]')
+            field_names.append(f'{field_name[:3]:s}_v{field_name[-3:]:s}')
 
     return message, field_names
 

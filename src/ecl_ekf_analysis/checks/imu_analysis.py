@@ -20,8 +20,8 @@ from ecl_ekf_analysis.log_processing.data_version_handling import (
     get_output_tracking_error_message,
 )
 from ecl_ekf_analysis.analysis.in_air_detector import InAirDetector
-import ecl_ekf_analysis.config.params as params
-import ecl_ekf_analysis.config.thresholds as thresholds
+from ecl_ekf_analysis.config import params
+from ecl_ekf_analysis.config import thresholds
 
 
 class IMU_Bias_Check(Check):
@@ -41,8 +41,7 @@ class IMU_Bias_Check(Check):
         )
         messages = {elem.name for elem in self.ulog.data_list}
         self._estimator_states_msg = (
-            "estimator_states" if "estimator_states" in messages else "estimator_status"
-        )
+            "estimator_states" if "estimator_states" in messages else "estimator_status")
 
     def run_precondition(self) -> bool:
         """
@@ -62,9 +61,10 @@ class IMU_Bias_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        estimator_states_data = self.ulog.get_dataset(self._estimator_states_msg).data
+        estimator_states_data = self.ulog.get_dataset(
+            self._estimator_states_msg).data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         for signal in [
             "states[10]",
@@ -75,7 +75,7 @@ class IMU_Bias_Check(Check):
             "states[15]",
         ]:
             imu_metrics[
-                "{:s}_windowed_mean".format(signal)
+                f"{signal:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 estimator_states_data,
                 self._estimator_states_msg,
@@ -91,10 +91,11 @@ class IMU_Bias_Check(Check):
         :return:
         """
         imu_metrics = self.calculate_metrics()
-        estimator_states_data = self.ulog.get_dataset(self._estimator_states_msg).data
+        estimator_states_data = self.ulog.get_dataset(
+            self._estimator_states_msg).data
 
         # summarize biases from all six possible states
-        imu_state_metrics = dict()
+        imu_state_metrics = {}
         for signal in [
             "states[10]",
             "states[11]",
@@ -103,11 +104,11 @@ class IMU_Bias_Check(Check):
             "states[14]",
             "states[15]",
         ]:
-            imu_state_metrics["{:s}_windowed_mean".format(signal)] = float(
+            imu_state_metrics[f"{signal:s}_windowed_mean"] = float(
                 max(
                     [
                         np.max(phase)
-                        for _, phase in imu_metrics["{:s}_windowed_mean".format(signal)]
+                        for _, phase in imu_metrics[f"{signal:s}_windowed_mean"]
                     ]
                 )
             )
@@ -141,8 +142,7 @@ class IMU_Bias_Check(Check):
 
         # delta angle bias windowed
         imu_delta_angle_bias_windowed_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_DELTA_ANGLE_BIAS_WINDOWED_AVG, statistic_instance=0)
 
         imu_delta_angle_bias_windowed_avg.value = float(
             np.sqrt(
@@ -161,8 +161,7 @@ class IMU_Bias_Check(Check):
 
         # delta velocity bias
         imu_delta_velocity_bias_avg = self.add_statistic(
-            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_DELTA_VELOCITY_BIAS_AVG, statistic_instance=0)
 
         imu_delta_velocity_bias_avg.value = float(
             np.sqrt(
@@ -229,12 +228,13 @@ class IMU_Output_Predictor_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_msg = get_output_tracking_error_message(
+            self.ulog)
         output_tracking_error_data = self.ulog.get_dataset(
             output_tracking_error_msg
         ).data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         # calculates the median of the output tracking error ekf innovations
         for signal, result in [
@@ -245,7 +245,7 @@ class IMU_Output_Predictor_Check(Check):
             # calculate a windowed version of the stat:
             # TODO: currently takes the mean instead of median
             imu_metrics[
-                "{:s}_windowed_mean".format(result)
+                f"{result:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 output_tracking_error_data,
                 output_tracking_error_msg,
@@ -262,15 +262,15 @@ class IMU_Output_Predictor_Check(Check):
         """
         imu_metrics = self.calculate_metrics()
 
-        output_tracking_error_msg = get_output_tracking_error_message(self.ulog)
+        output_tracking_error_msg = get_output_tracking_error_message(
+            self.ulog)
         output_tracking_error_data = self.ulog.get_dataset(
             output_tracking_error_msg
         ).data
 
         # observed angle error statistic average
         imu_observed_angle_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_ANGLE_ERROR_AVG, statistic_instance=0)
         imu_observed_angle_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -303,8 +303,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed velocity error statistic average
         imu_observed_velocity_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_VELOCITY_ERROR_AVG, statistic_instance=0)
         imu_observed_velocity_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -337,8 +336,7 @@ class IMU_Output_Predictor_Check(Check):
 
         # observed position error statistic average
         imu_observed_position_error_avg = self.add_statistic(
-            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_OBSERVED_POSITION_ERROR_AVG, statistic_instance=0)
         imu_observed_position_error_avg.value = float(
             calculate_stat_from_signal(
                 output_tracking_error_data,
@@ -393,7 +391,7 @@ class IMU_Vibration_Check(Check):
         """
         estimator_status_data = self.ulog.get_dataset("estimator_status").data
 
-        imu_metrics = dict()
+        imu_metrics = {}
 
         # calculates peak and mean for IMU vibration checks
         for signal, result in [
@@ -403,7 +401,7 @@ class IMU_Vibration_Check(Check):
         ]:
 
             imu_metrics[
-                "{:s}_windowed_mean".format(result)
+                f"{result:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
                 estimator_status_data,
                 "estimator_status",
@@ -480,8 +478,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta angle
         imu_high_freq_delta_angle_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_MAX, statistic_instance=0)
         imu_high_freq_delta_angle_max.value = float(
             calculate_stat_from_signal(
                 estimator_status_data,
@@ -497,8 +494,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta angle
         imu_high_freq_delta_angle_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_ANGLE_AVG, statistic_instance=0)
         imu_high_freq_delta_angle_avg.value = float(0.0)
 
         if imu_high_freq_delta_angle_max.value > 0.0:
@@ -539,8 +535,7 @@ class IMU_Vibration_Check(Check):
         """
         # max high frequency delta velocity
         imu_high_freq_delta_velocity_max = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_MAX, statistic_instance=0)
         imu_high_freq_delta_velocity_max.value = float(
             calculate_stat_from_signal(
                 estimator_status_data,
@@ -556,8 +551,7 @@ class IMU_Vibration_Check(Check):
 
         # avg high frequency delta velocity
         imu_high_freq_delta_velocity_avg = self.add_statistic(
-            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG, statistic_instance=0
-        )
+            CheckStatisticType.IMU_HIGH_FREQ_DELTA_VELOCITY_AVG, statistic_instance=0)
         imu_high_freq_delta_velocity_avg.value = float(0.0)
 
         if imu_high_freq_delta_velocity_max.value > 0.0:
@@ -596,7 +590,8 @@ class IMU_Vibration_Check(Check):
         estimator_status_data = self.ulog.get_dataset("estimator_status").data
 
         self.calc_coning_statistics(imu_metrics, estimator_status_data)
-        self.calc_high_freq_delta_angle_statistics(imu_metrics, estimator_status_data)
+        self.calc_high_freq_delta_angle_statistics(
+            imu_metrics, estimator_status_data)
         self.calc_high_freq_delta_velocity_statistics(
             imu_metrics, estimator_status_data
         )

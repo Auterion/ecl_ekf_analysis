@@ -23,7 +23,6 @@ class AnalysisStatus(IntEnum):
     RUNTIME_ERROR = 3
     PRECONDITION_ERROR = 4
 
-
     @property
     def status_name(self) -> str:
         """
@@ -33,21 +32,20 @@ class AnalysisStatus(IntEnum):
         return self._name_
 
 
-
 class CheckRunner():
     """
     a runner class for checks
     """
+
     def __init__(self):
         """
         initialize the class
         """
-        self._checks = list()
+        self._checks = []
         self._analysis_status = AnalysisStatus.SUCCESS
         self._error_message = ''
-        self._check_results = list()
-        self._results_table = list()
-
+        self._check_results = []
+        self._results_table = []
 
     def append(self, check: Check):
         """
@@ -57,12 +55,11 @@ class CheckRunner():
         """
         self._checks.append(check)
 
-
     def _create_results_table(self) -> Dict[str, tuple]:
         """
         :return:
         """
-        results_table = dict()
+        results_table = {}
         for check_result in self._check_results:
             check_name = check_result.check_type.name
             check_status = check_result.status.legacy_name
@@ -71,13 +68,12 @@ class CheckRunner():
 
         return results_table
 
-
     def run_checks(self):
         """
         runs the checks appended to this check runner.
         :return:
         """
-        analyses_statuses = list()
+        analyses_statuses = []
         for check in self._checks:
             try:
                 check.run()
@@ -104,8 +100,10 @@ class CheckRunner():
 
         # merge statuses
         if len(analyses_statuses) > 0:
-            # retry the analysis if one of the sub-analyses received an unexpected error
-            if any(status == AnalysisStatus.UNEXPECTED_ERROR for status in analyses_statuses):
+            # retry the analysis if one of the sub-analyses received an
+            # unexpected error
+            if any(
+                    status == AnalysisStatus.UNEXPECTED_ERROR for status in analyses_statuses):
                 self._analysis_status = AnalysisStatus.UNEXPECTED_ERROR
             elif any(status == AnalysisStatus.SUCCESS for status in analyses_statuses):
                 # set the checks of all failing analyses to Does Not Apply, such that they don't
@@ -113,7 +111,6 @@ class CheckRunner():
                 self._analysis_status = AnalysisStatus.SUCCESS
             else:
                 self._analysis_status = max(analyses_statuses)
-
 
     @property
     def results(self) -> List[CheckResult]:
@@ -150,7 +147,6 @@ class CheckRunner():
         :return: the results table
         """
         return self._create_results_table()
-
 
     @property
     def does_not_apply(self) -> Set[str]:

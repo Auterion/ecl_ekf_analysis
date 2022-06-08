@@ -33,12 +33,10 @@ def test_get_output_tracking_error_message(testing_args):
 
     output_tracking_error_message = dvh.get_output_tracking_error_message(log_est_format_v1)
     assert output_tracking_error_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(
-            output_tracking_error_message)
+        f'returned innovation message {output_tracking_error_message:s} was not ekf2_innovations'
     output_tracking_error_message = dvh.get_output_tracking_error_message(log_est_format_v2)
     assert output_tracking_error_message == "estimator_status", \
-        'returned innovation message {:s} was not estimator_status'.format(
-            output_tracking_error_message)
+        f'returned innovation message {output_tracking_error_message:s} was not estimator_status'
 
 
 def test_get_innovation_message(testing_args):
@@ -51,32 +49,30 @@ def test_get_innovation_message(testing_args):
 
     innovation_message = dvh.get_innovation_message(log_est_format_v1, topic='innovation')
     assert innovation_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(innovation_message)
+        f'returned innovation message {innovation_message:s} was not ekf2_innovations'
     innovation_message = dvh.get_innovation_message(log_est_format_v2, topic='innovation')
     assert innovation_message == "estimator_innovations", \
-        'returned innovation message {:s} was not estimator_innovations'.format(innovation_message)
+        f'returned innovation message {innovation_message:s} was not estimator_innovations'
 
     innovation_variance_message = dvh.get_innovation_message(
         log_est_format_v1, topic='innovation_variance')
     assert innovation_variance_message == "ekf2_innovations", \
-        'returned innovation message {:s} was not ekf2_innovations'.format(
-            innovation_variance_message)
+        f'returned innovation message {innovation_variance_message:s} was not ekf2_innovations'
     innovation_variance_message = dvh.get_innovation_message(
         log_est_format_v2, topic='innovation_variance')
     assert innovation_variance_message == "estimator_innovation_variances", \
-        'returned innovation message {:s} was not estimator_innovation_variances'.format(
-            innovation_variance_message)
+        f'returned innovation message {innovation_variance_message:s}' \
+        f'was not estimator_innovation_variances'
 
     innovation_test_ratio_message = dvh.get_innovation_message(
         log_est_format_v1, topic='innovation_test_ratio')
     assert innovation_test_ratio_message == "estimator_status", \
-        'returned innovation message {:s} was not estimator_status'.format(
-            innovation_test_ratio_message)
+        f'returned innovation message {innovation_test_ratio_message:s} was not estimator_status'
     innovation_test_ratio_message = dvh.get_innovation_message(
         log_est_format_v2, topic='innovation_test_ratio')
     assert innovation_test_ratio_message == "estimator_innovation_test_ratios", \
-        'returned innovation message {:s} was not estimator_innovation_test_ratios'.format(
-            innovation_test_ratio_message)
+        f'returned innovation message {innovation_test_ratio_message:s}' \
+        f'was not estimator_innovation_test_ratios'
 
 
 test_data = [
