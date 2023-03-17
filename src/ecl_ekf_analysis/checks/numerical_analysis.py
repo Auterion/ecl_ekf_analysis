@@ -47,9 +47,10 @@ class NumericalCheck(Check):
         "fs_bad_pos_n",
         "fs_bad_pos_e",
         "fs_bad_pos_d",
-        "fs_bad_acc_bias",
-        "fs_bad_acc_vertical",
-        "fs_bad_acc_clipping",
+        # Do not consider flags that are not related to numerical issues
+        # "fs_bad_acc_bias",
+        # "fs_bad_acc_vertical",
+        # "fs_bad_acc_clipping",
         ]
 
         filter_fault_flag.value = 0.0
