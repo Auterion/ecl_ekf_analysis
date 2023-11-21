@@ -39,9 +39,8 @@ class IMU_Bias_Check(Check):
             min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
             in_air_margin_seconds=params.iad_in_air_margin_seconds(),
         )
-        messages = {elem.name for elem in self.ulog.data_list}
-        self._estimator_states_msg = (
-            "estimator_states" if "estimator_states" in messages else "estimator_status")
+
+        self._estimator_sensor_bias_msg = "estimator_sensor_bias"
 
     def run_precondition(self) -> bool:
         """
@@ -51,7 +50,7 @@ class IMU_Bias_Check(Check):
 
         messages = {elem.name for elem in self.ulog.data_list}
 
-        if "estimator_states" not in messages and "estimator_status" not in messages:
+        if "estimator_sensor_bias" not in messages:
             precondition = False
 
         return precondition
@@ -61,24 +60,24 @@ class IMU_Bias_Check(Check):
         calculates the estimator status metrics
         :return:
         """
-        estimator_states_data = self.ulog.get_dataset(
-            self._estimator_states_msg).data
+        estimator_sensor_bias_data = self.ulog.get_dataset(
+            self._estimator_sensor_bias_msg).data
 
         imu_metrics = {}
 
         for signal in [
-            "states[10]",
-            "states[11]",
-            "states[12]",
-            "states[13]",
-            "states[14]",
-            "states[15]",
+            "gyro_bias[0]",
+            "gyro_bias[1]",
+            "gyro_bias[2]",
+            "accel_bias[0]",
+            "accel_bias[1]",
+            "accel_bias[2]",
         ]:
             imu_metrics[
                 f"{signal:s}_windowed_mean"
             ] = calculate_windowed_mean_per_airphase(
-                estimator_states_data,
-                self._estimator_states_msg,
+                estimator_sensor_bias_data,
+                self._estimator_sensor_bias_msg,
                 signal,
                 self._in_air_detector_no_ground_effects,
                 window_len_s=params.ecl_window_len_s(),
@@ -91,20 +90,22 @@ class IMU_Bias_Check(Check):
         :return:
         """
         imu_metrics = self.calculate_metrics()
-        estimator_states_data = self.ulog.get_dataset(
-            self._estimator_states_msg).data
+
+        estimator_sensor_bias_data = self.ulog.get_dataset(
+            self._estimator_sensor_bias_msg).data
 
         # summarize biases from all six possible states
-        imu_state_metrics = {}
+        imu_sensor_bias_metrics = {}
+
         for signal in [
-            "states[10]",
-            "states[11]",
-            "states[12]",
-            "states[13]",
-            "states[14]",
-            "states[15]",
+            "gyro_bias[0]",
+            "gyro_bias[1]",
+            "gyro_bias[2]",
+            "accel_bias[0]",
+            "accel_bias[1]",
+            "accel_bias[2]",
         ]:
-            imu_state_metrics[f"{signal:s}_windowed_mean"] = float(
+            imu_sensor_bias_metrics[f"{signal:s}_windowed_mean"] = float(
                 max(
                     [
                         np.max(phase)
@@ -124,14 +125,14 @@ class IMU_Bias_Check(Check):
                     [
                         np.square(
                             calculate_stat_from_signal(
-                                estimator_states_data,
-                                self._estimator_states_msg,
+                                estimator_sensor_bias_data,
+                                self._estimator_sensor_bias_msg,
                                 signal,
                                 self._in_air_detector_no_ground_effects,
                                 np.median,
                             )
                         )
-                        for signal in ["states[10]", "states[11]", "states[12]"]
+                        for signal in ["gyro_bias[0]", "gyro_bias[1]", "gyro_bias[2]"]
                     ]
                 )
             )
@@ -148,11 +149,11 @@ class IMU_Bias_Check(Check):
             np.sqrt(
                 np.sum(
                     [
-                        np.square(imu_state_metrics[signal])
+                        np.square(imu_sensor_bias_metrics[signal])
                         for signal in [
-                            "states[10]_windowed_mean",
-                            "states[11]_windowed_mean",
-                            "states[12]_windowed_mean",
+                            "gyro_bias[0]_windowed_mean",
+                            "gyro_bias[1]_windowed_mean",
+                            "gyro_bias[2]_windowed_mean"
                         ]
                     ]
                 )
@@ -169,14 +170,14 @@ class IMU_Bias_Check(Check):
                     [
                         np.square(
                             calculate_stat_from_signal(
-                                estimator_states_data,
-                                self._estimator_states_msg,
+                                estimator_sensor_bias_data,
+                                self._estimator_sensor_bias_msg,
                                 signal,
                                 self._in_air_detector_no_ground_effects,
                                 np.median,
                             )
                         )
-                        for signal in ["states[13]", "states[14]", "states[15]"]
+                        for signal in ["accel_bias[0]", "accel_bias[1]", "accel_bias[2]"]
                     ]
                 )
             )
@@ -195,11 +196,11 @@ class IMU_Bias_Check(Check):
             np.sqrt(
                 np.sum(
                     [
-                        np.square(imu_state_metrics[signal])
+                        np.square(imu_sensor_bias_metrics[signal])
                         for signal in [
-                            "states[13]_windowed_mean",
-                            "states[14]_windowed_mean",
-                            "states[15]_windowed_mean",
+                            "accel_bias[0]_windowed_mean",
+                            "accel_bias[1]_windowed_mean",
+                            "accel_bias[2]_windowed_mean"
                         ]
                     ]
                 )
