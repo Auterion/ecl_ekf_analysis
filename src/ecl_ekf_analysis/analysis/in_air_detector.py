@@ -45,7 +45,8 @@ class InAirDetector():
             self._vehicle_land_detected = ulog.get_dataset(
                 'vehicle_land_detected').data
             self._airtime = np.where(self._vehicle_land_detected['landed'] == 0, 1, 0)
-            self._in_air = self._detect_airtime(self._airtime, self._vehicle_land_detected['timestamp'] )
+            self._in_air = self._detect_airtime(self._airtime,
+                self._vehicle_land_detected['timestamp'] )
         except Exception as e:
             self._in_air = []
             raise PreconditionError(
@@ -64,15 +65,20 @@ class InAirDetector():
                 fixed_wing = np.where(vehicle_status['vehicle_type'] == 2, 1, 0)
                 fixed_wing_airtimes = self._detect_airtime(fixed_wing, vehicle_status['timestamp'])
 
-                self._in_air = self._merge_airtimes(self._in_air, fixed_wing_airtimes)
+                self._in_air = InAirDetector.merge_airtimes(self._in_air, fixed_wing_airtimes)
 
             except Exception as e:
                 self._in_air = []
                 raise PreconditionError(
-                    'InAirDetector: Could not vehicle status topic and therefore cannot figure out fixed wing airtime') from e
+                    'InAirDetector: Could not vehicle status topic and therefore cannot figure out'
+                    ' fixed wing airtime') from e
 
-
-    def _merge_airtimes(self, first, second)-> List[Airtime]:
+    @staticmethod
+    def merge_airtimes(first, second)-> List[Airtime]:
+        """
+        Merge to lists providing airtimes into a single list of airtimes with only the'
+        ' common parts of airtime.
+        """
         res = []
         for a in first:
             for b in second:
