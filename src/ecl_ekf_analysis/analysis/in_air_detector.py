@@ -27,7 +27,7 @@ class InAirDetector():
 
     def __init__(
             self, ulog: ULog, min_flight_time_seconds: float = 0.0,
-            in_air_margin_seconds: float = 0.0) -> None:
+            in_air_margin_seconds: float = 0.0, fixed_wing_only: bool = False) -> None:
         """
         initializes an InAirDetector instance.
         :param ulog:
@@ -44,31 +44,61 @@ class InAirDetector():
         try:
             self._vehicle_land_detected = ulog.get_dataset(
                 'vehicle_land_detected').data
-            self._landed = self._vehicle_land_detected['landed']
+            self._airtime = np.where(self._vehicle_land_detected['landed'] == 0, 1, 0)
+            self._in_air = self._detect_airtime(self._airtime, self._vehicle_land_detected['timestamp'] )
         except Exception as e:
             self._in_air = []
             raise PreconditionError(
                 'InAirDetector: Could not find vehicle land detected message and/or landed field'
                 ' and thus not find any airtime.') from e
 
+
         self._log_start = self._ulog.start_timestamp / 1.0e6
 
-        self._in_air = self._detect_airtime()
 
-    def _detect_airtime(self) -> List[Airtime]:
+        # only use air time which is in fixed wing mode
+        if fixed_wing_only:
+            try:
+                vehicle_status = ulog.get_dataset(
+                    'vehicle_status').data
+                fixed_wing = np.where(vehicle_status['vehicle_type'] == 2, 1, 0)
+                fixed_wing_airtimes = self._detect_airtime(fixed_wing, vehicle_status['timestamp'])
+
+                self._in_air = self._merge_airtimes(self._in_air, fixed_wing_airtimes)
+
+            except Exception as e:
+                self._in_air = []
+                raise PreconditionError(
+                    'InAirDetector: Could not vehicle status topic and therefore cannot figure out fixed wing airtime') from e
+
+
+    def _merge_airtimes(self, first, second)-> List[Airtime]:
+        res = []
+        for a in first:
+            for b in second:
+                start = max(a.take_off, b.take_off)
+                end = min(a.landing, b.landing)
+
+                if start < end:
+                    res.append(Airtime(start, end))
+
+        return res
+
+
+    def _detect_airtime(self, data, timestamps) -> List[Airtime]:
         """
-        detects the airtime take_off and landing of a ulog.
-        :return: a named tuple of ('Airtime', ['take_off', 'landing']) or None.
+        detects the airtime start and end of a ulog based signal changing value from 0 to 1.
+        :return: a named tuple of ('Airtime', ['start', 'end']) or None.
         """
 
         # test whether flight was in air at all
-        if (self._landed > 0).all():
-            print('InAirDetector: always on ground.')
+        if (data == 0).all():
+            print('InAirDetector: Data has not airtime.')
             return []
 
         # find the indices of all take offs and landings
-        take_offs = np.where(np.diff(self._landed) < 0)[0].tolist()
-        landings = np.where(np.diff(self._landed) > 0)[0].tolist()
+        take_offs = np.where(np.diff(data) > 0)[0].tolist()
+        landings = np.where(np.diff(data) < 0)[0].tolist()
 
         # check for start in air.
         if len(take_offs) == 0 or (
@@ -82,7 +112,7 @@ class InAirDetector():
         take_offs = [take_off + 1 for take_off in take_offs]
         if len(landings) < len(take_offs):
             print('No final landing detected. Assume last timestamp is landing.')
-            landings += [len(self._landed) - 2]
+            landings += [len(data) - 2]
         # correct for offset: add 1 to landing list
         landings = [landing + 1 for landing in landings]
 
@@ -91,19 +121,19 @@ class InAirDetector():
 
         in_air = []
         for take_off, landing in zip(take_offs, landings):
-            if (self._vehicle_land_detected['timestamp'][landing] / 1e6 -
+            if (timestamps[landing] / 1e6 -
                     self._in_air_margin_seconds) - \
-                    (self._vehicle_land_detected['timestamp'][take_off] / 1e6 +
+                    (timestamps[take_off] / 1e6 +
                      self._in_air_margin_seconds) >= self._min_flight_time_seconds:
                 in_air.append(
                     Airtime(
                         take_off=(
-                            self._vehicle_land_detected['timestamp'][take_off] -
+                            timestamps[take_off] -
                             self._ulog.start_timestamp) /
                         1.0e6 +
                         self._in_air_margin_seconds,
                         landing=(
-                            self._vehicle_land_detected['timestamp'][landing] -
+                            timestamps[landing] -
                             self._ulog.start_timestamp) /
                         1.0e6 -
                         self._in_air_margin_seconds))
