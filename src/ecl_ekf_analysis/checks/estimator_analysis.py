@@ -47,15 +47,19 @@ class EstimatorCheck(Check):
 
         self._innov_fail_names = innov_fail_names if innov_fail_names is not None else []
 
+        fixed_wing_only = check_id in ['airspeed', 'side_slip']
+
         self._in_air_detector_no_ground_effects = InAirDetector(
             ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
-            in_air_margin_seconds=params.iad_in_air_margin_seconds())
+            in_air_margin_seconds=params.iad_in_air_margin_seconds(),
+                fixed_wing_only = fixed_wing_only)
 
         if check_id in ['magnetometer', 'height', 'yaw', 'optical_flow']:
             self._in_air_detector = self._in_air_detector_no_ground_effects
         else:
             self._in_air_detector = InAirDetector(
-                ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds())
+                ulog, min_flight_time_seconds=params.iad_min_flight_duration_seconds(),
+                    fixed_wing_only = fixed_wing_only)
 
     def init_test_ratio_message_and_names(self):
         """
